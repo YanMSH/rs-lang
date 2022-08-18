@@ -1,0 +1,66 @@
+:root {
+  --color-gradient: linear-gradient(64.43deg, rgba(249, 219, 109, 0.1725) 0%, #F9DB6D 25.92%, rgba(196, 177, 131, 0.819773) 45.1%, rgba(102, 103, 171, 0.4985) 71.01%, rgba(27, 30, 208, 0) 99.52%);
+  --color-yellow: #F9DB6D;
+  --color-purple: #6667AB;
+  --color-black: #000000;
+  --color-white: #ffffff;
+  --color-grey: #808080;
+}
+main {
+  background-color: var(--color-gradient);
+}
+.settings-section {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+.count-section {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+.sprint-game-container {
+  margin: 0 auto;
+  width: 450px;
+  height: 450px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.circles {
+  width: 75px;
+  height: 75px;
+}
+.circle {
+  width: 25px;
+  height: 25px;
+  background: var(--color-grey);
+  border: none;
+  border-radius: 50%;
+}
+.points-text {
+  font-size: 12px;
+  color: var(--color-black);
+}
+.english-word {
+  font-size: 36px;
+  font-weight: bold;
+}
+.russian-word {
+  font-size: 32px;
+}
+.answer-btn {
+  width: 106px;
+  height: 42px;
+}
+.answers-btn {
+  display: flex;
+  gap: 40px;
+}
+.wrong-answer-btn {
+  background: var(--color-yellow);
+}
+.right-answer-btn {
+  background: var(--color-purple);
+}
