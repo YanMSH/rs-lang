@@ -78,7 +78,7 @@ export default class AuthPage {
                 //DELETE BEFORE RELEASE
                 console.log(authResponse);
                 if (authResponse.message === AuthMessages.success) {
-                    this.store.set('user', JSON.stringify(authResponse));
+                    this.store.set('user', authResponse);
                 } else {
                     showErrorMessage(authResponse.message);
                 }
