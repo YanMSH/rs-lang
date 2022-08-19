@@ -1,4 +1,4 @@
-import './sprintGame.css';
+import './sprint-game.css';
 
 export class SprintGameView {
   render() {
@@ -46,7 +46,7 @@ export class SprintGameView {
       <div class="english-word">hello</div>
       <div class="russian-word">привет</div>
       <div class="ok-icon">
-        <img src="./assets/svg/ok_circle_icon.svg" alt="ok-icon" class="ok-icon" class="running-man">
+        <img src="./assets/svg/ok_circle_icon.svg" alt="ok-icon" class="ok-icon">
       </div>
       <div class="answers-button">
         <button class="wrong-answer-btn answer-btn" name="wrong-answer">Неверно</button>
@@ -56,17 +56,15 @@ export class SprintGameView {
     return sprintGameContainer;
   }
   addContainersToMain() {
-    const main = document.querySelector<HTMLElement>('main');
+    const main = document.querySelector('main') as HTMLElement;
     const sprintGameContainer = this.createSprintGameContainer();
     const createCountSection = this.createCountSection();
     const createSettingsSection = this.createSettingsSection();
     const wrapper = document.createElement('div');
     wrapper.classList.add('game-wrapper');
     const fragment = document.createDocumentFragment();
-    fragment.append(createSettingsSection, createCountSection, sprintGameContainer, );
+    fragment.append(createSettingsSection, createCountSection, sprintGameContainer);
     wrapper.append(fragment);
-    if (main) {
-      main.append(wrapper);
-    }
+    main.append(wrapper);
   }
 }
