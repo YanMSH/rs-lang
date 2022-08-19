@@ -11,8 +11,8 @@ export type UserAuth = {
 
 export type ResponseReg = {
     id: string;
-    name: string | undefined;
-    email: string | undefined;
+    name: string;
+    email: string;
 };
 
 export type ResponseAuth = {
