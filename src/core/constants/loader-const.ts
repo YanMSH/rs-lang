@@ -19,4 +19,11 @@ export enum Requests {
     patch = 'PATCH',
 }
 
+export enum AuthMessages {
+    success = 'Authenticated',
+    wrongPass = 'Incorrect password',
+    notFound = 'User not found',
+    timeout = 'Connection timeout',
+}
+
 export const serverURL = 'https://rs-back.herokuapp.com/';
