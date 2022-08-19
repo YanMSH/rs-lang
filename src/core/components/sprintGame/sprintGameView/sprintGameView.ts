@@ -1,3 +1,5 @@
+import './sprintGame.css';
+
 export class SprintGameView {
   render() {
     this.resetMain();
@@ -13,9 +15,9 @@ export class SprintGameView {
     const settingsSection = document.createElement('section');
     settingsSection.classList.add('settings-section')
     settingsSection.innerHTML = `
-      <img src = '../../assets/with-sound.svg' alt="sound icon" class="sound-icon">
-      <img src = '../../assets/fullscreen_icon.svg' alt="fullscreen icon" class="fullscreen-icon">
-      <img src = '../../assets/close_icon.svg' alt="close icon" class="close-icon">
+      <img src = '../../../../assets/svg/sound1.svg' alt="sound icon" class="sound-icon">
+      <img src = '../../../../assets/svg/fullscreen_icon.svg' alt="fullscreen icon" class="fullscreen-icon">
+      <img src = '../../../../assets/svg/close_icon.svg' alt="close icon" class="close-icon">
     `
     return settingsSection;
   }
@@ -23,7 +25,7 @@ export class SprintGameView {
     const countSection = document.createElement('section');
     countSection.classList.add('count-section');
     countSection.innerHTML = `
-      <span class="point-count">0</span>
+      <span class="point-count">10</span>
       <div class="timer"></div>
     `
     return countSection;
@@ -39,12 +41,12 @@ export class SprintGameView {
       </div>
       <div class="points-text">+10 очков за слово</div>
       <div class="human-img">
-        <img src="../../assets/running_man.svg" alt="running man">
+        <img src="../../../../assets/svg/running_man.svg" alt="running man" class="running-man">
       </div>
       <div class="english-word">hello</div>
       <div class="russian-word">привет</div>
       <div class="ok-icon">
-        <img src="ok_circle_icon" alt="ok-icon" class="ok-icon">
+        <img src="../../../../assets/svg/ok_circle_icon.svg" alt="ok-icon" class="ok-icon" class="running-man">
       </div>
       <div class="answers-button">
         <button class="wrong-answer-btn answer-btn" name="wrong-answer">Неверно</button>
@@ -58,10 +60,13 @@ export class SprintGameView {
     const sprintGameContainer = this.createSprintGameContainer();
     const createCountSection = this.createCountSection();
     const createSettingsSection = this.createSettingsSection();
+    const wrapper = document.createElement('div');
+    wrapper.classList.add('game-wrapper');
     const fragment = document.createDocumentFragment();
-    fragment.append(sprintGameContainer, createCountSection, createSettingsSection);
+    fragment.append(createSettingsSection, createCountSection, sprintGameContainer, );
+    wrapper.append(fragment);
     if (main) {
-      main.append(fragment);
+      main.append(wrapper);
     }
   }
 }

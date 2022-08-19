@@ -4,37 +4,48 @@
   --color-purple: #6667AB;
   --color-black: #000000;
   --color-white: #ffffff;
-  --color-grey: #808080;
+  --color-grey: #D3D3D3;
 }
-main {
-  background-color: var(--color-gradient);
+.game-wrapper {
+  height: 100vh;
+  background: var(--color-gradient);
 }
 .settings-section {
+  padding-top: 1%;
   width: 100%;
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
+  gap: 15px;
 }
 .count-section {
   width: 100%;
   display: flex;
-  justify-content: space-between;
+}
+.point-count {
+  margin: 0 auto;
+  font-size: 36px;
+  color: var(--color-yellow);
 }
 .sprint-game-container {
-  margin: 0 auto;
+  margin: 5% auto;
   width: 450px;
   height: 450px;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
+  gap: 25px;
+  background: var(--color-white);
 }
 .circles {
+  display: flex;
+  gap: 10px;
   width: 75px;
-  height: 75px;
+  height: 20px;
 }
 .circle {
-  width: 25px;
-  height: 25px;
+  width: 20px;
+  height: 20px;
   background: var(--color-grey);
   border: none;
   border-radius: 50%;
@@ -53,8 +64,9 @@ main {
 .answer-btn {
   width: 106px;
   height: 42px;
+  border: none;
 }
-.answers-btn {
+.answers-button{
   display: flex;
   gap: 40px;
 }
@@ -63,4 +75,29 @@ main {
 }
 .right-answer-btn {
   background: var(--color-purple);
+}
+.sound-icon {
+  width: 38px;
+  height: 28px;
+}
+.fullscreen-icon {
+  width: 25px;
+  height: 22px;
+}
+.close-icon {
+  width: 20px;
+  height: 22px;
+}
+.ok-icon {
+  width: 33px;
+  height: 29px;
+}
+.human-img {
+  width: 80px;
+  height: 40px;
+}
+.running-man {
+  margin-right: 15%;
+  width: 40px;
+  height: 44px;
 }

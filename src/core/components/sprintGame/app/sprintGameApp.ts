@@ -1,4 +1,3 @@
-import '../sprintGame.css';
 import { SprintGameController } from '../sprintGameController/sprintGameController';
 
 export class SprintGameApp {
@@ -6,7 +5,7 @@ export class SprintGameApp {
   constructor() {
     this.sprintGameController = new SprintGameController();
   }
-  start() {
+  starting() {
     this.sprintGameController.render();
   }
 }
