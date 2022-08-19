@@ -1,5 +1,7 @@
 import Loader from '../../core/components/loader/loader';
 import Storage from '../../core/components/service/storage/storage';
+import { emailIsValid, passIsValid } from '../../core/components/service/validation/validation';
+import { AuthMessages } from '../../core/constants/loader-const';
 import './auth.css';
 
 export default class AuthPage {
@@ -9,7 +11,7 @@ export default class AuthPage {
         this.load = new Loader();
         this.store = new Storage();
     }
-    render() {
+    public render() {
         const app = document.querySelector('.app') as HTMLElement;
         app.innerHTML = `
         <div class="auth__form-container">
@@ -28,22 +30,58 @@ export default class AuthPage {
         </div>
         `;
         const authForm = document.querySelector('.auth__form') as HTMLElement;
+        const emailInput = authForm.querySelector('#form__input-email') as HTMLInputElement;
+        const passInput = authForm.querySelector('#form__input-pass') as HTMLInputElement;
 
-        authForm.onsubmit = async (e: Event) => {
+        const uncolorizeInput = (e: Event) => {
+            (e.target as HTMLElement).classList.remove('invalid');
+        };
+
+        const inputsAreValid = (): boolean => {
+            if (!emailIsValid(emailInput)) {
+                emailInput.classList.add('invalid');
+            }
+            if (!passIsValid(passInput)) {
+                passInput.classList.add('invalid');
+            }
+            return emailIsValid(emailInput) && passIsValid(passInput);
+        };
+
+        const showErrorMessage = (responseMessage: string) => {
+            if (responseMessage === AuthMessages.success) {
+                return;
+            }
+            const message = document.createElement('p');
+            message.classList.add('error-message');
+            if (responseMessage === AuthMessages.notFound) {
+                message.innerText = 'Пользователь не найден';
+            } else if (responseMessage === AuthMessages.wrongPass) {
+                message.innerText = 'Неправильный e-mail или пароль';
+            } else {
+                message.innerText = 'Неизвестная ошибка. Попробуйте снова';
+            }
+            authForm.append(message);
+        };
+
+        const formHandler = async (e: Event) => {
             e.preventDefault();
-            const emailInput = authForm.querySelector('#form__input-email') as HTMLInputElement;
-            const passInput = authForm.querySelector('#form__input-pass') as HTMLInputElement;
+            const previousError = authForm.querySelector('.error-message');
+            if (previousError !== null) {
+                authForm.removeChild(previousError);
+            }
             const authData = {
                 email: emailInput.value,
-                password: passInput.value
+                password: passInput.value,
+            };
+            if (inputsAreValid()) {
+                const authResponse = await this.load.authUser(authData);
+                console.log(authResponse);
+                showErrorMessage(authResponse.message);
             }
-            console.log(authData);
-            const authResponse = await this.load.authUser(authData);
-            console.log(authResponse);
-            //this.store.set('user', JSON.stringify(authResponse));
-            // console.log('token', authResponse.token);
-            // console.log('refreshToken', authResponse.refreshToken);
+        };
 
-        }
+        authForm.onsubmit = formHandler;
+        emailInput.oninput = uncolorizeInput;
+        passInput.oninput = uncolorizeInput;
     }
 }

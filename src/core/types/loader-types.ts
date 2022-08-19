@@ -17,8 +17,8 @@ export type ResponseReg = {
 
 export type ResponseAuth = {
     message: string;
-    token: string;
-    refreshToken: string;
-    userId: string;
-    name: string;
+    token: string | undefined;
+    refreshToken: string | undefined;
+    userId: string | undefined;
+    name: string | undefined;
 };
