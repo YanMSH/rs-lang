@@ -75,8 +75,13 @@ export default class AuthPage {
             };
             if (inputsAreValid()) {
                 const authResponse = await this.load.authUser(authData);
+                //DELETE BEFORE RELEASE
                 console.log(authResponse);
-                showErrorMessage(authResponse.message);
+                if (authResponse.message === AuthMessages.success) {
+                    this.store.set('user', JSON.stringify(authResponse));
+                } else {
+                    showErrorMessage(authResponse.message);
+                }
             }
         };
 
