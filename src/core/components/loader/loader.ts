@@ -1,4 +1,4 @@
-import { AuthMessages, serverURL, StatusCodes } from '../../constants/loader-const';
+import { AuthMessages, serverURL } from '../../constants/loader-const';
 import { ResponseAuth, UserAuth, UserReg } from '../../types/loader-types';
 
 export default class Loader {
@@ -22,21 +22,7 @@ export default class Loader {
             },
             body: JSON.stringify(user),
         });
-        if (response.status === StatusCodes.ok) {
-            return await response.json();
-        } else if (response.status === StatusCodes.expectationFailed) {
-            return {
-                id: response.status.toString(),
-                name: undefined,
-                email: undefined,
-            };
-        } else if (response.status === StatusCodes.incorrectAuthInput) {
-            return {
-                id: response.status.toString(),
-                name: undefined,
-                email: undefined,
-            };
-        }
+        return await response.json();
     }
 
     async authUser(user: UserAuth): Promise<ResponseAuth> {
@@ -66,9 +52,9 @@ export default class Loader {
             },
             body: JSON.stringify(user),
         });
-        if (response.status === StatusCodes.ok) {
+        if (response.status === 200) {
             return await response.json();
-        } else if (response.status === StatusCodes.incorrectAuthTry) {
+        } else if (response.status === 403) {
             return {
                 message: AuthMessages.wrongPass,
                 token: undefined,
@@ -76,7 +62,7 @@ export default class Loader {
                 userId: undefined,
                 name: undefined,
             };
-        } else if (response.status === StatusCodes.notFound) {
+        } else if (response.status === 404) {
             return {
                 message: AuthMessages.notFound,
                 token: undefined,
