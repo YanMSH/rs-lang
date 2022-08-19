@@ -1,18 +1,16 @@
-import './audioCallView.css';
+import './audio-call-view.css';
 
 export default class AudioCallView {
 
   renderMainPage() {
-    const main = document.querySelector<HTMLElement>('main');
-    if (main) {
-      main.innerHTML = '';
-    }
+    const main = document.querySelector('main') as HTMLElement;
+    main.innerHTML = '';
     const wrapper = document.createElement('div');
     wrapper.classList.add('wrapper');
     const headerPanel = this.compareHeaderPanel();
     const mainPanel = this.compareGamePanel();
     wrapper.append(headerPanel, mainPanel);
-    main?.append(wrapper);
+    main.append(wrapper);
   }
 
   createResponseOptions() {
@@ -73,9 +71,9 @@ export default class AudioCallView {
 
     return gamePanel;
   }
-  createHearth() {
-    const hearth = document.createElement('div');
-    hearth.classList.add('hearth');
-    return hearth;
+  createHeart() {
+    const heart = document.createElement('div');
+    heart.classList.add('heart');
+    return heart;
   }
 }

@@ -1,4 +1,4 @@
-import AudioCallController from "../audioCallcontroller/audioCallController";
+import AudioCallController from "../audio-call-controller/audio-call-controller";
 
 export default class AudioCallApp {
 

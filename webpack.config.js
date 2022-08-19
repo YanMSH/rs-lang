@@ -4,6 +4,7 @@ const { merge } = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const EslintPlugin = require('eslint-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 
 
 const baseConfig = {
@@ -38,6 +39,7 @@ const baseConfig = {
     output: {
         filename: 'index.js',
         path: path.resolve(__dirname, './dist'),
+        assetModuleFilename: 'assets/img/[name][ext]',
     },
     plugins: [
         new webpack.ProvidePlugin({
@@ -49,6 +51,9 @@ const baseConfig = {
             filename: 'index.html',
         }),
         new CleanWebpackPlugin(),
+        new CopyPlugin({
+            patterns: [{ from: './src/assets/img', to: '../dist/assets/img' }],
+        }),
     ],
 };
 
