@@ -1,4 +1,4 @@
-import { SprintGameApp } from '../sprintGame/app/sprintGameApp';
+import { SprintGameApp } from '../sprint-game/app/sprint-game-app';
 export default class App {
   public sprintGameApp: SprintGameApp; 
   constructor() {
@@ -6,7 +6,6 @@ export default class App {
   }
   starting() {
     this.sprintGameApp.starting();
-    console.log('durak')
   }
 }
 

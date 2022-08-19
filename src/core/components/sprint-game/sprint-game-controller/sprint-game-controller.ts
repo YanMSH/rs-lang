@@ -1,4 +1,4 @@
-import { SprintGameView } from "../sprintGameView/sprintGameView";
+import { SprintGameView } from "../sprint-game-view/sprint-game-view";
 
 export class SprintGameController {
   public sprintGameView: SprintGameView;

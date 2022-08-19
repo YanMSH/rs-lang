@@ -1,4 +1,4 @@
-import { SprintGameController } from '../sprintGameController/sprintGameController';
+import { SprintGameController } from '../sprint-game-controller/sprint-game-controller';
 
 export class SprintGameApp {
   public sprintGameController: SprintGameController; 
