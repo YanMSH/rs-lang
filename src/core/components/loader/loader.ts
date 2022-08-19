@@ -1,4 +1,5 @@
-import { AuthMessages, serverURL } from '../../constants/loader-const';
+
+import { AuthMessages, serverURL, StatusCodes } from '../../constants/loader-const';
 import { ResponseAuth, UserAuth, UserReg } from '../../types/loader-types';
 
 export default class Loader {
@@ -12,13 +13,11 @@ export default class Loader {
         this.wordsEP = this.serverURL + 'words';
         this.signInEP = this.serverURL + 'signin';
     }
-
     async get(endpoint: string) {
         const response = await fetch(this.serverURL + endpoint);
         if (response.ok) { return await response.json() }
         throw response.json();
     }
-
     // TODO: Error handling
     async createUser(user: UserReg) {
         const response = await fetch(this.usersEP, {
@@ -29,7 +28,21 @@ export default class Loader {
             },
             body: JSON.stringify(user),
         });
-        return await response.json();
+        if (response.status === StatusCodes.ok) {
+            return await response.json();
+        } else if (response.status === StatusCodes.expectationFailed) {
+            return {
+                id: response.status.toString(),
+                name: undefined,
+                email: undefined,
+            };
+        } else if (response.status === StatusCodes.incorrectAuthInput) {
+            return {
+                id: response.status.toString(),
+                name: undefined,
+                email: undefined,
+            };
+        }
     }
 
     async authUser(user: UserAuth): Promise<ResponseAuth> {
@@ -59,9 +72,11 @@ export default class Loader {
             },
             body: JSON.stringify(user),
         });
-        if (response.status === 200) {
+
+        if (response.status === StatusCodes.ok) {
             return await response.json();
-        } else if (response.status === 403) {
+        } else if (response.status === StatusCodes.incorrectAuthTry) {
+
             return {
                 message: AuthMessages.wrongPass,
                 token: undefined,
@@ -69,7 +84,7 @@ export default class Loader {
                 userId: undefined,
                 name: undefined,
             };
-        } else if (response.status === 404) {
+        } else if (response.status === StatusCodes.notFound) {
             return {
                 message: AuthMessages.notFound,
                 token: undefined,

@@ -1,4 +1,5 @@
 import './global.css';
+
 import WordListPage from './pages/wordlist/wordlist-page';
 import AuthPage from './pages/auth/auth-page';
 // import App from './core/components/app/app';

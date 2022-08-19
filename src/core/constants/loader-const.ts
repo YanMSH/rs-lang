@@ -6,6 +6,7 @@ export enum StatusCodes {
     badToken = 402,
     incorrectAuthTry = 403,
     notFound = 404,
+    expectationFailed = 417,
     incorrectAuthInput = 422,
     tooManyRequests = 429,
     internalError = 500,
