@@ -1,4 +1,4 @@
-import AudioCallApp from '../../audio-call/app/audioCallApp';
+import AudioCallApp from '../../audio-call/app/audio-call-app';
 
 export default class App {
   public appAudio: AudioCallApp;
