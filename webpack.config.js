@@ -50,7 +50,7 @@ const baseConfig = {
         }),
         new CleanWebpackPlugin(),
         new CopyPlugin({
-            patterns: [{ from: './src/assets/svg', to: '../dist/assets/svg' }],
+            patterns: [{ from: './src/core/components/sprintGame/assets/svg', to: '../dist/assets/svg' }],
         }),
     ],
 };
