@@ -4,7 +4,7 @@ export default class Storage {
     public inStore(fieldName: string): boolean {
         return !!localStorage.getItem(fieldName);
     }
-    public set(fieldName: string, value: string | ResponseAuth): void {
+    public set(fieldName: string, value: string | number | ResponseAuth): void {
         localStorage.setItem(fieldName, JSON.stringify(value));
     }
     public get(fieldName: string): string | number | null {
