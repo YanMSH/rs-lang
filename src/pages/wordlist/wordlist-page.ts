@@ -67,7 +67,7 @@ export default class WordListPage {
         } else {
             prevGroupButton.removeAttribute('disabled');
         }
-        if (this.group === 6) {
+        if (this.group === 5) {
             nextGroupButton.setAttribute('disabled', 'true');
         } else {
             nextGroupButton.removeAttribute('disabled');

@@ -6,5 +6,4 @@ import WordListPage from './pages/wordlist/wordlist-page';
 // const app = new App();
 
 const page = new WordListPage();
-
 page.render();
