@@ -7,6 +7,5 @@ import WordListPage from './pages/wordlist/wordlist-page';
 
 
 const page = new WordListPage();
-
 page.render();
 
