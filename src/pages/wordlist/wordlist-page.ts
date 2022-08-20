@@ -11,8 +11,8 @@ export default class WordListPage {
     constructor() {
         this.controller = new Controller();
         this.store = new Storage();
-        this.page = this.getParam('page');
-        this.group = this.getParam('group');
+        this.page = this.getParam('page') || 0;
+        this.group = this.getParam('group') || 0;
     }
 
     getParam(param: 'page' | 'group'): number {
