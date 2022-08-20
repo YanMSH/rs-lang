@@ -4,4 +4,4 @@ import App from './core/components/app/app';
 
 const app = new App();
 
-// app.renderAudioCall();
+app.renderAudioCall();
