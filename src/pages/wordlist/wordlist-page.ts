@@ -17,7 +17,7 @@ export default class WordListPage {
 
     getParam(param: 'page' | 'group'): number {
         if (this[param] === null) {
-            this.store.set(param, '0');
+            this.store.set(param, 0);
         }
         return this.store.get(param) as number;
     }
@@ -34,19 +34,55 @@ export default class WordListPage {
         return card;
     }
 
+
+
     turnOnControls() {
-        const prevButton = document.querySelector('.page__controls-prev') as HTMLElement;
-        const nextButton = document.querySelector('.page__controls-next') as HTMLElement;
+        const prevPageButton = document.querySelector('.page__controls-prev') as HTMLElement;
+        const nextPageButton = document.querySelector('.page__controls-next') as HTMLElement;
+        const prevGroupButton = document.querySelector('.group__controls-prev') as HTMLElement;
+        const nextGroupButton = document.querySelector('.group__controls-next') as HTMLElement;
         if (this.page === 0) {
-            prevButton.setAttribute('disabled', 'true');
+            prevPageButton.setAttribute('disabled', 'true');
         } else {
-            prevButton.removeAttribute('disabled');
+            prevPageButton.removeAttribute('disabled');
         }
         if (this.page === 29) {
-            nextButton.setAttribute('disabled', 'true');
+            nextPageButton.setAttribute('disabled', 'true');
         } else {
-            nextButton.removeAttribute('disabled');
+            nextPageButton.removeAttribute('disabled');
         }
+        prevPageButton.addEventListener('click', () => {
+            this.page -= 1;
+            this.store.set('page', this.page);
+            this.render();
+        })
+        nextPageButton.addEventListener('click', () => {
+            this.page += 1;
+            this.store.set('page', this.page);
+            this.render();
+        })
+
+        if (this.group === 0) {
+            prevGroupButton.setAttribute('disabled', 'true');
+        } else {
+            prevGroupButton.removeAttribute('disabled');
+        }
+        if (this.group === 6) {
+            nextGroupButton.setAttribute('disabled', 'true');
+        } else {
+            nextGroupButton.removeAttribute('disabled');
+        }
+        prevGroupButton.addEventListener('click', () => {
+            this.group -= 1;
+            this.store.set('group', this.group);
+            this.render();
+        })
+        nextGroupButton.addEventListener('click', () => {
+            this.group += 1;
+            this.store.set('group', this.group);
+            this.render();
+        })
+
     }
 
     render() {
@@ -54,10 +90,14 @@ export default class WordListPage {
         this.getParam('group');
         const app = document.querySelector('.app') as HTMLElement;
         app.innerHTML = `
+        <p>Страница ${this.page} Группа ${this.group}</p>
         <div class="page__controls">
             <button class="page__controls-prev">Prev page</button>
-            <button class="page__controls-prev">Next page</button>
+            <button class="page__controls-next">Next page</button>
+            <button class="group__controls-prev">Prev group</button>
+            <button class="group__controls-next">Next group</button>
         </div>`;
+        this.turnOnControls();
         const cards = document.createElement('div');
         cards.classList.add('cards__container')
         this.controller.getWords(this.page, this.group).then(value => value.forEach((item: Word) => {
