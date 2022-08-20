@@ -7,7 +7,7 @@ export default class Storage {
     public set(fieldName: string, value: string | ResponseAuth): void {
         localStorage.setItem(fieldName, JSON.stringify(value));
     }
-    public get(fieldName: string): string | null {
+    public get(fieldName: string): string | number | null {
         if (this.inStore(fieldName)) {
             return JSON.parse(localStorage.getItem(fieldName) as string);
         } else {

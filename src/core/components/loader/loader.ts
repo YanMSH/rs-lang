@@ -12,6 +12,13 @@ export default class Loader {
         this.wordsEP = this.serverURL + 'words';
         this.signInEP = this.serverURL + 'signin';
     }
+
+    async get(endpoint: string) {
+        const response = await fetch(this.serverURL + endpoint);
+        if (response.ok) { return await response.json() }
+        throw response.json();
+    }
+
     // TODO: Error handling
     async createUser(user: UserReg) {
         const response = await fetch(this.usersEP, {
