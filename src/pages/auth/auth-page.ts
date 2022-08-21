@@ -48,12 +48,12 @@ export default class AuthPage {
         };
 
         const showErrorMessage = (responseMessage: string) => {
-            if (responseMessage === AuthMessages.success) {
-                return;
-            }
             const message = document.createElement('p');
             message.classList.add('error-message');
-            if (responseMessage === AuthMessages.notFound) {
+            if (responseMessage === AuthMessages.success) {
+                message.innerText = 'Вы успешно вошли';
+            }
+            else if (responseMessage === AuthMessages.notFound) {
                 message.innerText = 'Пользователь не найден';
             } else if (responseMessage === AuthMessages.wrongPass) {
                 message.innerText = 'Неправильный e-mail или пароль';
@@ -79,6 +79,7 @@ export default class AuthPage {
                 console.log(authResponse);
                 if (authResponse.message === AuthMessages.success) {
                     this.store.set('user', authResponse);
+                    showErrorMessage(authResponse.message);
                 } else {
                     showErrorMessage(authResponse.message);
                 }
