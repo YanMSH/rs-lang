@@ -2,14 +2,17 @@ import Loader from '../../core/components/loader/loader';
 import Storage from '../../core/components/service/storage/storage';
 import { emailIsValid, passIsValid } from '../../core/components/service/validation/validation';
 import { AuthMessages } from '../../core/constants/loader-const';
+import RegPage from '../registration/reg-page';
 import './auth.css';
 
 export default class AuthPage {
     load: Loader;
     store: Storage;
+    regPage: RegPage
     constructor() {
         this.load = new Loader();
         this.store = new Storage();
+        this.regPage = new RegPage();
     }
     public render() {
         const app = document.querySelector('.app') as HTMLElement;
@@ -26,13 +29,14 @@ export default class AuthPage {
                 </div>
                 <button type="submit" class="auth__submit">Войти</button>
             </form>
-            <p>Нет аккаунта? <a href="#">Зарегистрируйтесь!</a></p>
+            <p>Нет аккаунта? <a class="reg__link" href="#">Зарегистрируйтесь!</a></p>
         </div>
         `;
         const authForm = document.querySelector('.auth__form') as HTMLElement;
         const emailInput = authForm.querySelector('#form__input-email') as HTMLInputElement;
         const passInput = authForm.querySelector('#form__input-pass') as HTMLInputElement;
-
+        const regLink = document.querySelector('.reg__link') as HTMLElement;
+        regLink.onclick = () => { this.regPage.render() }
         const uncolorizeInput = (e: Event) => {
             (e.target as HTMLElement).classList.remove('invalid');
         };
