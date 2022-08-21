@@ -1,26 +1,41 @@
 
-import { AuthMessages, serverURL, StatusCodes } from '../../constants/loader-const';
+import { AuthMessages, Endpoints, Requests, serverURL, StatusCodes } from '../../constants/loader-const';
 import { ResponseAuth, UserAuth, UserReg } from '../../types/loader-types';
+import Storage from '../service/storage/storage';
+import { buildAuthorizedEndpoint } from '../service/utils/utils';
 
 export default class Loader {
-    serverURL: string;
-    usersEP: string;
-    wordsEP: string;
-    signInEP: string;
+    store: Storage;
     constructor() {
-        this.serverURL = serverURL;
-        this.usersEP = this.serverURL + 'users';
-        this.wordsEP = this.serverURL + 'words';
-        this.signInEP = this.serverURL + 'signin';
+        this.store = new Storage();
     }
     async get(endpoint: string) {
-        const response = await fetch(this.serverURL + endpoint);
+        const response = await fetch(serverURL + endpoint);
         if (response.ok) { return await response.json() }
         throw response.json();
     }
+
+    async getAuthorizedData(endpoint: string, wordId: string) {
+        const token = (this.store.get('user') as ResponseAuth).token;
+        const response = await fetch(serverURL + buildAuthorizedEndpoint(endpoint) + wordId, {
+            method: Requests.get,
+            credentials: 'include',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+        });
+        if (response.ok) {
+            return await response.json();
+        }
+        else {
+            throw response.json();
+        }
+    }
     // TODO: Error handling
     async createUser(user: UserReg) {
-        const response = await fetch(this.usersEP, {
+        const response = await fetch(Endpoints.users, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -64,7 +79,7 @@ export default class Loader {
         //     console.log('Error here', err);
         //     return { message: 'error happened' };
         // }
-        const response = await fetch(this.signInEP, {
+        const response = await fetch(Endpoints.singIn, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',

@@ -27,4 +27,12 @@ export enum AuthMessages {
     timeout = 'Connection timeout',
 }
 
+export enum Endpoints {
+    users = 'users',
+    words = 'words',
+    singIn = 'signin',
+    aggregatedWords = 'aggregatedwords',
+    settings = 'settings',
+}
+
 export const serverURL = 'https://rs-back.herokuapp.com/';
