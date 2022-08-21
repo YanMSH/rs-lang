@@ -6,7 +6,6 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const EslintPlugin = require('eslint-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 
-
 const baseConfig = {
     entry: path.resolve(__dirname, './src/index'),
     mode: 'development',
@@ -39,7 +38,7 @@ const baseConfig = {
     output: {
         filename: 'index.js',
         path: path.resolve(__dirname, './dist'),
-        assetModuleFilename: 'assets/img/[name][ext]',
+        assetModuleFilename: 'assets/[name][ext]',
     },
     plugins: [
         new webpack.ProvidePlugin({
@@ -52,7 +51,7 @@ const baseConfig = {
         }),
         new CleanWebpackPlugin(),
         new CopyPlugin({
-            patterns: [{ from: './src/assets/img', to: '../dist/assets/img' }],
+            patterns: [{ from: './src/assets/svg', to: '../dist/assets/svg' }],
         }),
     ],
 };
@@ -62,4 +61,3 @@ module.exports = ({ mode }) => {
     const envConfig = isProductionMode ? require('./webpack.prod.config') : require('./webpack.dev.config');
     return merge(baseConfig, envConfig);
 };
-
