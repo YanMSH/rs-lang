@@ -14,8 +14,4 @@ export default class Storage {
             return null;
         }
     }
-    public setEmptyFields() {
-        this.set('page', 0);
-        this.set('group', 0);
-    }
 }
