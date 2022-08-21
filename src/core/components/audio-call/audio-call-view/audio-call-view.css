@@ -1,0 +1,97 @@
+@import url('https://fonts.googleapis.com/css2?family=Cabin:wght@400;500&family=Ubuntu:wght@500;700&display=swap');
+
+:root {
+  --wrapperBackground: url("../../../../assets/img/background.jpg");
+  --controlPanelSound: url("../../../../assets/svg/unmute.svg");
+  --controlFullScreen: url("../../../../assets/svg/fullscreen.svg");
+  --audio-button-image: url('../../../../assets/img/audio-image.png');
+  --heart: url("../../../../assets/svg/heart.svg");
+  --color-audio-button: white;
+  --color-negation-button: #808080;
+  --color-word-button: white;
+  --font-title: 'Ubuntu', sans-serif;
+  --font-text: 'Cabin', sans-serif;
+  --font-size-text: 16px;
+  --font-size-main-text: 32px;
+}
+
+.wrapper {
+  height: 630px;
+  background-image: var(--wrapperBackground);
+  background-repeat: no-repeat;
+  background-size: 100%;
+}
+
+.header-panel {
+  display: flex;
+  justify-content: space-around;
+}
+.control-panel {
+  width: 5%;
+  display: flex;
+  justify-content: space-between;
+}
+.sound-control, .control-fullscreen {
+  width: 30px;
+  height: 30px;
+  background-repeat: no-repeat;
+  background-size: 100%;
+}
+.sound-control {
+  background-image: var(--controlPanelSound);
+}
+
+.control-fullscreen {
+  background-image: var(--controlFullScreen);
+}
+
+.audio-button {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  /* background-color: inherit; */
+  background-image: var(--audio-button-image);
+  background-repeat: no-repeat;
+  background-size: 100%;
+  /* border: 3px solid var(--color-negation-button); */
+}
+
+.negation-button {
+  width: 190px;
+  height: 43px;
+  background-color: inherit;
+  border: 1px solid var(--color-negation-button);
+  font-family: var(--font-text);
+  font-size: var(--font-size-text);
+  color: var(--color-negation-button);
+}
+.response-options {
+  display: flex;
+  gap: 90px;
+}
+.word {
+  background-color: inherit;
+  border: none;
+  font-family: var(--font-text);
+  font-size: var(--font-size-text);
+  color: var(--color-word-button);
+}
+.game-panel {
+  margin-top: 5%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 80px;
+}
+.heart {
+  width: 30px;
+  height: 30px;
+  background-image: var(--heart);
+  background-repeat: no-repeat;
+  background-size: 100%;
+}
+.key-word {
+  color: var(--color-word-button);
+  font-size: var(--font-size-main-text);
+  font-weight: bold;
+}

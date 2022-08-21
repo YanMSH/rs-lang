@@ -14,6 +14,8 @@ const sprintLink = document.querySelector('.header__nav-game-sprint') as HTMLEle
 const wordListLink = document.querySelector('.header__nav-learn-wordlist') as HTMLElement;
 wordListLink.onclick = () => page.render();
 sprintLink.onclick = () => sprintGame.starting();
-authLink.onclick = () => { auth.render() }
+authLink.onclick = () => {
+    auth.render();
+};
 const page = new WordListPage();
 page.render();
