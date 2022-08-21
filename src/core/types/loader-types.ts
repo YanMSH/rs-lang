@@ -22,3 +22,8 @@ export type ResponseAuth = {
     userId: string | undefined;
     name: string | undefined;
 };
+
+export type UserWord = {
+    difficulty: 'weak' | 'medium' | 'hard',
+    optional: object
+}

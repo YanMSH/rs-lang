@@ -1,6 +1,6 @@
 
 import { AuthMessages, Endpoints, Requests, serverURL, StatusCodes } from '../../constants/loader-const';
-import { ResponseAuth, UserAuth, UserReg } from '../../types/loader-types';
+import { ResponseAuth, UserAuth, UserReg, UserWord } from '../../types/loader-types';
 import Storage from '../service/storage/storage';
 import { buildAuthorizedEndpoint } from '../service/utils/utils';
 
@@ -16,6 +16,7 @@ export default class Loader {
     }
 
     async getAuthorizedData(endpoint: string, wordId: string) {
+        // TODO Handle case when token is outdated!
         const token = (this.store.get('user') as ResponseAuth).token;
         const response = await fetch(serverURL + buildAuthorizedEndpoint(endpoint) + wordId, {
             method: Requests.get,
@@ -33,6 +34,29 @@ export default class Loader {
             throw response.json();
         }
     }
+
+    async postAuthorisedData(endpoint: string, wordId: string, body: UserWord) {
+        // TODO Handle case when token is outdated! 
+        // on posting word that already exists you get 417 error
+        const token = (this.store.get('user') as ResponseAuth).token;
+        const response = await fetch(serverURL + buildAuthorizedEndpoint(endpoint) + wordId, {
+            method: Requests.post,
+            //       credentials: 'include',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        });
+        if (response.ok) {
+            return await response.json();
+        }
+        else {
+            throw response.json();
+        }
+    }
+
     // TODO: Error handling
     async createUser(user: UserReg) {
         const response = await fetch(serverURL + Endpoints.users, {

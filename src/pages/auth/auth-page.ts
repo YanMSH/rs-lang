@@ -32,6 +32,7 @@ export default class AuthPage {
             <p>Нет аккаунта? <a class="reg__link" href="#">Зарегистрируйтесь!</a></p>
         </div>
         `;
+
         const authForm = document.querySelector('.auth__form') as HTMLElement;
         const emailInput = authForm.querySelector('#form__input-email') as HTMLInputElement;
         const passInput = authForm.querySelector('#form__input-pass') as HTMLInputElement;
