@@ -19,10 +19,10 @@ export default class Loader {
         const token = (this.store.get('user') as ResponseAuth).token;
         const response = await fetch(serverURL + buildAuthorizedEndpoint(endpoint) + wordId, {
             method: Requests.get,
-            credentials: 'include',
+            //       credentials: 'include',
             headers: {
-                'Authorization': `Bearer ${token}`,
-                'Accept': 'application/json',
+                Authorization: `Bearer ${token}`,
+                Accept: 'application/json',
                 'Content-Type': 'application/json'
             },
         });
@@ -35,7 +35,7 @@ export default class Loader {
     }
     // TODO: Error handling
     async createUser(user: UserReg) {
-        const response = await fetch(Endpoints.users, {
+        const response = await fetch(serverURL + Endpoints.users, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -79,7 +79,7 @@ export default class Loader {
         //     console.log('Error here', err);
         //     return { message: 'error happened' };
         // }
-        const response = await fetch(Endpoints.singIn, {
+        const response = await fetch(serverURL + Endpoints.signIn, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',

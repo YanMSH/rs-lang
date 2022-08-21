@@ -30,7 +30,7 @@ export enum AuthMessages {
 export enum Endpoints {
     users = 'users',
     words = 'words',
-    singIn = 'signin',
+    signIn = 'signin',
     aggregatedWords = 'aggregatedwords',
     settings = 'settings',
 }
