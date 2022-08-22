@@ -12,9 +12,19 @@ export default class AudioCallController {
     this.token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlYzk5M2RmNGNhOWQ2MDAxNzg3NDBhZSIsImlhdCI6MTU5MDI2OTE1OCwiZXhwIjoxNTkwMjgzNTU4fQ.XHKmdY_jk1R7PUbgCZfqH8TxH6XQ0USwPBSKNHMdF6I';
   }
   connectWithView() {
-    this.view.renderMainPage();
-    this.controlHeart();
-    this.fillWords();
+    this.chooseLevel();
+  }
+  //TODO: complete Level Page !!!
+  chooseLevel() {
+    this.view.renderLevelPage();
+    const level = document.querySelectorAll('.level') as NodeList;
+    level.forEach((elem) => {
+      elem.addEventListener('click', () => {
+        this.view.renderMainPage();
+        this.controlHeart();
+        this.fillWords();
+      });
+    });
   }
   controlHeart() {
     const heart = this.view.createHeart();

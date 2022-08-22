@@ -71,9 +71,24 @@ export default class AudioCallView {
 
     return gamePanel;
   }
+  
   createHeart() {
     const heart = document.createElement('div');
     heart.classList.add('heart');
     return heart;
+  }
+  //TODO: Доделать страницу с выбором уровня сложности
+  welcomeMessage() {
+    const message = document.createElement('p');
+    message.classList.add('message');
+    message.innerText = `Добро пожаловать на страницу! Давай попробуем выучить слова используя эту игру?`;
+  }
+
+  renderLevelPage() {
+    const main = document.querySelector('main') as HTMLElement;
+    main.innerHTML = '';
+    const wrapper = document.createElement('div');
+    wrapper.classList.add('wrapper');
+    console.log('LavelPage');
   }
 }

@@ -7,6 +7,5 @@ export default class Controller {
     }
     async getWords(page = 0, group = 0) {
         return await this.load.get(`words?page=${page}&group=${group}`);
-
     }
 }
