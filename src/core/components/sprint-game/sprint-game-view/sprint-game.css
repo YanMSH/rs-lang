@@ -7,7 +7,8 @@
   --color-grey: #D3D3D3;
 }
 .game-wrapper {
-  height: 100vh;
+  padding: 15px;
+  height: 120vh;
   background: var(--color-gradient);
 }
 .settings-section {
@@ -18,16 +19,18 @@
   gap: 15px;
 }
 .count-section {
-  width: 100%;
+  margin-top: 2%;
+  width: 90%;
   display: flex;
+  align-items: center;
 }
 .point-count {
-  margin: 0 auto;
-  font-size: 36px;
+  margin: 0 46% 0 54%;
+  font-size: 40px;
   color: var(--color-yellow);
 }
 .sprint-game-container {
-  margin: 5% auto;
+  margin: 1% auto;
   width: 450px;
   height: 450px;
   display: flex;
@@ -62,6 +65,7 @@
   font-size: 32px;
 }
 .answer-btn {
+  cursor: pointer;
   width: 106px;
   height: 42px;
   border: none;
@@ -77,14 +81,17 @@
   background: var(--color-purple);
 }
 .sound-icon {
+  cursor: pointer;
   width: 38px;
   height: 28px;
 }
 .fullscreen-icon {
+  cursor: pointer;
   width: 25px;
   height: 22px;
 }
 .close-icon {
+  cursor: pointer;
   width: 20px;
   height: 22px;
 }
@@ -100,4 +107,35 @@
   margin-right: 15%;
   width: 40px;
   height: 44px;
+}
+
+@media (max-width: 1280px) {
+  .count-section {
+    flex-direction: column-reverse;
+    gap: 20px;
+  }
+}
+@media (max-width: 768px) {
+  .sprint-game-container {
+    width: 350px;
+    height: 350px;
+    gap: 15px;
+  }
+}
+@media (max-width: 320px) {
+  .sprint-game-container {
+    width: 250px;
+    height: 350px;
+    gap: 10px;
+  }
+  .answers-button{
+    gap: 15px;
+  }
+  .answer-btn {
+    width: 90px;
+    height: 40px;
+  }
+  .point-count {
+    margin: 0 43% 0 57%;
+  }
 }
