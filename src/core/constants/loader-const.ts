@@ -6,6 +6,7 @@ export enum StatusCodes {
     badToken = 402,
     incorrectAuthTry = 403,
     notFound = 404,
+    expectationFailed = 417,
     incorrectAuthInput = 422,
     tooManyRequests = 429,
     internalError = 500,
@@ -24,6 +25,14 @@ export enum AuthMessages {
     wrongPass = 'Incorrect password',
     notFound = 'User not found',
     timeout = 'Connection timeout',
+}
+
+export enum Endpoints {
+    users = 'users',
+    words = 'words',
+    signIn = 'signin',
+    aggregatedWords = 'aggregatedwords',
+    settings = 'settings',
 }
 
 export const serverURL = 'https://rs-back.herokuapp.com/';

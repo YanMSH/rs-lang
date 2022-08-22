@@ -1,27 +1,65 @@
-import { AuthMessages, serverURL } from '../../constants/loader-const';
-import { ResponseAuth, UserAuth, UserReg } from '../../types/loader-types';
+
+import { AuthMessages, Endpoints, Requests, serverURL, StatusCodes } from '../../constants/loader-const';
+import { ResponseAuth, UserAuth, UserReg, UserWord } from '../../types/loader-types';
+import Storage from '../service/storage/storage';
+import { buildAuthorizedEndpoint } from '../service/utils/utils';
 
 export default class Loader {
-    serverURL: string;
-    usersEP: string;
-    wordsEP: string;
-    signInEP: string;
+    store: Storage;
     constructor() {
-        this.serverURL = serverURL;
-        this.usersEP = this.serverURL + 'users';
-        this.wordsEP = this.serverURL + 'words';
-        this.signInEP = this.serverURL + 'signin';
+        this.store = new Storage();
     }
-
     async get(endpoint: string) {
-        const response = await fetch(this.serverURL + endpoint);
+        const response = await fetch(serverURL + endpoint);
         if (response.ok) { return await response.json() }
         throw response.json();
     }
 
+    async getAuthorizedData(endpoint: string, wordId: string) {
+        // TODO Handle case when token is outdated!
+        const token = (this.store.get('user') as ResponseAuth).token;
+        const response = await fetch(serverURL + buildAuthorizedEndpoint(endpoint) + wordId, {
+            method: Requests.get,
+            //       credentials: 'include',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+        });
+        if (response.ok) {
+            return await response.json();
+        }
+        else {
+            throw response.json();
+        }
+    }
+
+    async postAuthorisedData(endpoint: string, wordId: string, body: UserWord) {
+        // TODO Handle case when token is outdated! 
+        // on posting word that already exists you get 417 error
+        const token = (this.store.get('user') as ResponseAuth).token;
+        const response = await fetch(serverURL + buildAuthorizedEndpoint(endpoint) + wordId, {
+            method: Requests.post,
+            //       credentials: 'include',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        });
+        if (response.ok) {
+            return await response.json();
+        }
+        else {
+            throw response.json();
+        }
+    }
+
     // TODO: Error handling
     async createUser(user: UserReg) {
-        const response = await fetch(this.usersEP, {
+        const response = await fetch(serverURL + Endpoints.users, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -29,7 +67,21 @@ export default class Loader {
             },
             body: JSON.stringify(user),
         });
-        return await response.json();
+        if (response.status === StatusCodes.ok) {
+            return await response.json();
+        } else if (response.status === StatusCodes.expectationFailed) {
+            return {
+                id: response.status.toString(),
+                name: undefined,
+                email: undefined,
+            };
+        } else if (response.status === StatusCodes.incorrectAuthInput) {
+            return {
+                id: response.status.toString(),
+                name: undefined,
+                email: undefined,
+            };
+        }
     }
 
     async authUser(user: UserAuth): Promise<ResponseAuth> {
@@ -51,7 +103,7 @@ export default class Loader {
         //     console.log('Error here', err);
         //     return { message: 'error happened' };
         // }
-        const response = await fetch(this.signInEP, {
+        const response = await fetch(serverURL + Endpoints.signIn, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -59,9 +111,11 @@ export default class Loader {
             },
             body: JSON.stringify(user),
         });
-        if (response.status === 200) {
+
+        if (response.status === StatusCodes.ok) {
             return await response.json();
-        } else if (response.status === 403) {
+        } else if (response.status === StatusCodes.incorrectAuthTry) {
+
             return {
                 message: AuthMessages.wrongPass,
                 token: undefined,
@@ -69,7 +123,7 @@ export default class Loader {
                 userId: undefined,
                 name: undefined,
             };
-        } else if (response.status === 404) {
+        } else if (response.status === StatusCodes.notFound) {
             return {
                 message: AuthMessages.notFound,
                 token: undefined,

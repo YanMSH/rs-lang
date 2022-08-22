@@ -3,7 +3,7 @@ export type Word = {
     audioExample: string;
     audioMeaning: string;
     group: number;
-    id: string;
+    _id: string;
     image: string;
     page: number;
     textExample: string;
@@ -13,4 +13,4 @@ export type Word = {
     transcription: string;
     word: string;
     wordTranslate: string;
-}
+};

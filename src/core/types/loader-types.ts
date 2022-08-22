@@ -11,8 +11,8 @@ export type UserAuth = {
 
 export type ResponseReg = {
     id: string;
-    name: string;
-    email: string;
+    name: string | undefined;
+    email: string | undefined;
 };
 
 export type ResponseAuth = {
@@ -22,3 +22,8 @@ export type ResponseAuth = {
     userId: string | undefined;
     name: string | undefined;
 };
+
+export type UserWord = {
+    difficulty: 'weak' | 'medium' | 'hard',
+    optional: object
+}
