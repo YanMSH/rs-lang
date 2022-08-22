@@ -14,7 +14,6 @@ export default class AudioCallController {
   connectWithView() {
     this.chooseLevel();
   }
-  //TODO: complete Level Page !!!
   chooseLevel() {
     this.view.renderLevelPage();
     const level = document.querySelectorAll('.level') as NodeList;

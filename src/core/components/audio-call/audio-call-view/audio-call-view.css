@@ -6,8 +6,9 @@
   --controlFullScreen: url("../../../../assets/svg/fullscreen.svg");
   --audio-button-image: url('../../../../assets/img/audio-image.png');
   --heart: url("../../../../assets/svg/heart.svg");
-  --color-audio-button: white;
+  --color-white: white;
   --color-negation-button: #808080;
+  --color-hover-button: #707070;
   --color-word-button: white;
   --font-title: 'Ubuntu', sans-serif;
   --font-text: 'Cabin', sans-serif;
@@ -19,7 +20,7 @@
   height: 630px;
   background-image: var(--wrapperBackground);
   background-repeat: no-repeat;
-  background-size: 100%;
+  background-size: 100% 100%;
 }
 
 .header-panel {
@@ -49,11 +50,10 @@
   width: 130px;
   height: 130px;
   border-radius: 50%;
-  /* background-color: inherit; */
+
   background-image: var(--audio-button-image);
   background-repeat: no-repeat;
   background-size: 100%;
-  /* border: 3px solid var(--color-negation-button); */
 }
 
 .negation-button {
@@ -94,4 +94,54 @@
   color: var(--color-word-button);
   font-size: var(--font-size-main-text);
   font-weight: bold;
+}
+.level-buttons {
+  width: 100%;
+  height: 70%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
+}
+.level {
+  width: 3rem;
+  height: 3rem;
+  border: 1px solid var(--color-white);
+  background: inherit;
+  color: var(--color-white);
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+}
+.level:hover {
+  cursor: pointer;
+  border: 1px solid var(--color-negation-button);
+  background: var(--color-hover-button);
+}
+.level-block {
+  padding: 2% 10%;
+  display: flex;
+}
+.message {
+  width: 100%;
+  height: 1%;
+  display: flex;
+  justify-content: center;
+  padding-top: 1rem;
+  color: var(--color-white);
+  font-family: var(--font-title);
+  font-size: 1rem;
+  line-height: 2rem;
+}
+
+@media (max-width: 768px)  { 
+  .wrapper {
+    height: 800px;
+  }
+  .level-block {
+    flex-wrap: wrap;
+  }
 }

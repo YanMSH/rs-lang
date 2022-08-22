@@ -77,18 +77,43 @@ export default class AudioCallView {
     heart.classList.add('heart');
     return heart;
   }
-  //TODO: Доделать страницу с выбором уровня сложности
   welcomeMessage() {
-    const message = document.createElement('p');
+    const message = document.createElement('span');
     message.classList.add('message');
-    message.innerText = `Добро пожаловать на страницу! Давай попробуем выучить слова используя эту игру?`;
+    message.innerText = `
+    Аудирование для многих, пожалуй, самый сложный навык. Понять иностранную речь бывает очень трудно: половину слов ты не успеваешь расслышать и понять. Из-за этого теряется смысл высказывания в целом. Особенно, если это телефонный разговор, или у тебя нет контекста события.
+    `;
+    return message;
+  }
+  
+  renderOneButtons(count: number) {
+    const level = document.createElement('button');
+    level.classList.add('level');
+    level.innerText = `${count}`;
+    return level;
   }
 
+  renderLevelButtons() {
+    const levelButtons = document.createElement('div');
+    levelButtons.classList.add('level-buttons');
+    const maxLevel = 6;
+    for (let i = 1; i < maxLevel; i += 1) {
+      const button = this.renderOneButtons(i);
+      levelButtons.append(button);
+    }
+    return levelButtons;
+  }
+  
   renderLevelPage() {
     const main = document.querySelector('main') as HTMLElement;
     main.innerHTML = '';
     const wrapper = document.createElement('div');
     wrapper.classList.add('wrapper');
-    console.log('LavelPage');
+    wrapper.classList.add('level-block');
+    const message = this.welcomeMessage();
+    const buttons = this.renderLevelButtons();
+    wrapper.append(message, buttons);
+    console.log('LevelPage');
+    main.append(wrapper);
   }
 }
