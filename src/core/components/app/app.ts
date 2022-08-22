@@ -11,9 +11,7 @@ export default class App {
   // starting() {
   //   this.sprintGameApp.starting();
   // }
-  // renderAudioCall() {
-  //   this.appAudio.renderAudioCall();
-  // }
+  renderAudioCall() {
+    this.appAudio.renderAudioCall();
+  }
 }
-
-
