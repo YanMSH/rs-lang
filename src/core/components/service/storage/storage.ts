@@ -14,6 +14,9 @@ export default class Storage {
             return null;
         }
     }
+    public remove(fieldName: string): void {
+        localStorage.removeItem(fieldName);
+    }
     public setEmptyFields() {
         this.set('page', 0);
         this.set('group', 0);

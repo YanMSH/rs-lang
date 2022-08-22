@@ -82,6 +82,7 @@ export default class AudioCallView {
     message.classList.add('message');
     message.innerText = `
     Аудирование для многих, пожалуй, самый сложный навык. Понять иностранную речь бывает очень трудно: половину слов ты не успеваешь расслышать и понять. Из-за этого теряется смысл высказывания в целом. Особенно, если это телефонный разговор, или у тебя нет контекста события.
+    Игра Аудиовызов: позволяет пользователю прослушать слово на английском языке и выбрать его перевод.
     `;
     return message;
   }
@@ -90,6 +91,7 @@ export default class AudioCallView {
     const level = document.createElement('button');
     level.classList.add('level');
     level.innerText = `${count}`;
+    level.setAttribute('data-level', `${count}`);
     return level;
   }
 
@@ -97,7 +99,7 @@ export default class AudioCallView {
     const levelButtons = document.createElement('div');
     levelButtons.classList.add('level-buttons');
     const maxLevel = 6;
-    for (let i = 1; i < maxLevel; i += 1) {
+    for (let i = 1; i <= maxLevel; i += 1) {
       const button = this.renderOneButtons(i);
       levelButtons.append(button);
     }
