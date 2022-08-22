@@ -1,19 +1,16 @@
-import AudioCallController from "../audio-call-controller/audio-call-controller";
+import AudioCallController from '../audio-call-controller/audio-call-controller';
 
 export default class AudioCallApp {
+    public controller: AudioCallController;
 
-  public controller: AudioCallController;
+    constructor() {
+        this.controller = new AudioCallController();
+    }
+    connectWithController() {
+        this.controller.connectWithView();
+    }
 
-  constructor() {
-    this.controller = new AudioCallController();
-  }
-  connectWithController() {
-    this.controller.connectWithView();
-  }
-
-  renderAudioCall() {
-    this.connectWithController();
-  }
-
+    renderAudioCall() {
+        this.connectWithController();
+    }
 }
-
