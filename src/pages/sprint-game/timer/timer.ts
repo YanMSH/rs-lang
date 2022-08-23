@@ -1,6 +1,6 @@
 import './timer.css';
-import { fullDashArray, warningThreshold, alertThreshold, timeLimit } from '../../../components/../constants/timer-const';
-import { ColorCodes } from '../../../types/timer-types';
+import { fullDashArray, warningThreshold, alertThreshold, timeLimit } from '../../../core/constants/timer-const';
+import { ColorCodes } from '../../../core/types/timer-types';
 
 export class Timer {
     colorCodes: ColorCodes
