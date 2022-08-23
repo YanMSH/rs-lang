@@ -1,5 +1,5 @@
-import { SprintGameApp } from '../sprint-game/app/sprint-game-app';
-import AudioCallApp from '../audio-call/app/audio-call-app';
+import { SprintGameApp } from '../../../pages/sprint-game/app/sprint-game-app';
+import AudioCallApp from '../../../pages/audio-call/app/audio-call-app';
 export default class App {
   public sprintGameApp: SprintGameApp; 
   public appAudio: AudioCallApp;
