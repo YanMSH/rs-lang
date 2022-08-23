@@ -8,9 +8,9 @@ export default class App {
     this.appAudio = new AudioCallApp();
   }
   //TODO: Добавить действие по нажанию на кнопки в Header
-  starting() {
-    this.sprintGameApp.starting();
-  }
+  // starting() {
+  //   this.sprintGameApp.starting();
+  // }
   // renderAudioCall() {
   //   this.appAudio.renderAudioCall();
   // }
