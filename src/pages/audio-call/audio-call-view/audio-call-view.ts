@@ -71,9 +71,50 @@ export default class AudioCallView {
 
     return gamePanel;
   }
+  
   createHeart() {
     const heart = document.createElement('div');
     heart.classList.add('heart');
     return heart;
+  }
+  welcomeMessage() {
+    const message = document.createElement('span');
+    message.classList.add('message');
+    message.innerText = `
+    Аудирование для многих, пожалуй, самый сложный навык. Понять иностранную речь бывает очень трудно: половину слов ты не успеваешь расслышать и понять. Из-за этого теряется смысл высказывания в целом. Особенно, если это телефонный разговор, или у тебя нет контекста события.
+    Игра Аудиовызов: позволяет пользователю прослушать слово на английском языке и выбрать его перевод.
+    `;
+    return message;
+  }
+  
+  renderOneButtons(count: number) {
+    const level = document.createElement('button');
+    level.classList.add('level');
+    level.innerText = `${count}`;
+    level.setAttribute('data-level', `${count}`);
+    return level;
+  }
+
+  renderLevelButtons(maxLevel = 6) {
+    const levelButtons = document.createElement('div');
+    levelButtons.classList.add('level-buttons');
+    for (let i = 1; i <= maxLevel; i += 1) {
+      const button = this.renderOneButtons(i);
+      levelButtons.append(button);
+    }
+    return levelButtons;
+  }
+  
+  renderLevelPage() {
+    const main = document.querySelector('main') as HTMLElement;
+    main.innerHTML = '';
+    const wrapper = document.createElement('div');
+    wrapper.classList.add('wrapper');
+    wrapper.classList.add('level-block');
+    const message = this.welcomeMessage();
+    const buttons = this.renderLevelButtons();
+    wrapper.append(message, buttons);
+    console.log('LevelPage');
+    main.append(wrapper);
   }
 }
