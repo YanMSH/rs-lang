@@ -8,7 +8,7 @@ export class Timer {
     timeLeft: number
     timerInterval: number | undefined
     constructor() {
-        (this.colorCodes = {
+        this.colorCodes = {
             info: {
                 color: 'purple',
             },
@@ -20,10 +20,10 @@ export class Timer {
                 color: 'red',
                 threshold: alertThreshold,
             },
-        }),
-        (this.remainingPathColor = this.colorCodes.info.color),
-        (this.timeLeft = timeLimit),
-        (this.timerInterval = 0);
+        },
+        this.remainingPathColor = this.colorCodes.info.color,
+        this.timeLeft = timeLimit,
+        this.timerInterval = 0;
     }
     start() {
         this.renderTimer();
