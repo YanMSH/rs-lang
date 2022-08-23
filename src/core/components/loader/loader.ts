@@ -32,6 +32,7 @@ export default class Loader {
         if (response.ok) {
             return await response.json();
         } else {
+            console.log('resp status', response.status);
             throw await response.text();
         }
     }
@@ -54,8 +55,18 @@ export default class Loader {
             throw await response.text();
         }
     }
-
-    // TODO: Error handling
+    // async getNewTokens(){
+    //     const userData = this.store.get('user') as ResponseAuth;
+    //     const response = await fetch(serverURL + Endpoints.users + userData.userId, {
+    //         method: 'GET',
+    //         headers: {
+    //             'Authorization': `Bearer ${userData.refreshToken}`,
+    // 	'Accept': 'application/json',
+    // 	'Content-Type': 'application/json'
+    //         }
+    //     })
+    // }
+    // TODO:MOVE TO A SEPARATE FILE
     async createUser(user: UserReg) {
         const response = await fetch(serverURL + Endpoints.users, {
             method: 'POST',
@@ -81,26 +92,8 @@ export default class Loader {
             };
         }
     }
-
+    // TODO:MOVE TO A SEPARATE FILE
     async authUser(user: UserAuth): Promise<ResponseAuth> {
-        // let response;
-        // try {
-        // response = await fetch(this.signInEP, {
-        //     method: 'POST',
-        //     headers: {
-        //         Accept: 'application/json',
-        //         'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify(user),
-        // });
-        //     if (!response.ok) {
-        //         throw await response.json();
-        //     }
-        //     return response.json();
-        // } catch (err) {
-        //     console.log('Error here', err);
-        //     return { message: 'error happened' };
-        // }
         const response = await fetch(serverURL + Endpoints.signIn, {
             method: 'POST',
             headers: {

@@ -46,13 +46,55 @@ export default class TextbookController {
         }
     }
 
-    async getAllUserWords(): Promise<UserWordServer[]> {
-        const result = (await this.load.getAuthorizedData('words', '')) as UserWordServer[];
-        return result;
+    async postLearnedWord(id: string) {
+        let oldData;
+        try {
+            oldData = await this.load.getAuthorizedData('words', id);
+        } catch (e) {
+            console.log(e);
+            oldData = undefined;
+        }
+        let body;
+        if (oldData === undefined) {
+            body = {
+                difficulty: undefined,
+                optional: {
+                    learned: true,
+                    guessedRight: 0,
+                    guessedWrong: 0,
+                },
+            };
+        } else {
+            body = {
+                difficulty: oldData.difficulty,
+                optional: {
+                    learned: true,
+                    guessedRight: oldData.optional.guessedRight,
+                    guessedWrong: oldData.optional.guessedWrong,
+                },
+            };
+        }
+        try {
+            await this.load.postAuthorisedData('words', id, body as UserWord);
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    async getAllUserWords(): Promise<UserWordServer[] | undefined> {
+        try {
+            const result = (await this.load.getAuthorizedData('words', '')) as UserWordServer[];
+            return result;
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     async getFilteredWords(wordsIds: string[]) {
-        const userWords = await this.getAllUserWords();
+        const userWords = (await this.getAllUserWords()) as UserWordServer[];
+        if (userWords === undefined) {
+            return;
+        }
         const userWordsIds = userWords.map((item) => {
             return item.wordId;
         });

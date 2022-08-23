@@ -34,12 +34,19 @@ export default class TextbookPage {
         <p class="word__word"><span>${word.word}</span>: <span>${word.transcription}</span>, <span>${word.wordTranslate}</span></p>
         <p class="word__meaning"><span>${word.textMeaning}</span>: <span>${word.textMeaningTranslate}</span></p>
         <p class="word__example"><span>${word.textExample}</span>: <span>${word.textExampleTranslate}</span></p>
-        <button class="word__button-hard">Сложно</button>`;
+        <button class="word__button-hard">Сложно</button>
+        <button class="word__button-learned">Изучил</button>`;
         const setHardButton = card.querySelector('.word__button-hard') as HTMLButtonElement;
         setHardButton.onclick = () => {
             card.classList.add('card__word-hard');
             const id = word.id;
             this.tbController.postHardWord(id);
+        };
+        const setLearnedButton = card.querySelector('.word__button-learned') as HTMLButtonElement;
+        setLearnedButton.onclick = () => {
+            card.classList.add('card__word-learned');
+            const id = word.id;
+            this.tbController.postLearnedWord(id);
         };
         return card;
     }
@@ -57,7 +64,7 @@ export default class TextbookPage {
             const cardIds = cards.map((elem) => (elem as HTMLElement).dataset.id);
             const filteredIds = await this.tbController.getFilteredWords(cardIds as string[]);
             const filteredCards = cards.filter((card) =>
-                filteredIds.includes((card as HTMLElement).dataset.id as string)
+                filteredIds?.includes((card as HTMLElement).dataset.id as string)
             );
             console.log(filteredCards);
             filteredCards.forEach((card) => card.classList.add('card__word-hard'));
@@ -111,7 +118,7 @@ export default class TextbookPage {
         console.log('cards', cards);
         const cardIds = cards.map((elem) => (elem as HTMLElement).dataset.id);
         const filteredIds = await this.tbController.getFilteredWords(cardIds as string[]);
-        const filteredCards = cards.filter((card) => filteredIds.includes((card as HTMLElement).dataset.id as string));
+        const filteredCards = cards.filter((card) => filteredIds?.includes((card as HTMLElement).dataset.id as string));
         console.log(filteredCards);
         filteredCards.forEach((card) => card.classList.add('card__word-hard'));
     }
