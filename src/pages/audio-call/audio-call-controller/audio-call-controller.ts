@@ -1,6 +1,6 @@
 import AudioCallView from '../audio-call-view/audio-call-view'; 
 import Loader from '../loader/loader';
-import Storage from '../../service/storage/storage';
+import Storage from '../../../core/components/service/storage/storage';
 export default class AudioCallController {
   public view: AudioCallView;
   public loader: Loader;

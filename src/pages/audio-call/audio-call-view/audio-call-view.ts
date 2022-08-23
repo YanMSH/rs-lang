@@ -95,10 +95,9 @@ export default class AudioCallView {
     return level;
   }
 
-  renderLevelButtons() {
+  renderLevelButtons(maxLevel = 6) {
     const levelButtons = document.createElement('div');
     levelButtons.classList.add('level-buttons');
-    const maxLevel = 6;
     for (let i = 1; i <= maxLevel; i += 1) {
       const button = this.renderOneButtons(i);
       levelButtons.append(button);
