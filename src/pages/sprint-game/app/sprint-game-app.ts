@@ -6,6 +6,6 @@ export class SprintGameApp {
     this.sprintGameController = new SprintGameController();
   }
   starting() {
-    this.sprintGameController.render();
+    this.sprintGameController.chooseLevel();
   }
 }

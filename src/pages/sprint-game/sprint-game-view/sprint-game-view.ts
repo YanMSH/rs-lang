@@ -1,4 +1,5 @@
 import './sprint-game.css';
+import './level-page.css';
 import { Timer } from '../timer/timer';
 
 export class SprintGameView {
