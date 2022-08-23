@@ -14,4 +14,7 @@ export default class Storage {
             return null;
         }
     }
+    public remove(fieldName: string): void {
+        localStorage.removeItem(fieldName);
+    }
 }
