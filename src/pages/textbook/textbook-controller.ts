@@ -1,6 +1,7 @@
 import Loader from '../../core/components/loader/loader';
 import Storage from '../../core/components/service/storage/storage';
 import { UserWord, UserWordServer } from '../../core/types/controller-types';
+import { AWPaginatedResults } from '../../core/types/loader-types';
 
 export default class TextbookController {
     store: Storage;
@@ -100,5 +101,14 @@ export default class TextbookController {
         });
         const filteredWordsIds = wordsIds.filter((id) => userWordsIds.includes(id));
         return filteredWordsIds;
+    }
+
+    async getAggregatedWords() {
+        try {
+            const result = (await this.load.getLearnedWords()) as AWPaginatedResults;
+            return result;
+        } catch (e) {
+            console.log(e);
+        }
     }
 }

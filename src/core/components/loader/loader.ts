@@ -1,6 +1,13 @@
-import { AuthMessages, Endpoints, Requests, serverURL, StatusCodes } from '../../constants/loader-const';
+import {
+    ALL_WORDS_PER_GROUP,
+    AuthMessages,
+    Endpoints,
+    Requests,
+    serverURL,
+    StatusCodes,
+} from '../../constants/loader-const';
 import { UserWord } from '../../types/controller-types';
-import { ResponseAuth, UserAuth, UserReg } from '../../types/loader-types';
+import { ResponseAggregatedWords, ResponseAuth, UserAuth, UserReg } from '../../types/loader-types';
 import Storage from '../service/storage/storage';
 import { buildAuthorizedEndpoint } from '../service/utils/utils';
 
@@ -55,6 +62,58 @@ export default class Loader {
             throw await response.text();
         }
     }
+
+    async getHardWords() {
+        const token = (this.store.get('user') as ResponseAuth).token;
+        const response = await fetch(
+            serverURL + buildAuthorizedEndpoint('aggregatedwords') + '?&filter={"userWord.difficulty":"hard"}',
+            {
+                method: Requests.get,
+                //       credentials: 'include',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+            }
+        );
+        if (response.ok) {
+            return await response.json();
+        } else {
+            console.log('resp status', response.status);
+            throw await response.text();
+        }
+    }
+
+    async getLearnedWords() {
+        const token = (this.store.get('user') as ResponseAuth).token;
+        const group = this.store.get('group') as number;
+        const page = this.store.get('page') as number;
+        const response = await fetch(
+            serverURL +
+                buildAuthorizedEndpoint('aggregatedwords') +
+                `?&group=${group}&wordsPerPage=${ALL_WORDS_PER_GROUP}&filter={"$and":[{"userWord.optional.learned":true,"page":${page}}]}`,
+            {
+                method: Requests.get,
+                //       credentials: 'include',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+            }
+        );
+        if (response.ok) {
+            const responseArray = (await response.json()) as ResponseAggregatedWords;
+            const result = responseArray[0];
+            const aggregatedWords = result.paginatedResults;
+            return aggregatedWords;
+        } else {
+            console.log('resp status', response.status);
+            throw await response.text();
+        }
+    }
+
     // async getNewTokens(){
     //     const userData = this.store.get('user') as ResponseAuth;
     //     const response = await fetch(serverURL + Endpoints.users + userData.userId, {

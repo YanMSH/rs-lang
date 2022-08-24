@@ -1,3 +1,5 @@
+import { UserWord, Word } from './controller-types';
+
 export type UserReg = {
     name: string;
     email: string;
@@ -22,6 +24,13 @@ export type ResponseAuth = {
     userId: string | undefined;
     name: string | undefined;
 };
+
+export type ResponseAggregatedWords = {
+    paginatedResults: AWPaginatedResults;
+    totalCount: { count: number }[];
+}[];
+
+export type AWPaginatedResults = (Word & { userWord: UserWord; _id: string; group: number; page: number })[];
 
 // export type UserWord = {
 //     difficulty: 'weak' | 'medium' | 'hard',

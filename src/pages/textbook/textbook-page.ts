@@ -60,14 +60,15 @@ export default class TextbookPage {
         const logUserWordsButton = document.querySelector('.userWords') as HTMLElement;
 
         logUserWordsButton.onclick = async () => {
-            const cards = [...document.querySelectorAll('.card')];
-            const cardIds = cards.map((elem) => (elem as HTMLElement).dataset.id);
-            const filteredIds = await this.tbController.getFilteredWords(cardIds as string[]);
-            const filteredCards = cards.filter((card) =>
-                filteredIds?.includes((card as HTMLElement).dataset.id as string)
-            );
-            console.log(filteredCards);
-            filteredCards.forEach((card) => card.classList.add('card__word-hard'));
+            // const cards = [...document.querySelectorAll('.card')];
+            // const cardIds = cards.map((elem) => (elem as HTMLElement).dataset.id);
+            // const filteredIds = await this.tbController.getFilteredWords(cardIds as string[]);
+            // const filteredCards = cards.filter((card) =>
+            //     filteredIds?.includes((card as HTMLElement).dataset.id as string)
+            // );
+            // console.log(filteredCards);
+            // filteredCards.forEach((card) => card.classList.add('card__word-hard'));
+            console.log(await this.tbController.getAggregatedWords());
         };
         /*******************************************/
         if (this.page === 0) {

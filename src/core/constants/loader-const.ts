@@ -36,3 +36,4 @@ export enum Endpoints {
 }
 
 export const serverURL = 'https://rs-back.herokuapp.com/';
+export const ALL_WORDS_PER_GROUP = 600;
