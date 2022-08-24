@@ -7,7 +7,7 @@ import {
     StatusCodes,
 } from '../../constants/loader-const';
 import { UserWord } from '../../types/controller-types';
-import { ResponseAggregatedWords, ResponseAuth, UserAuth, UserReg } from '../../types/loader-types';
+import { AWPaginatedResults, ResponseAggregatedWords, ResponseAuth, UserAuth, UserReg } from '../../types/loader-types';
 import Storage from '../service/storage/storage';
 import { buildAuthorizedEndpoint } from '../service/utils/utils';
 
@@ -59,6 +59,28 @@ export default class Loader {
         if (response.ok) {
             return await response.json();
         } else {
+            if (response.status === 417) {
+                this.putAuthorisedData(endpoint, wordId, body);
+            }
+            throw await response.text();
+        }
+    }
+
+    async putAuthorisedData(endpoint: string, wordId: string, body: UserWord) {
+        const token = (this.store.get('user') as ResponseAuth).token;
+        const response = await fetch(serverURL + buildAuthorizedEndpoint(endpoint) + wordId, {
+            method: Requests.put,
+            //       credentials: 'include',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(body),
+        });
+        if (response.ok) {
+            return await response.json();
+        } else {
             throw await response.text();
         }
     }
@@ -85,6 +107,8 @@ export default class Loader {
         }
     }
 
+    //TODO REWRITE AS ONE METHOD WITH ARGUMENTS
+
     async getLearnedWords() {
         const token = (this.store.get('user') as ResponseAuth).token;
         const group = this.store.get('group') as number;
@@ -103,6 +127,31 @@ export default class Loader {
                 },
             }
         );
+        return await this.pullAggregatedResult(response);
+    }
+
+    async getPageHardWords() {
+        const token = (this.store.get('user') as ResponseAuth).token;
+        const group = this.store.get('group') as number;
+        const page = this.store.get('page') as number;
+        const response = await fetch(
+            serverURL +
+                buildAuthorizedEndpoint('aggregatedwords') +
+                `?&group=${group}&wordsPerPage=${ALL_WORDS_PER_GROUP}&filter={"$and":[{"userWord.difficulty":"hard","page":${page}}]}`,
+            {
+                method: Requests.get,
+                //       credentials: 'include',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+            }
+        );
+        return await this.pullAggregatedResult(response);
+    }
+
+    async pullAggregatedResult(response: Response): Promise<AWPaginatedResults> {
         if (response.ok) {
             const responseArray = (await response.json()) as ResponseAggregatedWords;
             const result = responseArray[0];

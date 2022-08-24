@@ -103,9 +103,18 @@ export default class TextbookController {
         return filteredWordsIds;
     }
 
-    async getAggregatedWords() {
+    async getLearnedAggregatedWords() {
         try {
             const result = (await this.load.getLearnedWords()) as AWPaginatedResults;
+            return result;
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    async getHardAggregatedWords() {
+        try {
+            const result = (await this.load.getPageHardWords()) as AWPaginatedResults;
             return result;
         } catch (e) {
             console.log(e);

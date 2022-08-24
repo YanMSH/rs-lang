@@ -57,9 +57,10 @@ export default class TextbookPage {
         const prevGroupButton = document.querySelector('.group__controls-prev') as HTMLElement;
         const nextGroupButton = document.querySelector('.group__controls-next') as HTMLElement;
         /**** TEMP THINGS THAT SHOULD BE REMOVED ****/
-        const logUserWordsButton = document.querySelector('.userWords') as HTMLElement;
+        const logUserHardWordsButton = document.querySelector('.userHardWords') as HTMLElement;
+        const logUserLearnedWordsButton = document.querySelector('.userLearnedWords') as HTMLElement;
 
-        logUserWordsButton.onclick = async () => {
+        logUserHardWordsButton.onclick = async () => {
             // const cards = [...document.querySelectorAll('.card')];
             // const cardIds = cards.map((elem) => (elem as HTMLElement).dataset.id);
             // const filteredIds = await this.tbController.getFilteredWords(cardIds as string[]);
@@ -68,7 +69,29 @@ export default class TextbookPage {
             // );
             // console.log(filteredCards);
             // filteredCards.forEach((card) => card.classList.add('card__word-hard'));
-            console.log(await this.tbController.getAggregatedWords());
+            const wordsData = await this.tbController.getHardAggregatedWords();
+            const wordsIds = wordsData?.map((item) => item['_id']);
+            const cards = [...document.querySelectorAll('.card')];
+            const cardIds = cards.map((elem) => (elem as HTMLElement).dataset.id);
+            const filteredCardsIds = cardIds.filter((id) => wordsIds?.includes(id as string));
+            const filteredCards = cards.filter((card) =>
+                filteredCardsIds?.includes((card as HTMLElement).dataset.id as string)
+            );
+            filteredCards.forEach((card) => card.classList.add('card__word-hard'));
+            console.log(wordsData);
+            // console.log(await this.tbController.getLearnedAggregatedWords());
+        };
+        logUserLearnedWordsButton.onclick = async () => {
+            const wordsData = await this.tbController.getLearnedAggregatedWords();
+            const wordsIds = wordsData?.map((item) => item['_id']);
+            const cards = [...document.querySelectorAll('.card')];
+            const cardIds = cards.map((elem) => (elem as HTMLElement).dataset.id);
+            const filteredCardsIds = cardIds.filter((id) => wordsIds?.includes(id as string));
+            const filteredCards = cards.filter((card) =>
+                filteredCardsIds?.includes((card as HTMLElement).dataset.id as string)
+            );
+            filteredCards.forEach((card) => card.classList.add('card__word-learned'));
+            console.log(wordsData);
         };
         /*******************************************/
         if (this.page === 0) {
@@ -115,13 +138,26 @@ export default class TextbookPage {
     }
 
     async markHardWords() {
+        const learnedWordsData = await this.tbController.getHardAggregatedWords();
+        const learnedWordsIds = learnedWordsData?.map((item) => item['_id']);
         const cards = [...document.querySelectorAll('.card')];
-        console.log('cards', cards);
         const cardIds = cards.map((elem) => (elem as HTMLElement).dataset.id);
-        const filteredIds = await this.tbController.getFilteredWords(cardIds as string[]);
-        const filteredCards = cards.filter((card) => filteredIds?.includes((card as HTMLElement).dataset.id as string));
-        console.log(filteredCards);
+        const filteredCardsIds = cardIds.filter((id) => learnedWordsIds?.includes(id as string));
+        const filteredCards = cards.filter((card) =>
+            filteredCardsIds?.includes((card as HTMLElement).dataset.id as string)
+        );
         filteredCards.forEach((card) => card.classList.add('card__word-hard'));
+    }
+    async markLearnedWords() {
+        const learnedWordsData = await this.tbController.getLearnedAggregatedWords();
+        const learnedWordsIds = learnedWordsData?.map((item) => item['_id']);
+        const cards = [...document.querySelectorAll('.card')];
+        const cardIds = cards.map((elem) => (elem as HTMLElement).dataset.id);
+        const filteredCardsIds = cardIds.filter((id) => learnedWordsIds?.includes(id as string));
+        const filteredCards = cards.filter((card) =>
+            filteredCardsIds?.includes((card as HTMLElement).dataset.id as string)
+        );
+        filteredCards.forEach((card) => card.classList.add('card__word-learned'));
     }
 
     async render() {
@@ -136,7 +172,8 @@ export default class TextbookPage {
             <button class="group__controls-prev">Prev group</button>
             <button class="group__controls-next">Next group</button>
             <!-- TEMP THING THAT SHOULD BE REMOVED -->    
-            <button class="userWords">Check userWords</button>
+            <button class="userHardWords">Check hardWords</button>
+            <button class="userLearnedWords">Check learnedWords</button>
             <!-- ********************************* -->
         </div>`;
         this.turnOnControls();
@@ -149,5 +186,6 @@ export default class TextbookPage {
         );
         app.append(cards);
         await this.markHardWords();
+        await this.markLearnedWords();
     }
 }
