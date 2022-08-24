@@ -48,8 +48,13 @@ export default class TextbookPage {
             } else {
                 setHardButton.innerText = 'Сложно';
             }
-            const id = word.id;
-            this.tbController.postHardWord(id);
+            let id;
+            if (word.id !== undefined) {
+                id = word.id;
+            } else {
+                id = word._id;
+            }
+            this.tbController.postHardWord(id as string);
         };
         const setLearnedButton = card.querySelector('.word__button-learned') as HTMLButtonElement;
         setLearnedButton.onclick = () => {
@@ -59,8 +64,13 @@ export default class TextbookPage {
             } else {
                 setLearnedButton.innerText = 'Изучил';
             }
-            const id = word.id;
-            this.tbController.postLearnedWord(id);
+            let id;
+            if (word.id !== undefined) {
+                id = word.id;
+            } else {
+                id = word._id;
+            }
+            this.tbController.postLearnedWord(id as string);
         };
         return card;
     }
