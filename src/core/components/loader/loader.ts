@@ -85,10 +85,12 @@ export default class Loader {
         }
     }
 
-    async getHardWords() {
+    async getAllHardWords() {
         const token = (this.store.get('user') as ResponseAuth).token;
         const response = await fetch(
-            serverURL + buildAuthorizedEndpoint('aggregatedwords') + '?&filter={"userWord.difficulty":"hard"}',
+            serverURL +
+                buildAuthorizedEndpoint('aggregatedwords') +
+                '?wordsPerPage=600&filter={"userWord.difficulty":"hard"}',
             {
                 method: Requests.get,
                 //       credentials: 'include',
@@ -99,12 +101,26 @@ export default class Loader {
                 },
             }
         );
-        if (response.ok) {
-            return await response.json();
-        } else {
-            console.log('resp status', response.status);
-            throw await response.text();
-        }
+        return await this.pullAggregatedResult(response);
+    }
+
+    async getAllLearnedWords() {
+        const token = (this.store.get('user') as ResponseAuth).token;
+        const response = await fetch(
+            serverURL +
+                buildAuthorizedEndpoint('aggregatedwords') +
+                '?wordsPerPage=600&filter={"userWord.optional.learned":true}',
+            {
+                method: Requests.get,
+                //       credentials: 'include',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+            }
+        );
+        return await this.pullAggregatedResult(response);
     }
 
     //TODO REWRITE AS ONE METHOD WITH ARGUMENTS

@@ -30,7 +30,7 @@ export type ResponseAggregatedWords = {
     totalCount: { count: number }[];
 }[];
 
-export type AWPaginatedResults = (Word & { userWord: UserWord; _id: string; group: number; page: number })[];
+export type AWPaginatedResults = (Word & { userWord: UserWord; group: number; page: number })[];
 
 // export type UserWord = {
 //     difficulty: 'weak' | 'medium' | 'hard',

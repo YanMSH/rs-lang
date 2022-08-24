@@ -121,4 +121,22 @@ export default class TextbookController {
             console.log(e);
         }
     }
+
+    async getAllHardWords() {
+        try {
+            const result = (await this.load.getAllHardWords()) as AWPaginatedResults;
+            return result;
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    async getAllLearnedWords() {
+        try {
+            const result = (await this.load.getAllLearnedWords()) as AWPaginatedResults;
+            return result;
+        } catch (e) {
+            console.log(e);
+        }
+    }
 }

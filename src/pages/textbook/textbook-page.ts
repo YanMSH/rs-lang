@@ -27,7 +27,11 @@ export default class TextbookPage {
 
     drawCard(word: Word) {
         const card = document.createElement('div');
-        card.dataset.id = word.id;
+        if (word.id !== undefined) {
+            card.dataset.id = word.id;
+        } else {
+            card.dataset.id = word._id;
+        }
         card.classList.add('card');
         card.innerHTML = `
         <img src="https://rs-back.herokuapp.com/${word.image}" class="word__pic">
@@ -64,8 +68,9 @@ export default class TextbookPage {
     turnOnControls() {
         const prevPageButton = document.querySelector('.page__controls-prev') as HTMLElement;
         const nextPageButton = document.querySelector('.page__controls-next') as HTMLElement;
-        const prevGroupButton = document.querySelector('.group__controls-prev') as HTMLElement;
-        const nextGroupButton = document.querySelector('.group__controls-next') as HTMLElement;
+        const groupControlPanel = document.querySelector('.group__controls') as HTMLElement;
+        // const prevGroupButton = document.querySelector('.group__controls-prev') as HTMLElement;
+        // const nextGroupButton = document.querySelector('.group__controls-next') as HTMLElement;
         /**** TEMP THINGS THAT SHOULD BE REMOVED ****/
         const logUserHardWordsButton = document.querySelector('.userHardWords') as HTMLElement;
         const logUserLearnedWordsButton = document.querySelector('.userLearnedWords') as HTMLElement;
@@ -125,34 +130,46 @@ export default class TextbookPage {
             this.render();
         });
 
-        if (this.group === 0) {
-            prevGroupButton.setAttribute('disabled', 'true');
-        } else {
-            prevGroupButton.removeAttribute('disabled');
-        }
-        if (this.group === 5) {
-            nextGroupButton.setAttribute('disabled', 'true');
-        } else {
-            nextGroupButton.removeAttribute('disabled');
-        }
-        prevGroupButton.addEventListener('click', () => {
-            this.group -= 1;
-            this.store.set('group', this.group);
-            this.render();
+        // if (this.group === 0) {
+        //     prevGroupButton.setAttribute('disabled', 'true');
+        // } else {
+        //     prevGroupButton.removeAttribute('disabled');
+        // }
+        // if (this.group === 5) {
+        //     nextGroupButton.setAttribute('disabled', 'true');
+        // } else {
+        //     nextGroupButton.removeAttribute('disabled');
+        // }
+        groupControlPanel.addEventListener('click', (e) => {
+            if (e.target !== groupControlPanel) {
+                this.group = Number((e.target as HTMLElement).innerText) - 1;
+                this.store.set('group', this.group);
+                this.render();
+            }
         });
-        nextGroupButton.addEventListener('click', () => {
-            this.group += 1;
-            this.store.set('group', this.group);
-            this.render();
-        });
+        // prevGroupButton.addEventListener('click', () => {
+        //     this.group -= 1;
+        //     this.store.set('group', this.group);
+        //     this.render();
+        // });
+        // nextGroupButton.addEventListener('click', () => {
+        //     this.group += 1;
+        //     this.store.set('group', this.group);
+        //     this.render();
+        // });
     }
 
     async markHardWords() {
-        const learnedWordsData = await this.tbController.getHardAggregatedWords();
-        const learnedWordsIds = learnedWordsData?.map((item) => item['_id']);
+        let wordsData;
+        if (this.group < 6) {
+            wordsData = await this.tbController.getHardAggregatedWords();
+        } else {
+            wordsData = await this.tbController.getAllHardWords();
+        }
+        const wordsIds = wordsData?.map((item) => item['_id']);
         const cards = [...document.querySelectorAll('.card')];
         const cardIds = cards.map((elem) => (elem as HTMLElement).dataset.id);
-        const filteredCardsIds = cardIds.filter((id) => learnedWordsIds?.includes(id as string));
+        const filteredCardsIds = cardIds.filter((id) => wordsIds?.includes(id as string));
         const filteredCards = cards.filter((card) =>
             filteredCardsIds?.includes((card as HTMLElement).dataset.id as string)
         );
@@ -163,11 +180,16 @@ export default class TextbookPage {
         });
     }
     async markLearnedWords() {
-        const learnedWordsData = await this.tbController.getLearnedAggregatedWords();
-        const learnedWordsIds = learnedWordsData?.map((item) => item['_id']);
+        let wordsData;
+        if (this.group < 6) {
+            wordsData = await this.tbController.getLearnedAggregatedWords();
+        } else {
+            wordsData = await this.tbController.getAllLearnedWords();
+        }
+        const wordsIds = wordsData?.map((item) => item['_id']);
         const cards = [...document.querySelectorAll('.card')];
         const cardIds = cards.map((elem) => (elem as HTMLElement).dataset.id);
-        const filteredCardsIds = cardIds.filter((id) => learnedWordsIds?.includes(id as string));
+        const filteredCardsIds = cardIds.filter((id) => wordsIds?.includes(id as string));
         const filteredCards = cards.filter((card) =>
             filteredCardsIds?.includes((card as HTMLElement).dataset.id as string)
         );
@@ -183,25 +205,39 @@ export default class TextbookPage {
         this.getParam('group');
         const app = document.querySelector('.app') as HTMLElement;
         app.innerHTML = `
-        <p>Страница ${this.page} Группа ${this.group}</p>
+        <p>Страница ${this.page} Группа ${this.group + 1}</p>
         <div class="page__controls">
             <button class="page__controls-prev">Prev page</button>
             <button class="page__controls-next">Next page</button>
-            <button class="group__controls-prev">Prev group</button>
-            <button class="group__controls-next">Next group</button>
             <!-- TEMP THING THAT SHOULD BE REMOVED -->    
             <button class="userHardWords">Check hardWords</button>
             <button class="userLearnedWords">Check learnedWords</button>
             <!-- ********************************* -->
-        </div>`;
+        </div>
+        <div class="group__controls">
+        <button class="group__controls-button">1</button>
+        <button class="group__controls-button">2</button>
+        <button class="group__controls-button">3</button>
+        <button class="group__controls-button">4</button>
+        <button class="group__controls-button">5</button>
+        <button class="group__controls-button">6</button>
+        <button class="group__controls-button">7</button>
+        </div>
+        `;
         this.turnOnControls();
         const cards = document.createElement('div');
         cards.classList.add('cards__container');
-        await this.controller.getWords(this.page, this.group).then((value) =>
-            value.forEach((item: Word) => {
-                cards.append(this.drawCard(item));
-            })
-        );
+        if (this.group < 6) {
+            await this.controller.getWords(this.page, this.group).then((value) =>
+                value.forEach((item: Word) => {
+                    cards.append(this.drawCard(item));
+                })
+            );
+        } else {
+            await this.tbController
+                .getAllHardWords()
+                .then((value) => value?.forEach((item) => cards.append(this.drawCard(item))));
+        }
         app.append(cards);
         await this.markHardWords();
         await this.markLearnedWords();

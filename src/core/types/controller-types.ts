@@ -13,6 +13,7 @@ export type Word = {
     transcription: string;
     word: string;
     wordTranslate: string;
+    _id: string | undefined;
 };
 
 export type UserWord = {
