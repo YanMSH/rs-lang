@@ -3,6 +3,7 @@ import Controller from '../../core/components/controller/controller';
 import { Word } from '../../core/types/controller-types';
 import Storage from '../../core/components/service/storage/storage';
 import TextbookController from './textbook-controller';
+import { AWPaginatedResults } from '../../core/types/loader-types';
 
 export default class TextbookPage {
     tbController: TextbookController;
@@ -119,16 +120,17 @@ export default class TextbookPage {
             console.log(wordsData);
         };
         /*******************************************/
-        if (this.page === 0) {
+        if (this.page === 0 || this.group === 6) {
             prevPageButton.setAttribute('disabled', 'true');
         } else {
             prevPageButton.removeAttribute('disabled');
         }
-        if (this.page === 29) {
+        if (this.page === 29 || this.group === 6) {
             nextPageButton.setAttribute('disabled', 'true');
         } else {
             nextPageButton.removeAttribute('disabled');
         }
+
         prevPageButton.addEventListener('click', () => {
             this.page -= 1;
             this.store.set('page', this.page);
@@ -172,7 +174,8 @@ export default class TextbookPage {
     async markHardWords() {
         let wordsData;
         if (this.group < 6) {
-            wordsData = await this.tbController.getHardAggregatedWords();
+            wordsData = (await this.tbController.getHardAggregatedWords()) as AWPaginatedResults;
+            wordsData?.sort((wordA, wordB) => wordA.page - wordB.page);
         } else {
             wordsData = await this.tbController.getAllHardWords();
         }
