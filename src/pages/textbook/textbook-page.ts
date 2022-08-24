@@ -38,13 +38,23 @@ export default class TextbookPage {
         <button class="word__button-learned">Изучил</button>`;
         const setHardButton = card.querySelector('.word__button-hard') as HTMLButtonElement;
         setHardButton.onclick = () => {
-            card.classList.add('card__word-hard');
+            card.classList.toggle('card__word-hard');
+            if (setHardButton.innerText === 'Сложно') {
+                setHardButton.innerText = 'Не сложно';
+            } else {
+                setHardButton.innerText = 'Сложно';
+            }
             const id = word.id;
             this.tbController.postHardWord(id);
         };
         const setLearnedButton = card.querySelector('.word__button-learned') as HTMLButtonElement;
         setLearnedButton.onclick = () => {
-            card.classList.add('card__word-learned');
+            card.classList.toggle('card__word-learned');
+            if (setLearnedButton.innerText === 'Изучил') {
+                setLearnedButton.innerText = 'Забыл';
+            } else {
+                setLearnedButton.innerText = 'Изучил';
+            }
             const id = word.id;
             this.tbController.postLearnedWord(id);
         };
@@ -146,7 +156,11 @@ export default class TextbookPage {
         const filteredCards = cards.filter((card) =>
             filteredCardsIds?.includes((card as HTMLElement).dataset.id as string)
         );
-        filteredCards.forEach((card) => card.classList.add('card__word-hard'));
+        filteredCards.forEach((card) => {
+            card.classList.add('card__word-hard');
+            const setHardButton = card.querySelector('.word__button-hard') as HTMLButtonElement;
+            setHardButton.innerText = 'Не сложно';
+        });
     }
     async markLearnedWords() {
         const learnedWordsData = await this.tbController.getLearnedAggregatedWords();
@@ -157,7 +171,11 @@ export default class TextbookPage {
         const filteredCards = cards.filter((card) =>
             filteredCardsIds?.includes((card as HTMLElement).dataset.id as string)
         );
-        filteredCards.forEach((card) => card.classList.add('card__word-learned'));
+        filteredCards.forEach((card) => {
+            card.classList.add('card__word-learned');
+            const setLearnedButton = card.querySelector('.word__button-learned') as HTMLButtonElement;
+            setLearnedButton.innerText = 'Забыл';
+        });
     }
 
     async render() {

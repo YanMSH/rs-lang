@@ -9,3 +9,11 @@ export const buildAuthorizedEndpoint = (endpoint: string) => {
         return `users/${userId}/${endpoint}/`;
     } else return `users/${userId}/`;
 };
+
+export const toggleHardNothard = (arg: 'hard' | 'nothard' | undefined): 'nothard' | 'hard' => {
+    if (arg === 'hard') {
+        return 'nothard';
+    } else {
+        return 'hard';
+    }
+};

@@ -1,5 +1,6 @@
 import Loader from '../../core/components/loader/loader';
 import Storage from '../../core/components/service/storage/storage';
+import { toggleHardNothard } from '../../core/components/service/utils/utils';
 import { UserWord, UserWordServer } from '../../core/types/controller-types';
 import { AWPaginatedResults } from '../../core/types/loader-types';
 
@@ -36,7 +37,7 @@ export default class TextbookController {
             };
         } else {
             body = {
-                difficulty: 'hard',
+                difficulty: toggleHardNothard(oldData.difficulty),
                 optional: (oldData as UserWord).optional,
             };
         }
@@ -50,7 +51,7 @@ export default class TextbookController {
     async postLearnedWord(id: string) {
         let oldData;
         try {
-            oldData = await this.load.getAuthorizedData('words', id);
+            oldData = (await this.load.getAuthorizedData('words', id)) as UserWord;
         } catch (e) {
             console.log(e);
             oldData = undefined;
@@ -69,7 +70,7 @@ export default class TextbookController {
             body = {
                 difficulty: oldData.difficulty,
                 optional: {
-                    learned: true,
+                    learned: !oldData.optional.learned,
                     guessedRight: oldData.optional.guessedRight,
                     guessedWrong: oldData.optional.guessedWrong,
                 },

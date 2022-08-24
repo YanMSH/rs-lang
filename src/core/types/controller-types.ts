@@ -16,7 +16,7 @@ export type Word = {
 };
 
 export type UserWord = {
-    difficulty: 'hard' | undefined;
+    difficulty: 'hard' | 'nothard' | undefined;
     optional: {
         learned: boolean;
         guessedRight: number;
