@@ -59,7 +59,7 @@ export default class Loader {
         if (response.ok) {
             return await response.json();
         } else {
-            if (response.status === 417) {
+            if (response.status === StatusCodes.expectationFailed) {
                 this.putAuthorisedData(endpoint, wordId, body);
             }
             throw await response.text();

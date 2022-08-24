@@ -39,8 +39,12 @@ export default class TextbookPage {
         <p class="word__word"><span>${word.word}</span>: <span>${word.transcription}</span>, <span>${word.wordTranslate}</span></p>
         <p class="word__meaning"><span>${word.textMeaning}</span>: <span>${word.textMeaningTranslate}</span></p>
         <p class="word__example"><span>${word.textExample}</span>: <span>${word.textExampleTranslate}</span></p>
-        <button class="word__button-hard">Сложно</button>
-        <button class="word__button-learned">Изучил</button>`;
+        <div class="auth__visible">
+            <button class="word__button-hard">Сложно</button>
+            <button class="word__button-learned">Изучил</button>
+        </div>
+        `;
+
         const setHardButton = card.querySelector('.word__button-hard') as HTMLButtonElement;
         setHardButton.onclick = () => {
             card.classList.toggle('card__word-hard');
