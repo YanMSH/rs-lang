@@ -39,11 +39,28 @@ export default class TextbookPage {
         <p class="word__word"><span>${word.word}</span>: <span>${word.transcription}</span>, <span>${word.wordTranslate}</span></p>
         <p class="word__meaning"><span>${word.textMeaning}</span>: <span>${word.textMeaningTranslate}</span></p>
         <p class="word__example"><span>${word.textExample}</span>: <span>${word.textExampleTranslate}</span></p>
+        <audio class="word__audio" src="https://rs-back.herokuapp.com/${word.audio}"></audio>
+        <audio class="word__audio-meaning" src="https://rs-back.herokuapp.com/${word.audioMeaning}"></audio>
+        <audio class="word__audio-example" src="https://rs-back.herokuapp.com/${word.audioExample}"></audio>
+        <button class="word__audio-play">Play</button>
         <div class="auth__visible">
             <button class="word__button-hard">Сложно</button>
             <button class="word__button-learned">Изучил</button>
         </div>
         `;
+        const authVisibleBlock = card.querySelector('.auth__visible') as HTMLElement;
+        if (!this.store.get('auth')) {
+            authVisibleBlock.style.display = 'none';
+        }
+
+        const audioPlayButton = card.querySelector('.word__audio-play') as HTMLButtonElement;
+        const audio = card.querySelector('.word__audio') as HTMLAudioElement;
+        const audioMeaning = card.querySelector('.word__audio-meaning') as HTMLAudioElement;
+        const audioExample = card.querySelector('.word__audio-example') as HTMLAudioElement;
+
+        audioPlayButton.addEventListener('click', () => audio.play());
+        audio.addEventListener('ended', () => audioMeaning.play());
+        audioMeaning.addEventListener('ended', () => audioExample.play());
 
         const setHardButton = card.querySelector('.word__button-hard') as HTMLButtonElement;
         setHardButton.onclick = () => {

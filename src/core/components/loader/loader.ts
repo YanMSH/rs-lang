@@ -175,6 +175,9 @@ export default class Loader {
             return aggregatedWords;
         } else {
             console.log('resp status', response.status);
+            if (response.status === StatusCodes.unauthorized) {
+                this.store.remove('auth');
+            }
             throw await response.text();
         }
     }
