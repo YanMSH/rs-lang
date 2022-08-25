@@ -1,11 +1,14 @@
 import Loader from '../../core/components/loader/loader';
+import AuthTools from '../../core/components/service/auth/auth-tools';
 import { emailIsValid, nameIsValid, passIsValid } from '../../core/components/service/validation/validation';
 import { StatusCodes } from '../../core/constants/loader-const';
 import './reg-page.css';
 
 export default class RegPage {
     load: Loader;
+    auth: AuthTools;
     constructor() {
+        this.auth = new AuthTools();
         this.load = new Loader();
     }
     public render() {
@@ -79,7 +82,7 @@ export default class RegPage {
                 password: passInput.value,
             };
             if (inputsAreValid()) {
-                const regResponse = await this.load.createUser(regData);
+                const regResponse = await this.auth.createUser(regData);
                 //DELETE BEFORE RELEASE
                 console.log(regResponse);
                 showErrorMessage(regResponse.id);

@@ -100,7 +100,7 @@ export default class TextbookPage {
 
     async markPage() {
         const app = document.querySelector('.app') as HTMLElement;
-        if (document.querySelectorAll('.card__word-hard').length === 20) {
+        if (document.querySelectorAll('.card__word-hard').length >= 20) {
             app.classList.add('card__word-hard');
         } else {
             app.classList.remove('card__word-hard');
@@ -213,7 +213,7 @@ export default class TextbookPage {
             wordsData = (await this.tbController.getHardAggregatedWords()) as AWPaginatedResults;
             wordsData?.sort((wordA, wordB) => wordA.page - wordB.page);
         } else {
-            wordsData = await this.tbController.getAllHardWords();
+            wordsData = await this.tbController.getAllHardAggregatedWords();
         }
         const wordsIds = wordsData?.map((item) => item['_id']);
         const cards = [...document.querySelectorAll('.card')];
@@ -233,7 +233,7 @@ export default class TextbookPage {
         if (this.group < 6) {
             wordsData = await this.tbController.getLearnedAggregatedWords();
         } else {
-            wordsData = await this.tbController.getAllLearnedWords();
+            wordsData = await this.tbController.getAllLearnedAggregatedWords();
         }
         const wordsIds = wordsData?.map((item) => item['_id']);
         const cards = [...document.querySelectorAll('.card')];
@@ -284,7 +284,7 @@ export default class TextbookPage {
             );
         } else {
             await this.tbController
-                .getAllHardWords()
+                .getAllHardAggregatedWords()
                 .then((value) => value?.forEach((item) => cards.append(this.drawCard(item))));
         }
         app.append(cards);

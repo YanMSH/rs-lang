@@ -1,7 +1,7 @@
 import Loader from '../../core/components/loader/loader';
 import Storage from '../../core/components/service/storage/storage';
 import { toggleHardNothard } from '../../core/components/service/utils/utils';
-import { UserWord, UserWordServer } from '../../core/types/controller-types';
+import { UserWord } from '../../core/types/controller-types';
 import { AWPaginatedResults } from '../../core/types/loader-types';
 
 export default class TextbookController {
@@ -12,12 +12,7 @@ export default class TextbookController {
         this.load = new Loader();
     }
 
-    // getToken(): string{
-    //   const userData = this.store.get('user') as ResponseAuth;
-    //   return userData.token as string;
-    // }
-
-    async postHardWord(id: string) {
+    public async postHardWord(id: string): Promise<void> {
         let oldData;
         try {
             oldData = await this.load.getAuthorizedData('words', id);
@@ -48,7 +43,7 @@ export default class TextbookController {
         }
     }
 
-    async postLearnedWord(id: string) {
+    public async postLearnedWord(id: string): Promise<void> {
         let oldData;
         try {
             oldData = (await this.load.getAuthorizedData('words', id)) as UserWord;
@@ -83,57 +78,38 @@ export default class TextbookController {
         }
     }
 
-    async getAllUserWords(): Promise<UserWordServer[] | undefined> {
+    public async getLearnedAggregatedWords(): Promise<AWPaginatedResults | undefined> {
         try {
-            const result = (await this.load.getAuthorizedData('words', '')) as UserWordServer[];
+            const result = (await this.load.getFilteredWords('"userWord.optional.learned":true')) as AWPaginatedResults;
             return result;
         } catch (e) {
             console.log(e);
         }
     }
 
-    async getFilteredWords(wordsIds: string[]) {
-        const userWords = (await this.getAllUserWords()) as UserWordServer[];
-        if (userWords === undefined) {
-            return;
-        }
-        const userWordsIds = userWords.map((item) => {
-            return item.wordId;
-        });
-        const filteredWordsIds = wordsIds.filter((id) => userWordsIds.includes(id));
-        return filteredWordsIds;
-    }
-
-    async getLearnedAggregatedWords() {
+    public async getHardAggregatedWords(): Promise<AWPaginatedResults | undefined> {
         try {
-            const result = (await this.load.getLearnedWords()) as AWPaginatedResults;
+            const result = (await this.load.getFilteredWords('"userWord.difficulty":"hard"')) as AWPaginatedResults;
             return result;
         } catch (e) {
             console.log(e);
         }
     }
 
-    async getHardAggregatedWords() {
+    public async getAllHardAggregatedWords(): Promise<AWPaginatedResults | undefined> {
         try {
-            const result = (await this.load.getPageHardWords()) as AWPaginatedResults;
+            const result = (await this.load.getAllFilteredWords('"userWord.difficulty":"hard"')) as AWPaginatedResults;
             return result;
         } catch (e) {
             console.log(e);
         }
     }
 
-    async getAllHardWords() {
+    public async getAllLearnedAggregatedWords(): Promise<AWPaginatedResults | undefined> {
         try {
-            const result = (await this.load.getAllHardWords()) as AWPaginatedResults;
-            return result;
-        } catch (e) {
-            console.log(e);
-        }
-    }
-
-    async getAllLearnedWords() {
-        try {
-            const result = (await this.load.getAllLearnedWords()) as AWPaginatedResults;
+            const result = (await this.load.getAllFilteredWords(
+                '"userWord.optional.learned":true'
+            )) as AWPaginatedResults;
             return result;
         } catch (e) {
             console.log(e);

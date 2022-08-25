@@ -1,4 +1,5 @@
 import Loader from '../../core/components/loader/loader';
+import AuthTools from '../../core/components/service/auth/auth-tools';
 import Storage from '../../core/components/service/storage/storage';
 import { emailIsValid, passIsValid } from '../../core/components/service/validation/validation';
 import { AuthMessages } from '../../core/constants/loader-const';
@@ -9,10 +10,12 @@ export default class AuthPage {
     load: Loader;
     store: Storage;
     regPage: RegPage;
+    auth: AuthTools;
     constructor() {
         this.load = new Loader();
         this.store = new Storage();
         this.regPage = new RegPage();
+        this.auth = new AuthTools();
     }
     public render() {
         const app = document.querySelector('.app') as HTMLElement;
@@ -80,7 +83,7 @@ export default class AuthPage {
                 password: passInput.value,
             };
             if (inputsAreValid()) {
-                const authResponse = await this.load.authUser(authData);
+                const authResponse = await this.auth.authUser(authData);
                 //DELETE BEFORE RELEASE
                 console.log(authResponse);
                 if (authResponse.message === AuthMessages.success) {
