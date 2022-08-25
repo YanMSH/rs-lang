@@ -84,8 +84,6 @@ export default class AuthPage {
             };
             if (inputsAreValid()) {
                 const authResponse = await this.auth.authUser(authData);
-                //DELETE BEFORE RELEASE
-                console.log(authResponse);
                 if (authResponse.message === AuthMessages.success) {
                     this.store.set('user', authResponse);
                     this.store.set('auth', true);

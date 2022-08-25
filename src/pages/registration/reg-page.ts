@@ -84,7 +84,6 @@ export default class RegPage {
             if (inputsAreValid()) {
                 const regResponse = await this.auth.createUser(regData);
                 //DELETE BEFORE RELEASE
-                console.log(regResponse);
                 showErrorMessage(regResponse.id);
             }
         };
