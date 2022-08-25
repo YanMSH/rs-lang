@@ -26,13 +26,43 @@ export default class TextbookPage {
         return this.store.get(param) as number;
     }
 
+    private turnOnPlayButton(card: HTMLElement) {
+        const audioPlayButton = card.querySelector('.word__audio-play') as HTMLButtonElement;
+        const audio = card.querySelector('.word__audio') as HTMLAudioElement;
+        const audioMeaning = card.querySelector('.word__audio-meaning') as HTMLAudioElement;
+        const audioExample = card.querySelector('.word__audio-example') as HTMLAudioElement;
+
+        audioPlayButton.addEventListener('click', () => audio.play());
+        audio.addEventListener('ended', () => audioMeaning.play());
+        audioMeaning.addEventListener('ended', () => audioExample.play());
+    }
+
+    private turnOnHardLearnedButtons(card: HTMLElement, id: string) {
+        const setHardButton = card.querySelector('.word__button-hard') as HTMLButtonElement;
+        setHardButton.onclick = () => {
+            card.classList.toggle('card__word-hard');
+            if (setHardButton.innerText === 'Сложно') {
+                setHardButton.innerText = 'Не сложно';
+            } else {
+                setHardButton.innerText = 'Сложно';
+            }
+            this.tbController.postHardWord(id as string);
+        };
+        const setLearnedButton = card.querySelector('.word__button-learned') as HTMLButtonElement;
+        setLearnedButton.onclick = () => {
+            card.classList.toggle('card__word-learned');
+            if (setLearnedButton.innerText === 'Изучил') {
+                setLearnedButton.innerText = 'Забыл';
+            } else {
+                setLearnedButton.innerText = 'Изучил';
+            }
+            this.tbController.postLearnedWord(id as string);
+        };
+    }
+
     private drawCard(word: Word) {
         const card = document.createElement('div');
-        if (word.id !== undefined) {
-            card.dataset.id = word.id;
-        } else {
-            card.dataset.id = word._id;
-        }
+        card.dataset.id = word.id ? word.id : word._id;
         card.classList.add('card');
 
         card.innerHTML = `
@@ -55,47 +85,9 @@ export default class TextbookPage {
             authVisibleBlock.style.display = 'none';
         }
 
-        const audioPlayButton = card.querySelector('.word__audio-play') as HTMLButtonElement;
-        const audio = card.querySelector('.word__audio') as HTMLAudioElement;
-        const audioMeaning = card.querySelector('.word__audio-meaning') as HTMLAudioElement;
-        const audioExample = card.querySelector('.word__audio-example') as HTMLAudioElement;
-
-        audioPlayButton.addEventListener('click', () => audio.play());
-        audio.addEventListener('ended', () => audioMeaning.play());
-        audioMeaning.addEventListener('ended', () => audioExample.play());
-
-        const setHardButton = card.querySelector('.word__button-hard') as HTMLButtonElement;
-        setHardButton.onclick = () => {
-            card.classList.toggle('card__word-hard');
-            if (setHardButton.innerText === 'Сложно') {
-                setHardButton.innerText = 'Не сложно';
-            } else {
-                setHardButton.innerText = 'Сложно';
-            }
-            let id;
-            if (word.id !== undefined) {
-                id = word.id;
-            } else {
-                id = word._id;
-            }
-            this.tbController.postHardWord(id as string);
-        };
-        const setLearnedButton = card.querySelector('.word__button-learned') as HTMLButtonElement;
-        setLearnedButton.onclick = () => {
-            card.classList.toggle('card__word-learned');
-            if (setLearnedButton.innerText === 'Изучил') {
-                setLearnedButton.innerText = 'Забыл';
-            } else {
-                setLearnedButton.innerText = 'Изучил';
-            }
-            let id;
-            if (word.id !== undefined) {
-                id = word.id;
-            } else {
-                id = word._id;
-            }
-            this.tbController.postLearnedWord(id as string);
-        };
+        this.turnOnPlayButton(card);
+        const id = word.id ? word.id : word._id;
+        this.turnOnHardLearnedButtons(card, id as string);
         return card;
     }
 
@@ -106,7 +98,7 @@ export default class TextbookPage {
         } else {
             app.classList.remove('card__word-hard');
         }
-        if (document.querySelectorAll('.card__word-learned').length === 20) {
+        if (document.querySelectorAll('.card__word-learned').length >= 20) {
             app.classList.add('card__word-learned');
         } else {
             app.classList.remove('card__word-learned');
