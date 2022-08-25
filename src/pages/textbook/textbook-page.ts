@@ -48,6 +48,7 @@ export default class TextbookPage {
             <button class="word__button-learned">Изучил</button>
         </div>
         `;
+
         const authVisibleBlock = card.querySelector('.auth__visible') as HTMLElement;
         if (!this.store.get('auth')) {
             authVisibleBlock.style.display = 'none';
@@ -95,6 +96,20 @@ export default class TextbookPage {
             this.tbController.postLearnedWord(id as string);
         };
         return card;
+    }
+
+    async markPage() {
+        const app = document.querySelector('.app') as HTMLElement;
+        if (document.querySelectorAll('.card__word-hard').length === 20) {
+            app.classList.add('card__word-hard');
+        } else {
+            app.classList.remove('card__word-hard');
+        }
+        if (document.querySelectorAll('.card__word-learned').length === 20) {
+            app.classList.add('card__word-learned');
+        } else {
+            app.classList.remove('card__word-learned');
+        }
     }
 
     turnOnControls() {
@@ -275,5 +290,6 @@ export default class TextbookPage {
         app.append(cards);
         await this.markHardWords();
         await this.markLearnedWords();
+        await this.markPage();
     }
 }
