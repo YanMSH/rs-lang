@@ -33,7 +33,11 @@ export default class TextbookController {
         } else {
             body = {
                 difficulty: toggleHardNothard(oldData.difficulty),
-                optional: (oldData as UserWord).optional,
+                optional: {
+                    learned: false,
+                    guessedRight: oldData.optional.guessedRight,
+                    guessedWrong: oldData.optional.guessedWrong,
+                },
             };
         }
         try {
@@ -63,7 +67,7 @@ export default class TextbookController {
             };
         } else {
             body = {
-                difficulty: oldData.difficulty,
+                difficulty: 'nothard',
                 optional: {
                     learned: !oldData.optional.learned,
                     guessedRight: oldData.optional.guessedRight,
