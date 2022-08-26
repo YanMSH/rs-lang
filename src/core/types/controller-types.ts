@@ -3,7 +3,7 @@ export type Word = {
     audioExample: string;
     audioMeaning: string;
     group: number;
-    _id: string;
+    id: string;
     image: string;
     page: number;
     textExample: string;
@@ -13,4 +13,18 @@ export type Word = {
     transcription: string;
     word: string;
     wordTranslate: string;
+};
+
+export type UserWord = {
+    difficulty: 'hard' | undefined;
+    optional: {
+        learned: boolean;
+        guessedRight: number;
+        guessedWrong: number;
+    };
+};
+
+export type UserWordServer = UserWord & {
+    id: string;
+    wordId: string;
 };

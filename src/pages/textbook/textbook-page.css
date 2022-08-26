@@ -1,0 +1,19 @@
+.cards__container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 32px;
+    gap: 48px;
+}
+
+.card {
+    padding: 16px;
+    max-width: 390px;
+}
+.word__pic {
+    width: 40%;
+    height: 40%;
+}
+
+.card__word-hard {
+    outline: 2px solid red;
+}

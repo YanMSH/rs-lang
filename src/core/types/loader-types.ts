@@ -23,7 +23,7 @@ export type ResponseAuth = {
     name: string | undefined;
 };
 
-export type UserWord = {
-    difficulty: 'weak' | 'medium' | 'hard',
-    optional: object
-}
+// export type UserWord = {
+//     difficulty: 'weak' | 'medium' | 'hard',
+//     optional: object
+// }

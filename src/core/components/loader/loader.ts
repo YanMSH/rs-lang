@@ -1,6 +1,6 @@
-
 import { AuthMessages, Endpoints, Requests, serverURL, StatusCodes } from '../../constants/loader-const';
-import { ResponseAuth, UserAuth, UserReg, UserWord } from '../../types/loader-types';
+import { UserWord } from '../../types/controller-types';
+import { ResponseAuth, UserAuth, UserReg } from '../../types/loader-types';
 import Storage from '../service/storage/storage';
 import { buildAuthorizedEndpoint } from '../service/utils/utils';
 
@@ -11,7 +11,9 @@ export default class Loader {
     }
     async get(endpoint: string) {
         const response = await fetch(serverURL + endpoint);
-        if (response.ok) { return await response.json() }
+        if (response.ok) {
+            return await response.json();
+        }
         throw response.json();
     }
 
@@ -24,20 +26,17 @@ export default class Loader {
             headers: {
                 Authorization: `Bearer ${token}`,
                 Accept: 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
         });
         if (response.ok) {
             return await response.json();
-        }
-        else {
-            throw response.json();
+        } else {
+            throw await response.text();
         }
     }
 
     async postAuthorisedData(endpoint: string, wordId: string, body: UserWord) {
-        // TODO Handle case when token is outdated! 
-        // on posting word that already exists you get 417 error
         const token = (this.store.get('user') as ResponseAuth).token;
         const response = await fetch(serverURL + buildAuthorizedEndpoint(endpoint) + wordId, {
             method: Requests.post,
@@ -45,15 +44,14 @@ export default class Loader {
             headers: {
                 Authorization: `Bearer ${token}`,
                 Accept: 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
-            body: JSON.stringify(body)
+            body: JSON.stringify(body),
         });
         if (response.ok) {
             return await response.json();
-        }
-        else {
-            throw response.json();
+        } else {
+            throw await response.text();
         }
     }
 
@@ -115,7 +113,6 @@ export default class Loader {
         if (response.status === StatusCodes.ok) {
             return await response.json();
         } else if (response.status === StatusCodes.incorrectAuthTry) {
-
             return {
                 message: AuthMessages.wrongPass,
                 token: undefined,
