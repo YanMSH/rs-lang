@@ -31,8 +31,3 @@ export type ResponseAggregatedWords = {
 }[];
 
 export type AWPaginatedResults = (Word & { userWord: UserWord; group: number; page: number })[];
-
-// export type UserWord = {
-//     difficulty: 'weak' | 'medium' | 'hard',
-//     optional: object
-// }
