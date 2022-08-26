@@ -1,9 +1,16 @@
 import './sprint-game.css';
+import './level-page.css';
+import { Timer } from '../timer/timer';
 
 export class SprintGameView {
+  timer: Timer
+  constructor() {
+    this.timer = new Timer();
+  }
   render() {
     this.resetMain();
     this.addContainersToMain();
+    this.timer.start();
   }
   resetMain() {
     const main = document.querySelector<HTMLElement>('main');

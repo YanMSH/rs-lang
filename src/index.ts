@@ -3,8 +3,8 @@ import './global.css';
 import WordListPage from './pages/wordlist/wordlist-page';
 import TextbookPage from './pages/textbook/textbook-page';
 import AuthPage from './pages/auth/auth-page';
-import { SprintGameApp } from './core/components/sprint-game/app/sprint-game-app';
-import AudioCallApp from './core/components/audio-call/app/audio-call-app';
+import { SprintGameApp } from './pages/sprint-game/app/sprint-game-app';
+import AudioCallApp from './pages/audio-call/app/audio-call-app';
 // import App from './core/components/app/app';
 
 // const app = new App();
