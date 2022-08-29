@@ -4,7 +4,7 @@ import { sprintLevelMessage } from '../../../core/constants/level-const';
 import Storage from '../../../core/components/service/storage/storage';
 import Loader from '../../../core/components/loader/loader';
 import { circleActiveBackground, circleNoActiveBackground, maxVolume, minVolume } from "../../../core/constants/sprint-game-const";
-import { initialPoints, ratioOne, ratioTwo, ratioThree, maxCountCircle } from "../../../core/constants/sprint-game-const";
+import { initialPoints, ratioOne, ratioTwo, ratioThree, maxCountCircle, maxOffset } from "../../../core/constants/sprint-game-const";
 export class SprintGameController {
   private sprintGameView: SprintGameView;
   private levelPage: LevelPage;
@@ -21,6 +21,7 @@ export class SprintGameController {
   private ratioTwo: number;
   private ratioThree: number;
   private maxCountCircle: number;
+  private maxOffset: number;
 
   constructor() {
     this.sprintGameView = new SprintGameView();
@@ -38,6 +39,7 @@ export class SprintGameController {
     this.ratioTwo = ratioTwo;
     this.ratioThree = ratioThree;
     this.maxCountCircle = maxCountCircle;
+    this.maxOffset = maxOffset;
   }
 
   public render() {
@@ -66,35 +68,50 @@ export class SprintGameController {
       const rightAnswerBtn = document.querySelector('.right-answer-btn') as HTMLButtonElement;
       const sumPoint = document.querySelector('.point-count') as HTMLSpanElement;
       const point = Number(sumPoint.textContent);
+      let offset = 0;
       if (wrongAnswerBtn) {
         wrongAnswerBtn.addEventListener('click', () => {
           const rightAnswerCount = this.storage.get('rightAnswerCount') as number;
           const countCircle = this.storage.get('countCircle') as number;
           this.checkWrongAnswer(point, countCircle, rightAnswerCount);
-          const firstIndexOfWord = this.getRandomNumber(0, words.length / 4 - 1);
-          const secondIndexOfWord = this.getRandomNumber(0, words.length / 4 - 1);
-          console.log(firstIndexOfWord, secondIndexOfWord);
-          this.storage.set('firstIndexOfWord', firstIndexOfWord);
-          this.storage.set('secondIndexOfWord', secondIndexOfWord);
-          this.sprintGameView.clickOnTheAnswerButton(words[firstIndexOfWord].word, words[secondIndexOfWord].wordTranslate);
-          setTimeout(this.changeOkUsualIcon, 300);
-          setTimeout(this.changeUsualBorderOfContainer, 2000);
+          if (offset < this.maxOffset) {
+            const lastRandomNumber = words.length / 4 - 1 + Number(`${offset}`);
+            const firstRandomNumber = 0 + Number(`${offset}`);
+            const firstIndexOfWord = this.getRandomNumber(firstRandomNumber, lastRandomNumber);
+            const secondIndexOfWord = this.getRandomNumber(firstRandomNumber, lastRandomNumber);
+            console.log(firstIndexOfWord, secondIndexOfWord);
+            this.storage.set('firstIndexOfWord', firstIndexOfWord);
+            this.storage.set('secondIndexOfWord', secondIndexOfWord);
+            this.sprintGameView.clickOnTheAnswerButton(words[firstIndexOfWord].word, words[secondIndexOfWord].wordTranslate);
+            setTimeout(this.changeOkUsualIcon, 300);
+            setTimeout(this.changeUsualBorderOfContainer, 2000);
+            offset += 1;
+          } else {
+            offset = 0;
+          }
         });
       }
       if (rightAnswerBtn) {
         rightAnswerBtn.addEventListener('click', () => {
-          const rightAnswerCount = this.storage.get('rightAnswerCount') as number;
-          const countCircle = this.storage.get('countCircle') as number;
-          this.checkRightAnswer(point, countCircle, rightAnswerCount);
-          const firstIndexOfWord = this.getRandomNumber(0, words.length - 1);
-          const secondIndexOfWord = this.getRandomNumber(0, words.length - 1);
-          this.storage.set('firstIndexOfWord', firstIndexOfWord);
-          this.storage.set('secondIndexOfWord', secondIndexOfWord);
-          this.sprintGameView.clickOnTheAnswerButton(words[firstIndexOfWord].word, words[secondIndexOfWord].wordTranslate);
-          setTimeout(this.changeOkUsualIcon, 300);
-          setTimeout(this.changeUsualBorderOfContainer, 2000);
-        });
-      }
+          if (offset < this.maxOffset) {
+            const rightAnswerCount = this.storage.get('rightAnswerCount') as number;
+            const countCircle = this.storage.get('countCircle') as number;
+            this.checkRightAnswer(point, countCircle, rightAnswerCount);
+            const lastRandomNumber = words.length / 4 - 1 + Number(`${offset}`);
+            const firstRandomNumber = 0 + Number(`${offset}`);
+            const firstIndexOfWord = this.getRandomNumber(firstRandomNumber, lastRandomNumber);
+            const secondIndexOfWord = this.getRandomNumber(firstRandomNumber, lastRandomNumber);
+            this.storage.set('firstIndexOfWord', firstIndexOfWord);
+            this.storage.set('secondIndexOfWord', secondIndexOfWord);
+            this.sprintGameView.clickOnTheAnswerButton(words[firstIndexOfWord].word, words[secondIndexOfWord].wordTranslate);
+            setTimeout(this.changeOkUsualIcon, 300);
+            setTimeout(this.changeUsualBorderOfContainer, 2000);
+            offset += 1;
+        } else {
+            offset = 0;
+        } 
+      });
+    }
   }
 
   private checkRightAnswer(point: number, countCircle: number, rightAnswerCount: number) {
@@ -250,28 +267,11 @@ export class SprintGameController {
     return Math.ceil(Math.random() * (max - min) + min);
   }
 
-  // private changePositionOfWords(words: Array<Word>) {
-  //   let chunkWords;
-  //   setTimeout(() => {
-  //     chunkWords = words.slice(0, 5);
-  //   }, 0);
-  //   setTimeout(() => {
-  //     chunkWords = words.slice(5, 10);
-  //   }, 15000);
-  //   setTimeout(() => {
-  //     chunkWords = words.slice(10, 15);
-  //   }, 30000);
-  //   setTimeout(() => {
-  //     chunkWords = words.slice(15, 20);
-  //   }, 45000);
-  //   return chunkWords;
-  // }
-
   private async startGame() {
     const group = this.storage.get('group') as number;
     const words = await this.fillWords(group);
-    const firstIndexOfWord = this.getRandomNumber(0, words.length / 10);
-    const secondIndexOfWord = this.getRandomNumber(0, words.length / 10);
+    const firstIndexOfWord = this.getRandomNumber(0, words.length / 4);
+    const secondIndexOfWord = this.getRandomNumber(0, words.length / 4);
     this.storage.set('firstIndexOfWord', firstIndexOfWord);
     this.storage.set('secondIndexOfWord', secondIndexOfWord);
     this.sprintGameView.render(words[firstIndexOfWord].word, words[secondIndexOfWord].wordTranslate);

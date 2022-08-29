@@ -10,3 +10,5 @@ export const ratioTwo = 2;
 export const ratioThree = 3;
 
 export const maxCountCircle = 3;
+
+export const maxOffset = 16; 
