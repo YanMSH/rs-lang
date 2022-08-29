@@ -25,15 +25,15 @@ export class Timer {
         this.timeLeft = timeLimit,
         this.timerInterval = 0;
     }
-    start() {
+    public start() {
         this.renderTimer();
         this.startTimer();
     }
-    onTimesUp() {
+    private onTimesUp() {
         clearInterval(this.timerInterval);
     }
 
-    startTimer() {
+    private startTimer() {
         let timePassed = 0;
         const timerLabel = document.getElementById('base-timer-label') as HTMLElement;
         this.timerInterval = setInterval(() => {
@@ -49,7 +49,7 @@ export class Timer {
         }, 1000);
     }
 
-    formatTime(time: number) {
+    private formatTime(time: number) {
         let seconds = time % 60;
 
         if (seconds < 10 && seconds !== 0) {
@@ -61,7 +61,7 @@ export class Timer {
         return `${seconds}`;
     }
 
-    renderTimer() {
+    private renderTimer() {
         const timer = document.querySelector('.timer') as HTMLElement;
         timer.innerHTML = `
         <div class="base-timer">
@@ -86,7 +86,7 @@ export class Timer {
     `;
     }
 
-    setRemainingPathColor(timeLeft: number) {
+    private setRemainingPathColor(timeLeft: number) {
         const { alert, warning, info } = this.colorCodes;
         const baseTimer = document.getElementById('base-timer-path-remaining') as HTMLElement;
         if (timeLeft <= alert.threshold) {
@@ -98,12 +98,12 @@ export class Timer {
         }
     }
 
-    calculateTimeFraction() {
+    private calculateTimeFraction() {
         const rawTimeFraction = this.timeLeft / timeLimit;
         return rawTimeFraction - (1 / timeLimit) * (1 - rawTimeFraction);
     }
 
-    setCircleDasharray() {
+    private setCircleDasharray() {
         const baseTimer = document.getElementById('base-timer-path-remaining') as HTMLElement;
         const circleDasharray = `${(this.calculateTimeFraction() * fullDashArray).toFixed(0)} 283`;
         baseTimer.setAttribute('stroke-dasharray', circleDasharray);

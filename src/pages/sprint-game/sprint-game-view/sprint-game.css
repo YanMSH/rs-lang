@@ -5,6 +5,7 @@
   --color-black: #000000;
   --color-white: #ffffff;
   --color-grey: #D3D3D3;
+  /* --color-green: green; */
 }
 .game-wrapper {
   padding: 15px;
@@ -49,7 +50,7 @@
 .circle {
   width: 20px;
   height: 20px;
-  background: var(--color-grey);
+  background: #D3D3D3;
   border: none;
   border-radius: 50%;
 }
@@ -98,6 +99,9 @@
 .ok-icon {
   width: 33px;
   height: 29px;
+  background-image: url('../../../assets/svg/ok_circle_icon.svg');
+  background-repeat: no-repeat;
+  background-size: 100%;
 }
 .human-img {
   width: 80px;
@@ -107,6 +111,11 @@
   margin-right: 15%;
   width: 40px;
   height: 44px;
+}
+.sound-icon {
+  background-image: url('../../../assets/svg/sound1.svg');
+  background-repeat: no-repeat;
+  background-size: 100%;
 }
 
 @media (max-width: 1280px) {
