@@ -1,4 +1,5 @@
 import Loader from '../../core/components/loader/loader';
+import AuthTools from '../../core/components/service/auth/auth-tools';
 import Storage from '../../core/components/service/storage/storage';
 import { emailIsValid, passIsValid } from '../../core/components/service/validation/validation';
 import { AuthMessages } from '../../core/constants/loader-const';
@@ -8,11 +9,13 @@ import './auth.css';
 export default class AuthPage {
     load: Loader;
     store: Storage;
-    regPage: RegPage
+    regPage: RegPage;
+    auth: AuthTools;
     constructor() {
         this.load = new Loader();
         this.store = new Storage();
         this.regPage = new RegPage();
+        this.auth = new AuthTools();
     }
     public render() {
         const app = document.querySelector('.app') as HTMLElement;
@@ -37,7 +40,9 @@ export default class AuthPage {
         const emailInput = authForm.querySelector('#form__input-email') as HTMLInputElement;
         const passInput = authForm.querySelector('#form__input-pass') as HTMLInputElement;
         const regLink = document.querySelector('.reg__link') as HTMLElement;
-        regLink.onclick = () => { this.regPage.render() }
+        regLink.onclick = () => {
+            this.regPage.render();
+        };
         const uncolorizeInput = (e: Event) => {
             (e.target as HTMLElement).classList.remove('invalid');
         };
@@ -57,8 +62,7 @@ export default class AuthPage {
             message.classList.add('error-message');
             if (responseMessage === AuthMessages.success) {
                 message.innerText = 'Вы успешно вошли';
-            }
-            else if (responseMessage === AuthMessages.notFound) {
+            } else if (responseMessage === AuthMessages.notFound) {
                 message.innerText = 'Пользователь не найден';
             } else if (responseMessage === AuthMessages.wrongPass) {
                 message.innerText = 'Неправильный e-mail или пароль';
@@ -79,11 +83,10 @@ export default class AuthPage {
                 password: passInput.value,
             };
             if (inputsAreValid()) {
-                const authResponse = await this.load.authUser(authData);
-                //DELETE BEFORE RELEASE
-                console.log(authResponse);
+                const authResponse = await this.auth.authUser(authData);
                 if (authResponse.message === AuthMessages.success) {
                     this.store.set('user', authResponse);
+                    this.store.set('auth', true);
                     showErrorMessage(authResponse.message);
                 } else {
                     showErrorMessage(authResponse.message);

@@ -1,6 +1,8 @@
 import Loader from '../../core/components/loader/loader';
 import Storage from '../../core/components/service/storage/storage';
-import { UserWord, UserWordServer } from '../../core/types/controller-types';
+import { toggleHardNothard } from '../../core/components/service/utils/utils';
+import { UserWord } from '../../core/types/controller-types';
+import { AWPaginatedResults } from '../../core/types/loader-types';
 
 export default class TextbookController {
     store: Storage;
@@ -10,12 +12,7 @@ export default class TextbookController {
         this.load = new Loader();
     }
 
-    // getToken(): string{
-    //   const userData = this.store.get('user') as ResponseAuth;
-    //   return userData.token as string;
-    // }
-
-    async postHardWord(id: string) {
+    public async postHardWord(id: string): Promise<void> {
         let oldData;
         try {
             oldData = await this.load.getAuthorizedData('words', id);
@@ -35,8 +32,12 @@ export default class TextbookController {
             };
         } else {
             body = {
-                difficulty: 'hard',
-                optional: (oldData as UserWord).optional,
+                difficulty: toggleHardNothard(oldData.difficulty),
+                optional: {
+                    learned: false,
+                    guessedRight: oldData.optional.guessedRight,
+                    guessedWrong: oldData.optional.guessedWrong,
+                },
             };
         }
         try {
@@ -46,17 +47,76 @@ export default class TextbookController {
         }
     }
 
-    async getAllUserWords(): Promise<UserWordServer[]> {
-        const result = (await this.load.getAuthorizedData('words', '')) as UserWordServer[];
-        return result;
+    public async postLearnedWord(id: string): Promise<void> {
+        let oldData;
+        try {
+            oldData = (await this.load.getAuthorizedData('words', id)) as UserWord;
+        } catch (e) {
+            console.log(e);
+            oldData = undefined;
+        }
+        let body;
+        if (oldData === undefined) {
+            body = {
+                difficulty: undefined,
+                optional: {
+                    learned: true,
+                    guessedRight: 0,
+                    guessedWrong: 0,
+                },
+            };
+        } else {
+            body = {
+                difficulty: 'nothard',
+                optional: {
+                    learned: !oldData.optional.learned,
+                    guessedRight: oldData.optional.guessedRight,
+                    guessedWrong: oldData.optional.guessedWrong,
+                },
+            };
+        }
+        try {
+            await this.load.postAuthorisedData('words', id, body as UserWord);
+        } catch (e) {
+            console.log(e);
+        }
     }
 
-    async getFilteredWords(wordsIds: string[]) {
-        const userWords = await this.getAllUserWords();
-        const userWordsIds = userWords.map((item) => {
-            return item.wordId;
-        });
-        const filteredWordsIds = wordsIds.filter((id) => userWordsIds.includes(id));
-        return filteredWordsIds;
+    public async getLearnedAggregatedWords(): Promise<AWPaginatedResults | undefined> {
+        try {
+            const result = (await this.load.getFilteredWords('"userWord.optional.learned":true')) as AWPaginatedResults;
+            return result;
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    public async getHardAggregatedWords(): Promise<AWPaginatedResults | undefined> {
+        try {
+            const result = (await this.load.getFilteredWords('"userWord.difficulty":"hard"')) as AWPaginatedResults;
+            return result;
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    public async getAllHardAggregatedWords(): Promise<AWPaginatedResults | undefined> {
+        try {
+            const result = (await this.load.getAllFilteredWords('"userWord.difficulty":"hard"')) as AWPaginatedResults;
+            return result;
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    public async getAllLearnedAggregatedWords(): Promise<AWPaginatedResults | undefined> {
+        try {
+            const result = (await this.load.getAllFilteredWords(
+                '"userWord.optional.learned":true'
+            )) as AWPaginatedResults;
+            return result;
+        } catch (e) {
+            console.log(e);
+        }
     }
 }

@@ -13,10 +13,11 @@ export type Word = {
     transcription: string;
     word: string;
     wordTranslate: string;
+    _id: string | undefined;
 };
 
 export type UserWord = {
-    difficulty: 'hard' | undefined;
+    difficulty: 'hard' | 'nothard' | undefined;
     optional: {
         learned: boolean;
         guessedRight: number;

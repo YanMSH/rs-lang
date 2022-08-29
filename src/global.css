@@ -51,6 +51,11 @@
     transition-duration: 0.4s;
 }
 
+.header__nav-learn-textbook {
+    text-decoration: none;
+    color: inherit;
+}
+
 .header__nav-point:hover {
     color: #ffffff;
 }

@@ -17,3 +17,7 @@
 .card__word-hard {
     outline: 2px solid red;
 }
+
+.card__word-learned {
+    border: 2px solid green;
+}
