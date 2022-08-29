@@ -1,23 +1,186 @@
+:root {
+    --color-primary: #6667abff;
+    --color-accent: #f9db6dff;
+    --color-light: #f4ededff;
+    --color-shadow: #877666ff;
+    --color-error: #a8201aff;
+    --color-black: #1c1c1c;
+    --color-white: #f9f9f9;
+    --font-title: 'Ubuntu', sans-serif;
+    --font-text: 'PT Sans', sans-serif;
+}
+
 .cards__container {
     display: flex;
     flex-wrap: wrap;
-    margin-top: 32px;
-    gap: 48px;
+    margin: 32px auto 112px;
+    gap: 60px;
+    width: 1200px;
 }
 
 .card {
-    padding: 16px;
-    max-width: 390px;
+    background-color: var(--color-white);
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    max-width: 360px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
 }
+
+.card__main {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 120px;
+}
+
+.card__buttons-toggleables {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+    width: 64px;
+}
+
+.card__main-text {
+    font-family: var(--font-text);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.card__main-word {
+    color: var(--color-error);
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.card__main-etc {
+    font-size: 24px;
+    color: var(--color-black);
+}
+
+.word__transcription {
+    font-style: italic;
+    font-weight: 400;
+}
+
+.word__translation {
+    font-style: normal;
+    font-weight: 700;
+}
+
+.card__buttons-audio {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+}
+
+.btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: var(--color-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition-duration: 0.4s;
+}
+
+.btn:hover {
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
+    background-color: var(--color-white);
+}
+.btn-toggled {
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
+    background-color: var(--color-white);
+}
+.icon-toggled {
+    fill: var(--color-primary);
+}
+
+.btn:hover path {
+    fill: var(--color-primary);
+}
+
 .word__pic {
-    width: 40%;
-    height: 40%;
+    width: 360px;
+    height: 240px;
+}
+
+.card:hover .card__hidden {
+    transform: translateY(50%);
+}
+
+.card__hidden {
+    position: absolute;
+    height: 240px;
+    transform: translateY(400%);
+    background-color: rgba(255, 234, 155, 0.8);
+    font-family: var(--font-text);
+    font-size: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    transition-delay: 0.15s;
+    transition-timing-function: ease-in-out;
+    transition-duration: 0.5s;
+}
+
+.hidden__revail {
+    transform: translateY(50%);
+}
+
+.card__hidden-text {
+    width: 330px;
+    margin-top: 12px;
+}
+
+.card__meaning,
+.card__example {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.card__meaning-eng,
+.card__example-eng {
+    transition-duration: 0.3s;
+    font-style: italic;
+}
+
+.underline {
+    font-size: 18px;
+    text-decoration: underline;
 }
 
 .card__word-hard {
-    outline: 2px solid red;
+    background-color: #dc3545;
+}
+.card__word-hard:hover {
+    filter: opacity(0.6);
+    background-color: #dc3545;
+}
+.card__word-hard:hover path {
+    fill: var(--color-white);
 }
 
 .card__word-learned {
-    border: 2px solid green;
+    background-color: #28a745;
+}
+
+.card__word-learned:hover {
+    background-color: #28a745;
+    filter: opacity(0.6);
+}
+.card__word-learned:hover path {
+    fill: var(--color-white);
 }
