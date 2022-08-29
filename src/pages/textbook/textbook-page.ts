@@ -252,24 +252,35 @@ export default class TextbookPage {
         });
     }
 
+    private markButtons() {
+        const groupButtons = [...document.querySelectorAll('.group__controls-button')];
+        const currentGroup = this.store.get('group') as number;
+        groupButtons[currentGroup].classList.add('group__controls-current');
+        if (!this.store.get('auth')) {
+            groupButtons[groupButtons.length - 1].classList.add('group__controls-disabled');
+        }
+    }
+
     public async render() {
         this.getParam('page');
         this.getParam('group');
         const app = document.querySelector('.app') as HTMLElement;
         app.innerHTML = `
         <p>Страница ${this.page} Группа ${this.group + 1}</p>
-        <div class="page__controls">
-            <button class="page__controls-prev">Prev page</button>
-            <button class="page__controls-next">Next page</button>
-        </div>
-        <div class="group__controls">
-        <button class="group__controls-button">1</button>
-        <button class="group__controls-button">2</button>
-        <button class="group__controls-button">3</button>
-        <button class="group__controls-button">4</button>
-        <button class="group__controls-button">5</button>
-        <button class="group__controls-button">6</button>
-        <button class="group__controls-button">7</button>
+        <div class="app__controls">
+            <div class="group__controls">
+                <button class="group__controls-button">1</button>
+                <button class="group__controls-button">2</button>
+                <button class="group__controls-button">3</button>
+                <button class="group__controls-button">4</button>
+                <button class="group__controls-button">5</button>
+                <button class="group__controls-button">6</button>
+                <button class="group__controls-button">7</button>
+            </div>
+            <div class="page__controls">
+                <button class="page__controls-prev">Prev page</button>
+                <button class="page__controls-next">Next page</button>
+            </div>
         </div>
         `;
         this.turnOnControls();
@@ -287,6 +298,7 @@ export default class TextbookPage {
                 .then((value) => value?.forEach((item) => cards.append(this.drawCard(item))));
         }
         app.append(cards);
+        this.markButtons();
         await this.markHardWords();
         await this.markLearnedWords();
         await this.markPage();
