@@ -46,24 +46,48 @@ export class SprintGameController {
     this.chooseLevel();
   }
 
+  public async startGame(page: number) {
+    const group = this.storage.get('group') as number;
+    const words = await this.fillWords(group, page);
+    const firstIndexOfWord = this.getRandomNumber(0, words.length / 4);
+    const secondIndexOfWord = this.getRandomNumber(0, words.length / 4);
+    this.storage.set('firstIndexOfWord', firstIndexOfWord);
+    this.storage.set('secondIndexOfWord', secondIndexOfWord);
+    this.sprintGameView.render(words[firstIndexOfWord].word, words[secondIndexOfWord].wordTranslate);
+    this.changeVolume();
+    this.changeWords(page);
+    this.setCountCircleToLocalStorage(0); 
+    this.setRightAnswerCountToStorage(0);
+    this.endGame();
+  }
+
+  private endGame() {
+    const timer = document.querySelector('.base-timer__label') as HTMLSpanElement;
+    setTimeout(() => {
+      console.log(timer);
+      if (timer && Number(timer.textContent) === 0) {
+        console.log('end-game');
+        // this.sprintGameView.resetMain();
+      }
+    }, 60000);
+  }
+
   private chooseLevel() {
     this.levelPage.renderLevelPage('wrapper-sprint', this.sprintLevelMessage);
     const level = document.querySelectorAll('.level');
+    const page = 0;
     level.forEach((elem) => {
       elem.addEventListener('click', async () => {
         const buttonLevel = Number(elem.getAttribute('data-level'));
         this.storage.set('group', buttonLevel - 1);
-        this.startGame();
-        this.changeWords();
-        this.setCountCircleToLocalStorage(0); 
-        this.setRightAnswerCountToStorage(0);
+        this.startGame(page);
       });
     });
   }
 
-  private async changeWords() {
+  private async changeWords(page: number) {
       const group = this.storage.get('group') as number;
-      const words = await this.fillWords(group);
+      const words = await this.fillWords(group, page);
       const wrongAnswerBtn = document.querySelector('.wrong-answer-btn') as HTMLButtonElement;
       const rightAnswerBtn = document.querySelector('.right-answer-btn') as HTMLButtonElement;
       const sumPoint = document.querySelector('.point-count') as HTMLSpanElement;
@@ -258,35 +282,12 @@ export class SprintGameController {
     return await this.loader.get(`words?page=${page}&group=${group}`);
   }
 
-  private async fillWords(group: number, page = 0) {
+  private async fillWords(group: number, page: number) {
     const data = await this.getWords(group, page);
     return data;
   }
 
   private getRandomNumber(min: number, max: number) {
     return Math.ceil(Math.random() * (max - min) + min);
-  }
-
-  private async startGame() {
-    const group = this.storage.get('group') as number;
-    const words = await this.fillWords(group);
-    const firstIndexOfWord = this.getRandomNumber(0, words.length / 4);
-    const secondIndexOfWord = this.getRandomNumber(0, words.length / 4);
-    this.storage.set('firstIndexOfWord', firstIndexOfWord);
-    this.storage.set('secondIndexOfWord', secondIndexOfWord);
-    this.sprintGameView.render(words[firstIndexOfWord].word, words[secondIndexOfWord].wordTranslate);
-    this.changeVolume();
-    this.endGame();
-  }
-
-  private endGame() {
-    const timer = document.querySelector('.base-timer__label') as HTMLSpanElement;
-    setTimeout(() => {
-      console.log(timer);
-      if (timer && Number(timer.textContent) === 0) {
-        console.log('end-game');
-        // this.sprintGameView.resetMain();
-      }
-  }, 60000);
   }
 }
