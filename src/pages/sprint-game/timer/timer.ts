@@ -107,7 +107,7 @@ export class Timer {
 
     private setCircleDasharray() {
         const baseTimer = document.getElementById('base-timer-path-remaining') as HTMLElement;
-        const circleDasharray = `${(this.calculateTimeFraction() * fullDashArray).toFixed(0)} 283`;
+        const circleDasharray = `${(this.calculateTimeFraction() * fullDashArray).toFixed(0)} ${fullDashArray}`;
         if (baseTimer) {
             baseTimer.setAttribute('stroke-dasharray', circleDasharray);
         }

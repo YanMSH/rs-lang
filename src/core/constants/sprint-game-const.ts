@@ -1,14 +1,23 @@
-export const circleActiveBackground = 'green';
-export const circleNoActiveBackground = '#D3D3D3';
+export enum CircleBackground {
+    circleActiveBackground = 'green',
+    circleNoActiveBackground = '#D3D3D3'
+}
 
-export const maxVolume = 1;
-export const minVolume = 0;
+export enum Volume {
+    maxVolume = 1,
+    minVolume = 0
+}
 
 export const initialPoints = 10;
-export const ratioOne = 1;
-export const ratioTwo = 2;
-export const ratioThree = 3;
+
+export enum Ratios {
+    ratioOne = 1,
+    ratioTwo = 2,
+    ratioThree = 3
+}
 
 export const maxCountCircle = 3;
 
-// export const maxOffset = 16;
+export const minuteInMilisec = 60000;
+
+export const indexOfFifthWord = 4; 

@@ -3,8 +3,8 @@ import LevelPage from '../sprint-game-view/level-page';
 import { sprintLevelMessage } from '../../../core/constants/level-const';
 import Storage from '../../../core/components/service/storage/storage';
 import Loader from '../../../core/components/loader/loader';
-import { circleActiveBackground, circleNoActiveBackground, maxVolume, minVolume } from "../../../core/constants/sprint-game-const";
-import { initialPoints, ratioOne, ratioTwo, ratioThree, maxCountCircle } from "../../../core/constants/sprint-game-const";
+import { CircleBackground , Volume, Ratios } from "../../../core/constants/sprint-game-const";
+import { initialPoints, maxCountCircle, minuteInMilisec, indexOfFifthWord } from "../../../core/constants/sprint-game-const";
 import { Word } from '../../../core/types/controller-types';
 import { Timer } from '../timer/timer';
 export class SprintGameController {
@@ -24,7 +24,9 @@ export class SprintGameController {
   private ratioThree: number;
   private maxCountCircle: number;
   private timer: Timer;
-  private timerTimeout: number | undefined
+  private timerTimeout: number | undefined;
+  private minuteInMilisec: number;
+  private indexOfFifthWord: number;
   
 
   constructor() {
@@ -34,17 +36,19 @@ export class SprintGameController {
     this.storage = new Storage();
     this.loader = new Loader();
     this.audio = new Audio();
-    this.circleActiveBackground = circleActiveBackground;
-    this.circleNoActiveBackground = circleNoActiveBackground;
-    this.minVolume = minVolume;
-    this.maxVolume = maxVolume;
+    this.circleActiveBackground = CircleBackground.circleActiveBackground;
+    this.circleNoActiveBackground = CircleBackground.circleNoActiveBackground;
+    this.minVolume = Volume.minVolume;
+    this.maxVolume = Volume.maxVolume;
     this.initialPoints = initialPoints;
-    this.ratioOne = ratioOne;
-    this.ratioTwo = ratioTwo;
-    this.ratioThree = ratioThree;
+    this.ratioOne = Ratios.ratioOne;
+    this.ratioTwo = Ratios.ratioTwo;
+    this.ratioThree = Ratios.ratioThree;
     this.maxCountCircle = maxCountCircle;
     this.timer = new Timer();
     this.timerTimeout = 0;
+    this.minuteInMilisec = minuteInMilisec;
+    this.indexOfFifthWord = indexOfFifthWord;
   }
 
   public render() {
@@ -56,8 +60,8 @@ export class SprintGameController {
     const page = Number(this.storage.get('page'));
     const group = this.storage.get('group') as number;
     const words = await this.fillWords(group, page);
-    const firstIndexOfWord = this.getRandomNumber(0, words.length / 4);
-    const secondIndexOfWord = this.getRandomNumber(0, words.length / 4);
+    const firstIndexOfWord = this.getRandomNumber(0, this.indexOfFifthWord);
+    const secondIndexOfWord = this.getRandomNumber(0, this.indexOfFifthWord);
     this.storage.set('firstIndexOfWord', firstIndexOfWord);
     this.storage.set('secondIndexOfWord', secondIndexOfWord);
     this.sprintGameView.render(words[firstIndexOfWord].word, words[secondIndexOfWord].wordTranslate);
@@ -80,7 +84,7 @@ export class SprintGameController {
         console.log('end-game');
         // this.sprintGameView.resetMain();
       }
-    }, 60000);
+    }, this.minuteInMilisec);
   }
 
   private endGameWordsOut() {
@@ -110,13 +114,14 @@ export class SprintGameController {
       const sumPoint = document.querySelector('.point-count') as HTMLSpanElement;
       const point = Number(sumPoint.textContent);
       let offset = 0;
+      const maxOffSet = words.length - 4;
       if (wrongAnswerBtn) {
         wrongAnswerBtn.addEventListener('click', async () => {
           const rightAnswerCount = this.storage.get('rightAnswerCount') as number;
           const countCircle = this.storage.get('countCircle') as number;
           this.checkWrongAnswer(point, countCircle, rightAnswerCount);
-          if (offset < words.length - 4) {
-            const lastRandomNumber = words.length / 4 - 1 + Number(`${offset}`);
+          if (offset < maxOffSet) {
+            const lastRandomNumber = this.indexOfFifthWord + Number(`${offset}`);
             const firstRandomNumber = 0 + Number(`${offset}`);
             const firstIndexOfWord = this.getRandomNumber(firstRandomNumber, lastRandomNumber);
             const secondIndexOfWord = this.getRandomNumber(firstRandomNumber, lastRandomNumber);
@@ -133,11 +138,11 @@ export class SprintGameController {
       }
       if (rightAnswerBtn) {
         rightAnswerBtn.addEventListener('click', async () => {
-          if (offset < words.length - 4) {
+          if (offset < maxOffSet) {
             const rightAnswerCount = this.storage.get('rightAnswerCount') as number;
             const countCircle = this.storage.get('countCircle') as number;
             this.checkRightAnswer(point, countCircle, rightAnswerCount);
-            const lastRandomNumber = words.length / 4 - 1 + Number(`${offset}`);
+            const lastRandomNumber = this.indexOfFifthWord + Number(`${offset}`);
             const firstRandomNumber = 0 + Number(`${offset}`);
             const firstIndexOfWord = this.getRandomNumber(firstRandomNumber, lastRandomNumber);
             const secondIndexOfWord = this.getRandomNumber(firstRandomNumber, lastRandomNumber);
@@ -302,7 +307,6 @@ export class SprintGameController {
   }
 
   private async fillWords(group: number, page: number) {
-    // const currentData = await this.getWords(group, page);
     let data = await this.getWords(group, page);
     let prevData = [] as Array<Word>;
     while (page) {
