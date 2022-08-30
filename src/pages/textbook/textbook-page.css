@@ -19,17 +19,34 @@
     justify-content: space-between;
 }
 
-.group__controls {
+.app__hard-page {
+    background-color: rgba(220, 53, 69, 0.2);
+}
+
+.app_learned-page {
+    background-color: rgba(40, 167, 69, 0.2);
+}
+
+.textbook__title {
+    text-align: center;
+    font-size: 32px;
+    font-family: var(--font-title);
+    color: var(--color-black);
+    font-weight: 700;
+}
+
+.textbook__control-panel {
     display: flex;
     flex-direction: row;
     gap: 10px;
 }
 
-.group__controls-button {
+.control__button {
+    display: block;
     width: 40px;
     height: 40px;
     font-family: var(--font-text);
-    font-weight: 700;
+    font-weight: 400;
     font-size: 18px;
     color: var(--color-black);
     border: none;
@@ -39,11 +56,12 @@
     transition-duration: 0.3s;
 }
 
-.group__controls-button:hover {
+.control__button:hover {
     filter: brightness(1.1);
 }
 
-.group__controls-current {
+.controls-current {
+    pointer-events: none;
     background-color: var(--color-primary);
     color: var(--color-accent);
 }

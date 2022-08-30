@@ -94,6 +94,8 @@
 }
 
 .app {
+    padding-top: 64px;
+    padding-bottom: 112px;
     min-height: 580px;
 }
 

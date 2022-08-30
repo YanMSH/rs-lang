@@ -4,6 +4,8 @@ import { Word } from '../../core/types/controller-types';
 import Storage from '../../core/components/service/storage/storage';
 import TextbookController from './textbook-controller';
 import { AWPaginatedResults } from '../../core/types/loader-types';
+import { LAST_PAGE } from '../../core/constants/loader-const';
+import { pageButtons } from '../../core/types/textbook-types';
 
 export default class TextbookPage {
     tbController: TextbookController;
@@ -167,50 +169,65 @@ export default class TextbookPage {
 
     private async markPage() {
         const app = document.querySelector('.app') as HTMLElement;
-        if (document.querySelectorAll('.card__word-hard').length >= 20) {
-            app.classList.add('card__word-hard');
-        } else {
-            app.classList.remove('card__word-hard');
-        }
         if (document.querySelectorAll('.card__word-learned').length >= 20) {
-            app.classList.add('card__word-learned');
+            app.classList.add('app_learned-page');
         } else {
-            app.classList.remove('card__word-learned');
+            app.classList.remove('app_learned-page');
+        }
+        if (document.querySelectorAll('.card__word-hard').length >= 20) {
+            app.classList.add('app__hard-page');
+        } else {
+            app.classList.remove('app__hard-page');
         }
     }
 
     private turnOnControls() {
-        const prevPageButton = document.querySelector('.page__controls-prev') as HTMLElement;
-        const nextPageButton = document.querySelector('.page__controls-next') as HTMLElement;
         const groupControlPanel = document.querySelector('.group__controls') as HTMLElement;
-
-        if (this.page === 0 || this.group === 6) {
-            prevPageButton.setAttribute('disabled', 'true');
-        } else {
-            prevPageButton.removeAttribute('disabled');
-        }
-        if (this.page === 29 || this.group === 6) {
-            nextPageButton.setAttribute('disabled', 'true');
-        } else {
-            nextPageButton.removeAttribute('disabled');
-        }
-
-        prevPageButton.addEventListener('click', () => {
-            this.page -= 1;
-            this.store.set('page', this.page);
-            this.render();
-        });
-        nextPageButton.addEventListener('click', () => {
-            this.page += 1;
-            this.store.set('page', this.page);
-            this.render();
-        });
+        const pageControlPanel = document.querySelector('.page__controls') as HTMLElement;
 
         groupControlPanel.addEventListener('click', (e) => {
             if (e.target !== groupControlPanel) {
                 this.group = Number((e.target as HTMLElement).innerText) - 1;
                 this.store.set('group', this.group);
                 this.render();
+            }
+        });
+        pageControlPanel.addEventListener('click', (e) => {
+            let target = e.target as HTMLElement;
+            if (target !== pageControlPanel) {
+                if (target.tagName === 'IMG') {
+                    target = target.parentElement as HTMLElement;
+                }
+                const changePage = () => {
+                    this.store.set('page', this.page);
+                    this.render();
+                };
+                switch ((target as HTMLElement).dataset.button) {
+                    case pageButtons.prevArrow:
+                        this.page -= 1;
+                        changePage();
+                        break;
+                    case pageButtons.nextPage:
+                        this.page += 1;
+                        changePage();
+                        break;
+                    case pageButtons.jumpPage:
+                        this.page += 2;
+                        changePage();
+                        break;
+                    case pageButtons.preLastPage:
+                        this.page = LAST_PAGE - 1;
+                        changePage();
+                        break;
+                    case pageButtons.lastPage:
+                        this.page = LAST_PAGE;
+                        changePage();
+                        break;
+                    case pageButtons.nextArrow:
+                        this.page += 1;
+                        changePage();
+                        break;
+                }
             }
         });
     }
@@ -255,9 +272,59 @@ export default class TextbookPage {
     private markButtons() {
         const groupButtons = [...document.querySelectorAll('.group__controls-button')];
         const currentGroup = this.store.get('group') as number;
-        groupButtons[currentGroup].classList.add('group__controls-current');
+        groupButtons[currentGroup].classList.add('controls-current');
         if (!this.store.get('auth')) {
             groupButtons[groupButtons.length - 1].classList.add('group__controls-disabled');
+        }
+    }
+
+    private makePagination() {
+        const pageControls = document.querySelector('.page__controls') as HTMLElement;
+        const makeControlButton = () => {
+            const button = document.createElement('button') as HTMLButtonElement;
+            button.classList.add('control__button');
+            return button;
+        };
+        const currentPageButton = makeControlButton();
+        currentPageButton.innerText = (this.page + 1).toString();
+        currentPageButton.classList.add('controls-current');
+        currentPageButton.dataset.button = pageButtons.currentPage;
+        pageControls.append(currentPageButton);
+        if (this.page > 0) {
+            const prevArrowButton = makeControlButton();
+            prevArrowButton.innerHTML = '<img src="./../../assets/svg/prev-arrow.svg">';
+            prevArrowButton.dataset.button = pageButtons.prevArrow;
+            pageControls.prepend(prevArrowButton);
+        }
+        if (this.page < LAST_PAGE) {
+            const nextPageButton = makeControlButton();
+            nextPageButton.innerText = (this.page + 2).toString();
+            nextPageButton.dataset.button = pageButtons.nextPage;
+            pageControls.append(nextPageButton);
+        }
+        if (this.page <= LAST_PAGE - 3) {
+            const jumpPageButton = makeControlButton();
+            jumpPageButton.innerText = '...';
+            jumpPageButton.dataset.button = pageButtons.jumpPage;
+            pageControls.append(jumpPageButton);
+        }
+        if (this.page <= LAST_PAGE - 3) {
+            const preLastPageButton = makeControlButton();
+            preLastPageButton.innerText = LAST_PAGE.toString();
+            preLastPageButton.dataset.button = pageButtons.preLastPage;
+            pageControls.append(preLastPageButton);
+        }
+        if (this.page < LAST_PAGE - 1) {
+            const lastPageButton = makeControlButton();
+            lastPageButton.innerText = (LAST_PAGE + 1).toString();
+            lastPageButton.dataset.button = pageButtons.lastPage;
+            pageControls.append(lastPageButton);
+        }
+        if (this.page < LAST_PAGE) {
+            const nextArrowButton = makeControlButton();
+            nextArrowButton.innerHTML = '<img src="./../../assets/svg/next-arrow.svg">';
+            nextArrowButton.dataset.button = pageButtons.nextArrow;
+            pageControls.append(nextArrowButton);
         }
     }
 
@@ -266,20 +333,19 @@ export default class TextbookPage {
         this.getParam('group');
         const app = document.querySelector('.app') as HTMLElement;
         app.innerHTML = `
-        <p>Страница ${this.page} Группа ${this.group + 1}</p>
+
+        <h2 class="textbook__title">Учебник</h2>
         <div class="app__controls">
-            <div class="group__controls">
-                <button class="group__controls-button">1</button>
-                <button class="group__controls-button">2</button>
-                <button class="group__controls-button">3</button>
-                <button class="group__controls-button">4</button>
-                <button class="group__controls-button">5</button>
-                <button class="group__controls-button">6</button>
-                <button class="group__controls-button">7</button>
+            <div class="group__controls textbook__control-panel">
+                <button class="group__controls-button control__button">1</button>
+                <button class="group__controls-button control__button">2</button>
+                <button class="group__controls-button control__button">3</button>
+                <button class="group__controls-button control__button">4</button>
+                <button class="group__controls-button control__button">5</button>
+                <button class="group__controls-button control__button">6</button>
+                <button class="group__controls-button control__button">7</button>
             </div>
-            <div class="page__controls">
-                <button class="page__controls-prev">Prev page</button>
-                <button class="page__controls-next">Next page</button>
+            <div class="page__controls textbook__control-panel">
             </div>
         </div>
         `;
@@ -297,6 +363,8 @@ export default class TextbookPage {
                 .getAllHardAggregatedWords()
                 .then((value) => value?.forEach((item) => cards.append(this.drawCard(item))));
         }
+
+        this.makePagination();
         app.append(cards);
         this.markButtons();
         await this.markHardWords();
