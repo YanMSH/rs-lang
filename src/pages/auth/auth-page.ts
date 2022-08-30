@@ -21,18 +21,19 @@ export default class AuthPage {
         const app = document.querySelector('.app') as HTMLElement;
         app.innerHTML = `
         <div class="auth__form-container">
+        <h2 class="auth__title">Вход</h2>
             <form class="auth__form">
                 <div class="form__email">
-                    <label for="form__input-email">E-mail</label>
-                <input type="email" id="form__input-email">
+                    
+                <input type="email" id="form__input-email" placeholder="E-mail" class="form__input">
                 </div>
                 <div class="form__pass">
-                    <label for="form__input-pass">Пароль</label>
-                <input type="password" id="form__input-pass">
+                    
+                <input type="password" id="form__input-pass" placeholder="Пароль" class="form__input">
                 </div>
-                <button type="submit" class="auth__submit">Войти</button>
+                <button type="submit" class="auth__submit form__button">Войти</button>
             </form>
-            <p>Нет аккаунта? <a class="reg__link" href="#">Зарегистрируйтесь!</a></p>
+            <p class="reg__hint">Нет аккаунта? <a class="reg__link" href="#">Зарегистрируйтесь!</a></p>
         </div>
         `;
 
