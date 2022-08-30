@@ -29,7 +29,7 @@ export class Timer {
         this.renderTimer();
         this.startTimer();
     }
-    private onTimesUp() {
+    public onTimesUp() {
         clearInterval(this.timerInterval);
     }
 
@@ -62,6 +62,7 @@ export class Timer {
     }
 
     private renderTimer() {
+        this.timeLeft = timeLimit;
         const timer = document.querySelector('.timer') as HTMLElement;
         timer.innerHTML = `
         <div class="base-timer">
@@ -89,10 +90,10 @@ export class Timer {
     private setRemainingPathColor(timeLeft: number) {
         const { alert, warning, info } = this.colorCodes;
         const baseTimer = document.getElementById('base-timer-path-remaining') as HTMLElement;
-        if (timeLeft <= alert.threshold) {
+        if (timeLeft <= alert.threshold && baseTimer) {
             baseTimer.classList.remove(warning.color);
             baseTimer.classList.add(alert.color);
-        } else if (this.timeLeft <= warning.threshold) {
+        } else if (this.timeLeft <= warning.threshold && baseTimer) {
             baseTimer.classList.remove(info.color);
             baseTimer.classList.add(warning.color);
         }
@@ -100,12 +101,22 @@ export class Timer {
 
     private calculateTimeFraction() {
         const rawTimeFraction = this.timeLeft / timeLimit;
-        return rawTimeFraction - (1 / timeLimit) * (1 - rawTimeFraction);
+        const time = rawTimeFraction - (1 / timeLimit) * (1 - rawTimeFraction);
+        return time;
     }
 
     private setCircleDasharray() {
         const baseTimer = document.getElementById('base-timer-path-remaining') as HTMLElement;
         const circleDasharray = `${(this.calculateTimeFraction() * fullDashArray).toFixed(0)} 283`;
-        baseTimer.setAttribute('stroke-dasharray', circleDasharray);
+        if (baseTimer) {
+            baseTimer.setAttribute('stroke-dasharray', circleDasharray);
+        }
+    }
+
+    public resetTimer() {
+        const timer = document.querySelector('.timer') as HTMLDivElement;
+        this.timeLeft = 0;
+        this.onTimesUp();
+        timer.innerHTML = '';
     }
 }

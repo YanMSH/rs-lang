@@ -10,6 +10,7 @@ export class SprintGameView {
   public render(englishWord: string, russianWord: string) {
     this.resetMain();
     this.addContainersToMain(englishWord, russianWord);
+    this.timer.onTimesUp();
     this.timer.start();
   }
   public resetMain() {

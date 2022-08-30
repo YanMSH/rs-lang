@@ -11,4 +11,4 @@ export const ratioThree = 3;
 
 export const maxCountCircle = 3;
 
-export const maxOffset = 16; 
+// export const maxOffset = 16;

@@ -4,7 +4,9 @@ import { sprintLevelMessage } from '../../../core/constants/level-const';
 import Storage from '../../../core/components/service/storage/storage';
 import Loader from '../../../core/components/loader/loader';
 import { circleActiveBackground, circleNoActiveBackground, maxVolume, minVolume } from "../../../core/constants/sprint-game-const";
-import { initialPoints, ratioOne, ratioTwo, ratioThree, maxCountCircle, maxOffset } from "../../../core/constants/sprint-game-const";
+import { initialPoints, ratioOne, ratioTwo, ratioThree, maxCountCircle } from "../../../core/constants/sprint-game-const";
+import { Word } from '../../../core/types/controller-types';
+import { Timer } from '../timer/timer';
 export class SprintGameController {
   private sprintGameView: SprintGameView;
   private levelPage: LevelPage;
@@ -21,7 +23,9 @@ export class SprintGameController {
   private ratioTwo: number;
   private ratioThree: number;
   private maxCountCircle: number;
-  private maxOffset: number;
+  private timer: Timer;
+  private timerTimeout: number | undefined
+  
 
   constructor() {
     this.sprintGameView = new SprintGameView();
@@ -39,14 +43,17 @@ export class SprintGameController {
     this.ratioTwo = ratioTwo;
     this.ratioThree = ratioThree;
     this.maxCountCircle = maxCountCircle;
-    this.maxOffset = maxOffset;
+    this.timer = new Timer();
+    this.timerTimeout = 0;
   }
 
   public render() {
     this.chooseLevel();
   }
 
-  public async startGame(page: number) {
+  public async startGame() {
+    this.clearTimeoutOfTimer();
+    const page = Number(this.storage.get('page'));
     const group = this.storage.get('group') as number;
     const words = await this.fillWords(group, page);
     const firstIndexOfWord = this.getRandomNumber(0, words.length / 4);
@@ -58,12 +65,16 @@ export class SprintGameController {
     this.changeWords(page);
     this.setCountCircleToLocalStorage(0); 
     this.setRightAnswerCountToStorage(0);
-    this.endGame();
+    this.endGameTimeout();
   }
 
-  private endGame() {
+  public clearTimeoutOfTimer() {
+    clearTimeout(this.timerTimeout);
+  }
+
+  private endGameTimeout() {
     const timer = document.querySelector('.base-timer__label') as HTMLSpanElement;
-    setTimeout(() => {
+    this.timerTimeout = setTimeout(() => {
       console.log(timer);
       if (timer && Number(timer.textContent) === 0) {
         console.log('end-game');
@@ -72,15 +83,21 @@ export class SprintGameController {
     }, 60000);
   }
 
+  private endGameWordsOut() {
+    console.log('end-game');
+    this.clearTimeoutOfTimer();
+    this.timer.resetTimer();
+    this.sprintGameView.resetMain();
+  }
+
   private chooseLevel() {
     this.levelPage.renderLevelPage('wrapper-sprint', this.sprintLevelMessage);
     const level = document.querySelectorAll('.level');
-    const page = 0;
     level.forEach((elem) => {
       elem.addEventListener('click', async () => {
         const buttonLevel = Number(elem.getAttribute('data-level'));
         this.storage.set('group', buttonLevel - 1);
-        this.startGame(page);
+        this.startGame();
       });
     });
   }
@@ -94,16 +111,15 @@ export class SprintGameController {
       const point = Number(sumPoint.textContent);
       let offset = 0;
       if (wrongAnswerBtn) {
-        wrongAnswerBtn.addEventListener('click', () => {
+        wrongAnswerBtn.addEventListener('click', async () => {
           const rightAnswerCount = this.storage.get('rightAnswerCount') as number;
           const countCircle = this.storage.get('countCircle') as number;
           this.checkWrongAnswer(point, countCircle, rightAnswerCount);
-          if (offset < this.maxOffset) {
+          if (offset < words.length - 4) {
             const lastRandomNumber = words.length / 4 - 1 + Number(`${offset}`);
             const firstRandomNumber = 0 + Number(`${offset}`);
             const firstIndexOfWord = this.getRandomNumber(firstRandomNumber, lastRandomNumber);
             const secondIndexOfWord = this.getRandomNumber(firstRandomNumber, lastRandomNumber);
-            console.log(firstIndexOfWord, secondIndexOfWord);
             this.storage.set('firstIndexOfWord', firstIndexOfWord);
             this.storage.set('secondIndexOfWord', secondIndexOfWord);
             this.sprintGameView.clickOnTheAnswerButton(words[firstIndexOfWord].word, words[secondIndexOfWord].wordTranslate);
@@ -111,13 +127,13 @@ export class SprintGameController {
             setTimeout(this.changeUsualBorderOfContainer, 2000);
             offset += 1;
           } else {
-            offset = 0;
+            this.endGameWordsOut();
           }
         });
       }
       if (rightAnswerBtn) {
-        rightAnswerBtn.addEventListener('click', () => {
-          if (offset < this.maxOffset) {
+        rightAnswerBtn.addEventListener('click', async () => {
+          if (offset < words.length - 4) {
             const rightAnswerCount = this.storage.get('rightAnswerCount') as number;
             const countCircle = this.storage.get('countCircle') as number;
             this.checkRightAnswer(point, countCircle, rightAnswerCount);
@@ -131,11 +147,11 @@ export class SprintGameController {
             setTimeout(this.changeOkUsualIcon, 300);
             setTimeout(this.changeUsualBorderOfContainer, 2000);
             offset += 1;
-        } else {
-            offset = 0;
-        } 
-      });
-    }
+          } else {
+            this.endGameWordsOut();
+          } 
+        });
+      }
   }
 
   private checkRightAnswer(point: number, countCircle: number, rightAnswerCount: number) {
@@ -275,7 +291,10 @@ export class SprintGameController {
 
   private changeUsualBorderOfContainer() {
     const gameContainer = document.querySelector('.sprint-game-container') as HTMLDivElement;
-    gameContainer.style.border =  'none';
+    if (gameContainer) {
+      gameContainer.style.border =  'none';
+    }
+    
   }
 
   private async getWords(group: number, page = 0) {
@@ -283,7 +302,15 @@ export class SprintGameController {
   }
 
   private async fillWords(group: number, page: number) {
-    const data = await this.getWords(group, page);
+    // const currentData = await this.getWords(group, page);
+    let data = await this.getWords(group, page);
+    let prevData = [] as Array<Word>;
+    while (page) {
+      prevData = await this.getWords(group, page - 1) as Array<Word>;
+      data = data.concat(prevData);
+      page -= 1;
+    }
+    // console.log('data', data);
     return data;
   }
 
