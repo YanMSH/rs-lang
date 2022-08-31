@@ -20,9 +20,9 @@ export default class AuthPage {
     public render() {
         const app = document.querySelector('.app') as HTMLElement;
         app.innerHTML = `
-        <div class="auth__form-container">
-        <h2 class="auth__title">Вход</h2>
-            <form class="auth__form">
+        <div class="auth__form-container form__container">
+        <h2 class="auth__title form__title">Вход</h2>
+            <form class="auth__form form">
                 <div class="form__email">
                     
                 <input type="email" id="form__input-email" placeholder="E-mail" class="form__input">

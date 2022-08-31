@@ -12,3 +12,7 @@ export const emailIsValid = (emailInput: HTMLInputElement): boolean => {
 export const passIsValid = (passInput: HTMLInputElement): boolean => {
     return passInput.value.length >= 8;
 };
+
+export const passIsConfirmed = (passInput: HTMLInputElement, passConfirmInput: HTMLInputElement): boolean => {
+    return passInput.value === passConfirmInput.value;
+};

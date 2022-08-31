@@ -1,4 +1,4 @@
-.auth__form-container {
+.form__container {
     width: 600px;
     margin: 112px auto;
     display: flex;
@@ -6,19 +6,21 @@
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     flex-direction: column;
     align-items: center;
-
     font-family: var(--font-text);
+}
+
+.auth__form-container {
     min-height: 486px;
 }
 
-.auth__title {
+.form__title {
     font-size: 32px;
     font-family: var(--font-title);
     text-align: center;
     margin: 64px auto 32px;
 }
 
-.auth__form {
+.form {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -42,6 +44,7 @@
     font-size: 24px;
     border: none;
     outline: none;
+    cursor: pointer;
 }
 
 .auth__submit {
