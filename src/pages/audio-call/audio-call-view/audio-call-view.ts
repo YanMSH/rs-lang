@@ -1,5 +1,5 @@
 import './audio-call-view.css';
-
+import { Word } from '../../../core/types/controller-types';
 export default class AudioCallView {
 
   renderMainPage() {
@@ -11,20 +11,35 @@ export default class AudioCallView {
     const mainPanel = this.compareGamePanel();
     wrapper.append(headerPanel, mainPanel);
     main.append(wrapper);
+    this.addHeart();
   }
 
   createResponseOptions() {
     const responseOptions = document.createElement('div');
     responseOptions.classList.add('response-options');
     responseOptions.innerHTML = `
-      <button class = "word first-word">1. любовь </button>
-      <button class = "word second-word">2. семья </button>
-      <button class = "word third-word">3. брат </button>
-      <button class = "word fourth-word">4. природа </button>
-      <button class = "word fifth-word">5. волк </button>
+      <button class = "word first-word"></button>
+      <button class = "word second-word"></button>
+      <button class = "word third-word"></button>
+      <button class = "word fourth-word"></button>
+      <button class = "word fifth-word"></button>
     `;
 
     return responseOptions;
+  }
+
+  refreshResponse(array: Word[]) {
+    const options = document.querySelector('.response-options') as HTMLElement;
+    if (options) {
+      options.innerHTML = '';
+      options.innerHTML = `
+        <button class = "word first-word">${array[0].wordTranslate}</button>
+        <button class = "word second-word">${array[1].wordTranslate}</button>
+        <button class = "word third-word">${array[2].wordTranslate}</button>
+        <button class = "word fourth-word">${array[3].wordTranslate}</button>
+        <button class = "word fifth-word">${array[4].wordTranslate}</button>
+      `
+    }
   }
 
   createPanel() {
@@ -54,16 +69,27 @@ export default class AudioCallView {
     
     return headerPanel;
   }
-
+  createKeyWord() {
+    const keyWord = document.createElement('span');
+    keyWord.classList.add('key-word');
+    keyWord.classList.add('none');
+    keyWord.innerText = 'Initial word';
+    
+    return keyWord;
+  }
+  refreshKeyWord(rightWord: string, rightWordEn: string) {
+    const keyWord = document.querySelector('.key-word') as HTMLSpanElement;
+    keyWord.classList.add('none');
+    keyWord.setAttribute('data-ru', rightWordEn);
+    keyWord.innerText = `${rightWord}`;
+  }
   compareGamePanel() {
     const gamePanel = document.createElement('div');
     gamePanel.classList.add('game-panel');
     const responseOptions = this.createResponseOptions();
     const audioButton = document.createElement('button');
     audioButton.classList.add('audio-button');
-    const keyWord = document.createElement('span');
-    keyWord.classList.add('key-word');
-    keyWord.innerText = 'family';
+    const keyWord = this.createKeyWord();
     const negationButton = document.createElement('button');
     negationButton.classList.add('negation-button');
     negationButton.innerText = "Не знаю";
@@ -71,7 +97,6 @@ export default class AudioCallView {
 
     return gamePanel;
   }
-  
   createHeart() {
     const heart = document.createElement('div');
     heart.classList.add('heart');
@@ -114,7 +139,22 @@ export default class AudioCallView {
     const message = this.welcomeMessage();
     const buttons = this.renderLevelButtons();
     wrapper.append(message, buttons);
-    console.log('LevelPage');
     main.append(wrapper);
+  }
+  addHeart(maxLife = 5) {
+    for (let i = 1; i <= maxLife; i += 1) {
+      const heart = this.createHeart();
+      const lifeCounter = document.querySelector('.life-counter') as HTMLDivElement;
+      lifeCounter.append(heart);
+    }
+  }
+  removeHearth(): number {
+    const lifeCounter = document.querySelector('.life-counter') as HTMLDivElement;
+    const heart = document.querySelectorAll('.heart') as NodeList;
+    if (heart.length !== 0) {
+      const removeHeart = heart[0]; 
+      lifeCounter.removeChild(removeHeart);
+    } 
+    return heart.length;
   }
 }

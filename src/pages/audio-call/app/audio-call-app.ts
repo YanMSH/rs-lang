@@ -9,8 +9,10 @@ export default class AudioCallApp {
     connectWithController() {
         this.controller.connectWithView();
     }
-
     renderAudioCall() {
         this.connectWithController();
+    }
+    startAudioCallGame() {
+        this.controller.startGame();
     }
 }

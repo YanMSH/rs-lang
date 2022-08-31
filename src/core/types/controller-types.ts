@@ -29,3 +29,15 @@ export type UserWordServer = UserWord & {
     id: string;
     wordId: string;
 };
+
+type OneStat = {
+    local: number,
+    global: number,
+    general: number,
+    option: string[],
+    inThisGame: boolean
+}
+
+export type Stat = {
+    [answerStat: string]: OneStat | Record<string, never>;
+}

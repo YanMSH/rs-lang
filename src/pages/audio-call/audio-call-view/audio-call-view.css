@@ -1,148 +1,168 @@
-@import url('https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400&family=Ubuntu:wght@500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cabin:wght@400;500&family=Ubuntu:wght@500;700&display=swap');
 
 :root {
-    --wrapperBackground: url('../../../assets/img/background.jpg');
-    --controlPanelSound: url('../../../assets/svg/unmute.svg');
-    --controlFullScreen: url('../../../assets/svg/fullscreen.svg');
-    --audio-button-image: url('../../../assets/img/audio-image.png');
-    --heart: url('../../../assets/svg/heart.svg');
-    --color-white: white;
-    --color-negation-button: #808080;
-    --color-hover-button: #707070;
-    --color-word-button: white;
-    --font-title: 'Ubuntu', sans-serif;
-    --font-text: 'PT Sans', sans-serif;
-    --font-size-text: 16px;
-    --font-size-main-text: 32px;
+  --wrapperBackground: url("../../../assets/img/background.jpg");
+  --controlPanelSound: url("../../../assets/svg/unmute.svg");
+  --controlFullScreen: url("../../../assets/svg/fullscreen.svg");
+  --audioButtonImage: url('../../../assets/img/audio-image.png');
+  --heart: url("../../../assets/svg/heart.svg");
+  --color-white: white;
+  --color-right: green;
+  --color-mistakes: red;
+  --color-negation-button: #808080;
+  --color-hover-button: #707070;
+  --color-word-button: white;
+  --font-title: 'Ubuntu', sans-serif;
+  --font-text: 'Cabin', sans-serif;
+  --font-size-text: 16px;
+  --font-size-main-text: 32px;
 }
-
+.none {
+  visibility: hidden;
+}
 .wrapper {
-    height: 630px;
-    background-image: var(--wrapperBackground);
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
+  height: 630px;
+  background-image: var(--wrapperBackground);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
 }
 
 .header-panel {
-    display: flex;
-    justify-content: space-around;
+  display: flex;
+  justify-content: space-around;
 }
 .control-panel {
-    width: 5%;
-    display: flex;
-    justify-content: space-between;
+  width: 5%;
+  display: flex;
+  justify-content: space-between;
 }
-.sound-control,
-.control-fullscreen {
-    width: 30px;
-    height: 30px;
-    background-repeat: no-repeat;
-    background-size: 100%;
+.sound-control, .control-fullscreen {
+  width: 30px;
+  height: 30px;
+  background-repeat: no-repeat;
+  background-size: 100%;
 }
 .sound-control {
-    background-image: var(--controlPanelSound);
+  background-image: var(--controlPanelSound);
 }
 
 .control-fullscreen {
-    background-image: var(--controlFullScreen);
+  background-image: var(--controlFullScreen);
 }
 
 .audio-button {
-    width: 130px;
-    height: 130px;
-    border-radius: 50%;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
 
-    background-image: var(--audio-button-image);
-    background-repeat: no-repeat;
-    background-size: 100%;
+  background-image: var(--audioButtonImage);
+  background-repeat: no-repeat;
+  background-size: 100%;
 }
 
 .negation-button {
-    width: 190px;
-    height: 43px;
-    background-color: inherit;
-    border: 1px solid var(--color-negation-button);
-    font-family: var(--font-text);
-    font-size: var(--font-size-text);
-    color: var(--color-negation-button);
+  width: 190px;
+  height: 43px;
+  background-color: inherit;
+  border: 1px solid var(--color-negation-button);
+  font-family: var(--font-text);
+  font-size: var(--font-size-text);
+  color: var(--color-negation-button);
 }
 .response-options {
-    display: flex;
-    gap: 90px;
+  display: flex;
+  gap: 90px;
 }
 .word {
-    background-color: inherit;
-    border: none;
-    font-family: var(--font-text);
-    font-size: var(--font-size-text);
-    color: var(--color-word-button);
+  background-color: inherit;
+  border: none;
+  font-family: var(--font-text);
+  font-size: var(--font-size-text);
+  color: var(--color-word-button);
+}
+.word:hover {
+  cursor: pointer;
+  color: var(--color-hover-button);
 }
 .game-panel {
-    margin-top: 5%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 80px;
+  margin-top: 5%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 80px;
 }
 .heart {
-    width: 30px;
-    height: 30px;
-    background-image: var(--heart);
-    background-repeat: no-repeat;
-    background-size: 100%;
+  width: 30px;
+  height: 30px;
+  background-image: var(--heart);
+  background-repeat: no-repeat;
+  background-size: 100%;
 }
 .key-word {
-    color: var(--color-word-button);
-    font-size: var(--font-size-main-text);
-    font-weight: bold;
+  color: var(--color-word-button);
+  font-size: var(--font-size-main-text);
+  font-weight: bold;
 }
 .level-buttons {
-    width: 100%;
-    height: 70%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 25px;
+  width: 100%;
+  height: 70%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
 }
 .level {
-    width: 3rem;
-    height: 3rem;
-    border: 1px solid var(--color-white);
-    background: inherit;
-    color: var(--color-white);
-    border-radius: 50%;
-    -webkit-border-radius: 50%;
-    -moz-border-radius: 50%;
-    -ms-border-radius: 50%;
-    -o-border-radius: 50%;
+  width: 3rem;
+  height: 3rem;
+  border: 1px solid var(--color-white);
+  background: inherit;
+  color: var(--color-white);
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
 }
 .level:hover {
-    cursor: pointer;
-    border: 1px solid var(--color-negation-button);
-    background: var(--color-hover-button);
-}
-.level-block {
-    padding: 2% 10%;
-    display: flex;
-}
-.message {
-    width: 100%;
-    height: 1%;
-    display: flex;
-    justify-content: center;
-    padding-top: 1rem;
-    color: var(--color-white);
-    font-family: var(--font-title);
-    font-size: 1rem;
-    line-height: 2rem;
+  cursor: pointer;
+  border: 1px solid var(--color-negation-button);
+  background: var(--color-hover-button);
 }
 
-@media (max-width: 768px) {
-    .wrapper {
-        height: 800px;
-    }
-    .level-block {
-        flex-wrap: wrap;
-    }
+.level-block {
+  /* padding: 2% 10%; */
+  display: flex;
+}
+.message {
+  width: 100%;
+  height: 1%;
+  display: flex;
+  justify-content: center;
+  padding-top: 1rem;
+  color: var(--color-white);
+  font-family: var(--font-title);
+  font-size: 1rem;
+  line-height: 2rem;
+}
+.life-counter {
+  width: 30%;
+  display: flex;
+  gap: 5px;
+}
+.right {
+  background-color: var(--color-right);
+}
+
+.mistakes {
+  background-color: var(--color-mistakes);;
+}
+
+@media (max-width: 768px)  { 
+  .wrapper {
+    height: 800px;
+  }
+  .level-block {
+    flex-wrap: wrap;
+  }
 }
