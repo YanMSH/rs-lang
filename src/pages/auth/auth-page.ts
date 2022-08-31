@@ -38,6 +38,7 @@ export default class AuthPage {
         `;
 
         const authForm = document.querySelector('.auth__form') as HTMLElement;
+        const formContainer = document.querySelector('.auth__form-container') as HTMLElement;
         const emailInput = authForm.querySelector('#form__input-email') as HTMLInputElement;
         const passInput = authForm.querySelector('#form__input-pass') as HTMLInputElement;
         const regLink = document.querySelector('.reg__link') as HTMLElement;
@@ -70,14 +71,14 @@ export default class AuthPage {
             } else {
                 message.innerText = 'Неизвестная ошибка. Попробуйте снова';
             }
-            authForm.append(message);
+            formContainer.append(message);
         };
 
         const formHandler = async (e: Event) => {
             e.preventDefault();
-            const previousError = authForm.querySelector('.error-message');
+            const previousError = formContainer.querySelector('.error-message');
             if (previousError !== null) {
-                authForm.removeChild(previousError);
+                formContainer.removeChild(previousError);
             }
             const authData = {
                 email: emailInput.value,
