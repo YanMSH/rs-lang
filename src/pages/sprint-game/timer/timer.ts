@@ -25,15 +25,15 @@ export class Timer {
         this.timeLeft = timeLimit,
         this.timerInterval = 0;
     }
-    start() {
+    public start() {
         this.renderTimer();
         this.startTimer();
     }
-    onTimesUp() {
+    public onTimesUp() {
         clearInterval(this.timerInterval);
     }
 
-    startTimer() {
+    private startTimer() {
         let timePassed = 0;
         const timerLabel = document.getElementById('base-timer-label') as HTMLElement;
         this.timerInterval = setInterval(() => {
@@ -49,7 +49,7 @@ export class Timer {
         }, 1000);
     }
 
-    formatTime(time: number) {
+    private formatTime(time: number) {
         let seconds = time % 60;
 
         if (seconds < 10 && seconds !== 0) {
@@ -61,7 +61,8 @@ export class Timer {
         return `${seconds}`;
     }
 
-    renderTimer() {
+    private renderTimer() {
+        this.timeLeft = timeLimit;
         const timer = document.querySelector('.timer') as HTMLElement;
         timer.innerHTML = `
         <div class="base-timer">
@@ -86,26 +87,36 @@ export class Timer {
     `;
     }
 
-    setRemainingPathColor(timeLeft: number) {
+    private setRemainingPathColor(timeLeft: number) {
         const { alert, warning, info } = this.colorCodes;
         const baseTimer = document.getElementById('base-timer-path-remaining') as HTMLElement;
-        if (timeLeft <= alert.threshold) {
+        if (timeLeft <= alert.threshold && baseTimer) {
             baseTimer.classList.remove(warning.color);
             baseTimer.classList.add(alert.color);
-        } else if (this.timeLeft <= warning.threshold) {
+        } else if (this.timeLeft <= warning.threshold && baseTimer) {
             baseTimer.classList.remove(info.color);
             baseTimer.classList.add(warning.color);
         }
     }
 
-    calculateTimeFraction() {
+    private calculateTimeFraction() {
         const rawTimeFraction = this.timeLeft / timeLimit;
-        return rawTimeFraction - (1 / timeLimit) * (1 - rawTimeFraction);
+        const time = rawTimeFraction - (1 / timeLimit) * (1 - rawTimeFraction);
+        return time;
     }
 
-    setCircleDasharray() {
+    private setCircleDasharray() {
         const baseTimer = document.getElementById('base-timer-path-remaining') as HTMLElement;
-        const circleDasharray = `${(this.calculateTimeFraction() * fullDashArray).toFixed(0)} 283`;
-        baseTimer.setAttribute('stroke-dasharray', circleDasharray);
+        const circleDasharray = `${(this.calculateTimeFraction() * fullDashArray).toFixed(0)} ${fullDashArray}`;
+        if (baseTimer) {
+            baseTimer.setAttribute('stroke-dasharray', circleDasharray);
+        }
+    }
+
+    public resetTimer() {
+        const timer = document.querySelector('.timer') as HTMLDivElement;
+        this.timeLeft = 0;
+        this.onTimesUp();
+        timer.innerHTML = '';
     }
 }
