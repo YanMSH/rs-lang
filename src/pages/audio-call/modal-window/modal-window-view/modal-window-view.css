@@ -1,0 +1,63 @@
+:root {
+  --audioButton: url('../../../../assets/svg/unmute.svg');
+}
+
+.modal {
+  position: absolute;
+  width: 70vw;
+  height: 70vh;
+  background-color: #3D2D84;
+  margin-left: auto;
+  margin-right: auto;
+  top: 15vh;
+  left: 15vw;
+  text-align: center;
+  z-index: 100;
+}
+.results {
+  color: white;
+  display: flex;
+  width: 80%;
+  height: 80%;
+  margin: 1% auto;
+  flex-direction: column;
+  gap: 2%;
+  overflow-y: auto;
+}
+.result {
+  display: flex;
+  width: 50%;
+  margin: 0 auto;
+  text-align: center;
+  justify-content: space-between;
+}
+.result-symbol {
+  width: 25px;
+  height: 25px;
+  border: 1px solid black;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+}
+.audio-result {
+  width: 35px;
+  height: 35px;
+  border: none;
+  background: inherit;
+  background-image: var(--audioButton);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 35px;
+}
+.options {
+  display: flex;
+  justify-content: space-around;
+}
+.symbol-true {
+  background-color: green;
+}
+.symbol-false {
+  background-color: red;
+}
