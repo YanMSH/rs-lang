@@ -1,3 +1,4 @@
+import './level-page.css';
 export default class LevelPage {
     public renderLevelPage(wrapperClass: string, levelMessage: string) {
         const main = document.querySelector('main') as HTMLElement;

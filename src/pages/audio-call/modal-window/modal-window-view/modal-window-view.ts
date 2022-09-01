@@ -1,4 +1,4 @@
-import './modal-window-view.css';
+import './modal-window.css';
 import { Stat } from '../../../../core/types/controller-types';
 export default class ModalWindowView {
   renderModalWindow(statistic: Stat) {

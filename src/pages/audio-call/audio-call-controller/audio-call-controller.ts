@@ -15,7 +15,6 @@ export default class AudioCallController {
   public globalStatistic: Stat;
   public modal: ModalWindowController;
   public life: number;
-  public textbook: TextbookPage;
 
   constructor() {
     this.loader = new Loader();
@@ -26,7 +25,6 @@ export default class AudioCallController {
     this.gameStatistic = (JSON.parse(this.storage.get('gameStatistic') as string) as Stat) ? JSON.parse(this.storage.get('gameStatistic') as string) as Stat : {};
     this.modal = new ModalWindowController();
     this.life = this.view.removeHearth() - 1;
-    this.textbook = new TextbookPage();
   }
   connectWithView() {
     this.chooseLevel();
@@ -37,7 +35,6 @@ export default class AudioCallController {
     level.forEach((elem) => {
       elem.addEventListener('click', () => {
         const buttonLevel = Number(elem.getAttribute('data-level'));
-        // this.view.renderMainPage();
         if (buttonLevel) {
           this.storage.set('group', buttonLevel - 1);
           this.storage.set('page', 0);
@@ -72,14 +69,13 @@ export default class AudioCallController {
       this.storage.set('position', 0);
     }
     this.view.renderMainPage();
-    // this.refreshWord();
     this.life = MaxParam.maxLifes;
     this.updateLocalStatistic();
     const [buildData, word] = [...(await this.getParams())];
     this.view.refreshResponse(buildData);
     this.view.refreshKeyWord(word.word, word.wordTranslate);
     this.controlAudioButton();
-    this.controlNegatioButton();
+    this.controlNegationButton();
     this.controlAnswer(word);
   }
   updateLocalStatistic() {
@@ -168,8 +164,8 @@ export default class AudioCallController {
     if (position >= MaxParam.maxPosition && page <= MaxParam.maxPage) {
       this.storage.set('page', page + 1);
       this.storage.set('position', 0);
-      this.modal.modalWindow();
-      this.constrolModalWindow();
+      this.modal.renderModalWindow();
+      this.controlModalWindow();
     } 
     if (page >= MaxParam.maxPage && group !== MaxParam.maxGroup) {
       this.storage.set('group', group + 1);
@@ -180,7 +176,6 @@ export default class AudioCallController {
       position = this.storage.get('position') as number;
       this.storage.set('position', position + 1);
     }
-    // console.log(group, page, position);
   }
 
   async controlLife(life: number) {
@@ -193,12 +188,12 @@ export default class AudioCallController {
       this.controlAnswer(word);
     } else {
       this.view.removeHearth();
-      this.modal.modalWindow();
-      this.constrolModalWindow();
+      this.modal.renderModalWindow();
+      this.controlModalWindow();
     }
   }
 
-  controlNegatioButton() {
+  controlNegationButton() {
     const negation = document.querySelector('.negation-button');
     negation?.addEventListener('click', async () => {
       this.life = this.view.removeHearth() - 1;
@@ -263,7 +258,7 @@ export default class AudioCallController {
     });
   }
 
-  constrolModalWindow() {
+  controlModalWindow() {
     const textBook = document.querySelector('.textbook');
     const refresh = document.querySelector('.refresh');
     const modalWindow = document.querySelector('.modal');
@@ -272,7 +267,7 @@ export default class AudioCallController {
       modalWindow?.remove();
     });
     textBook?.addEventListener('click', () => {
-      this.textbook.render();
+      new TextbookPage().render();
       modalWindow?.remove();
     });
   }

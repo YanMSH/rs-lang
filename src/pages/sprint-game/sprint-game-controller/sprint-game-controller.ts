@@ -1,12 +1,14 @@
 import { SprintGameView } from '../sprint-game-view/sprint-game-view';
-import LevelPage from '../sprint-game-view/level-page';
+import LevelPage from '../../level-page/level-page';
 import { sprintLevelMessage } from '../../../core/constants/level-const';
 import Storage from '../../../core/components/service/storage/storage';
 import Loader from '../../../core/components/loader/loader';
 import { CircleBackground , Volume, Ratios } from "../../../core/constants/sprint-game-const";
 import { initialPoints, maxCountCircle, minuteInMilisec, indexOfFifthWord } from "../../../core/constants/sprint-game-const";
-import { Word } from '../../../core/types/controller-types';
+import { Word, Stat } from '../../../core/types/controller-types';
 import { Timer } from '../timer/timer';
+import ModalWindowController from '../../modal-window/modal-window-controller/modal-window-controller';
+import TextbookPage from '../../textbook/textbook-page';
 export class SprintGameController {
   private sprintGameView: SprintGameView;
   private levelPage: LevelPage;
@@ -27,6 +29,10 @@ export class SprintGameController {
   private timerTimeout: number | undefined;
   private minuteInMilisec: number;
   private indexOfFifthWord: number;
+  private modal: ModalWindowController;
+  public gameStatistic: Stat;
+  public globalStatistic: Stat;
+  
   
 
   constructor() {
@@ -49,6 +55,9 @@ export class SprintGameController {
     this.timerTimeout = 0;
     this.minuteInMilisec = minuteInMilisec;
     this.indexOfFifthWord = indexOfFifthWord;
+    this.modal = new ModalWindowController();
+    this.globalStatistic = {};
+    this.gameStatistic = (JSON.parse(this.storage.get('gameStatistic') as string) as Stat) ? JSON.parse(this.storage.get('gameStatistic') as string) as Stat : {};
   }
 
   public render() {
@@ -64,6 +73,7 @@ export class SprintGameController {
     const secondIndexOfWord = this.getRandomNumber(0, this.indexOfFifthWord);
     this.storage.set('firstIndexOfWord', firstIndexOfWord);
     this.storage.set('secondIndexOfWord', secondIndexOfWord);
+    this.updateLocalStatistic();
     this.sprintGameView.render(words[firstIndexOfWord].word, words[secondIndexOfWord].wordTranslate);
     this.changeVolume();
     this.changeWords(page);
@@ -82,6 +92,8 @@ export class SprintGameController {
       console.log(timer);
       if (timer && Number(timer.textContent) === 0) {
         console.log('end-game');
+        this.modal.modalWindow();
+        this.controlModalWindow()
         // this.sprintGameView.resetMain();
       }
     }, this.minuteInMilisec);
@@ -91,7 +103,9 @@ export class SprintGameController {
     console.log('end-game');
     this.clearTimeoutOfTimer();
     this.timer.resetTimer();
-    this.sprintGameView.resetMain();
+    this.modal.modalWindow();
+    this.controlModalWindow();
+    // this.sprintGameView.resetMain();
   }
 
   private chooseLevel() {
@@ -119,7 +133,7 @@ export class SprintGameController {
         wrongAnswerBtn.addEventListener('click', async () => {
           const rightAnswerCount = this.storage.get('rightAnswerCount') as number;
           const countCircle = this.storage.get('countCircle') as number;
-          this.checkWrongAnswer(point, countCircle, rightAnswerCount);
+          this.checkWrongAnswer(point, countCircle, rightAnswerCount, words);
           if (offset < maxOffSet) {
             const lastRandomNumber = this.indexOfFifthWord + Number(`${offset}`);
             const firstRandomNumber = 0 + Number(`${offset}`);
@@ -141,7 +155,7 @@ export class SprintGameController {
           if (offset < maxOffSet) {
             const rightAnswerCount = this.storage.get('rightAnswerCount') as number;
             const countCircle = this.storage.get('countCircle') as number;
-            this.checkRightAnswer(point, countCircle, rightAnswerCount);
+            this.checkRightAnswer(point, countCircle, rightAnswerCount, words);
             const lastRandomNumber = this.indexOfFifthWord + Number(`${offset}`);
             const firstRandomNumber = 0 + Number(`${offset}`);
             const firstIndexOfWord = this.getRandomNumber(firstRandomNumber, lastRandomNumber);
@@ -159,27 +173,31 @@ export class SprintGameController {
       }
   }
 
-  private checkRightAnswer(point: number, countCircle: number, rightAnswerCount: number) {
+  private checkRightAnswer(point: number, countCircle: number, rightAnswerCount: number, words: Array<Word>) {
     const prevFirstIndexOfWord =  this.storage.get('firstIndexOfWord') as number;
     const prevSecondIndexOfWord = this.storage.get('secondIndexOfWord') as number;
     const pointCount = document.querySelector('.point-count-text') as HTMLSpanElement;
     const sumOfCountPoint = Number(pointCount.textContent);
     if (prevFirstIndexOfWord === prevSecondIndexOfWord) {
       this.countPointsWithCorrectAnswer(rightAnswerCount, sumOfCountPoint, point, countCircle);
+      this.addToStatisticRightWord(words[prevFirstIndexOfWord]);
     } else {
       this.countPointsWithIncorrectAnswer(rightAnswerCount, countCircle);
+      this.addToStatisticWrongWord(words[prevFirstIndexOfWord]);
     }
   }
 
-  private checkWrongAnswer(point: number, countCircle: number, rightAnswerCount: number) {
+  private checkWrongAnswer(point: number, countCircle: number, rightAnswerCount: number, words: Array<Word>) {
     const prevFirstIndexOfWord =  this.storage.get('firstIndexOfWord') as number;
     const prevSecondIndexOfWord = this.storage.get('secondIndexOfWord') as number;
     const pointCount = document.querySelector('.point-count-text') as HTMLSpanElement;
     const sumOfCountPoint = Number(pointCount.textContent);
     if (prevFirstIndexOfWord === prevSecondIndexOfWord) {
       this.countPointsWithIncorrectAnswer(rightAnswerCount, countCircle);
+      this.addToStatisticWrongWord(words[prevFirstIndexOfWord]);
     } else {
       this.countPointsWithCorrectAnswer(rightAnswerCount, sumOfCountPoint, point, countCircle);
+      this.addToStatisticRightWord(words[prevFirstIndexOfWord]);
     }
   }
 
@@ -223,6 +241,49 @@ export class SprintGameController {
     } else {
       pointCount.textContent = String(this.initialPoints);
     }
+  }
+
+  private addToStatisticRightWord(buildWord: Word) {
+      if (this.gameStatistic[buildWord.word]) {
+        this.gameStatistic[buildWord.word].local += 1;
+        this.gameStatistic[buildWord.word].global += 1;
+        this.gameStatistic[buildWord.word].general += 1;
+        this.gameStatistic[buildWord.word].option = [buildWord.word, buildWord.wordTranslate, buildWord.audio]; 
+        this.gameStatistic[buildWord.word].inThisGame = true;
+      } else {
+        this.gameStatistic[buildWord.word] = {};
+        this.gameStatistic[buildWord.word].local = 1;
+        this.gameStatistic[buildWord.word].global = 1;
+        this.gameStatistic[buildWord.word].general = 1;
+        this.gameStatistic[buildWord.word].option = [buildWord.word, buildWord.wordTranslate, buildWord.audio];
+        this.gameStatistic[buildWord.word].inThisGame = true;
+      }
+      this.storage.set('gameStatistic', JSON.stringify(this.gameStatistic));
+  }
+
+  private addToStatisticWrongWord(buildWord: Word) {
+    if (this.gameStatistic[buildWord.word]) {
+      this.gameStatistic[buildWord.word].local = 0;
+      this.gameStatistic[buildWord.word].general += 1;
+      this.gameStatistic[buildWord.word].option = [buildWord.word, buildWord.wordTranslate, buildWord.audio]; 
+      this.gameStatistic[buildWord.word].inThisGame = true;
+    } else {
+      this.gameStatistic[buildWord.word] = {};
+      this.gameStatistic[buildWord.word].local = 0;
+      this.gameStatistic[buildWord.word].global = 0;
+      this.gameStatistic[buildWord.word].general = 1;
+      this.gameStatistic[buildWord.word].option = [buildWord.word, buildWord.wordTranslate, buildWord.audio];
+      this.gameStatistic[buildWord.word].inThisGame = true;
+    }
+    this.storage.set('gameStatistic', JSON.stringify(this.gameStatistic));
+  }
+
+  private updateLocalStatistic() {
+    for (const stat in this.gameStatistic) {
+      this.gameStatistic[stat].local = 0;
+      this.gameStatistic[stat].inThisGame = false;
+    }
+    this.storage.set('gameStatistic', JSON.stringify(this.gameStatistic));
   }
 
   private changeVolume() {
@@ -320,5 +381,19 @@ export class SprintGameController {
 
   private getRandomNumber(min: number, max: number) {
     return Math.ceil(Math.random() * (max - min) + min);
+  }
+
+  private controlModalWindow() {
+    const textBook = document.querySelector('.textbook');
+    const refresh = document.querySelector('.refresh');
+    const modalWindow = document.querySelector('.modal');
+    refresh?.addEventListener('click', () => {
+      this.startGame();
+      modalWindow?.remove();
+    });
+    textBook?.addEventListener('click', () => {
+      new TextbookPage().render();
+      modalWindow?.remove();
+    });
   }
 }
