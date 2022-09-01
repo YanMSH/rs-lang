@@ -5,14 +5,8 @@
     gap: 16px;
 }
 
-.form-container {
-    width: 20%;
-    border: 1px solid black;
-    margin: 100px auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+.reg__form-container {
+    min-height: 610px;
 }
 
 .form__field {
@@ -24,7 +18,8 @@ label {
     min-width: 50px;
 }
 .reg__submit {
-    display: block;
+    background-color: var(--color-accent);
+    color: var(--color-primary);
 }
 
 .invalid {

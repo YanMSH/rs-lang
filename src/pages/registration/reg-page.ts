@@ -1,6 +1,11 @@
 import Loader from '../../core/components/loader/loader';
 import AuthTools from '../../core/components/service/auth/auth-tools';
-import { emailIsValid, nameIsValid, passIsValid } from '../../core/components/service/validation/validation';
+import {
+    emailIsValid,
+    nameIsValid,
+    passIsConfirmed,
+    passIsValid,
+} from '../../core/components/service/validation/validation';
 import { StatusCodes } from '../../core/constants/loader-const';
 import './reg-page.css';
 
@@ -14,21 +19,22 @@ export default class RegPage {
     public render() {
         const app = document.querySelector('.app') as HTMLElement;
         app.innerHTML = `
-        <div class="form-container">
-            <form class="reg__form">
+        <div class="form__container reg__form-container">
+        <h2 class="reg__title form__title">Регистрация</h2>
+            <form class="reg__form form">
             <div class="form__name form__field">
-                    <label for="form__input-name">Имя</label>
-                <input type="text" id="form__input-name">
+                <input type="text" id="form__input-name" class="form__input" placeholder="Имя">
                 </div>
                 <div class="form__email form__field">
-                    <label for="form__input-email">E-mail</label>
-                <input type="email" id="form__input-email">
+                <input type="email" id="form__input-email" class="form__input" placeholder="E-mail">
                 </div>
                 <div class="form__pass form__field">
-                    <label for="form__input-pass">Пароль</label>
-                <input type="password" id="form__input-pass">
+                <input type="password" id="form__input-pass" class="form__input" placeholder="Пароль">
                 </div>
-                <button type="submit" class="reg__submit">Зарегистрироваться</button>
+                <div class="form__pass form__field">
+                <input type="password" id="form__input-pass-confirm" class="form__input" placeholder="Подтверждение">
+                </div>
+                <button type="submit" class="reg__submit form__button">Зарегистрироваться</button>
             </form>
         </div>
         `;
@@ -37,7 +43,8 @@ export default class RegPage {
         const nameInput = regForm.querySelector('#form__input-name') as HTMLInputElement;
         const emailInput = regForm.querySelector('#form__input-email') as HTMLInputElement;
         const passInput = regForm.querySelector('#form__input-pass') as HTMLInputElement;
-
+        const passConfirmInput = regForm.querySelector('#form__input-pass-confirm') as HTMLInputElement;
+        const inputs = document.querySelectorAll('input');
         const uncolorizeInput = (e: Event) => {
             (e.target as HTMLElement).classList.remove('invalid');
         };
@@ -52,7 +59,16 @@ export default class RegPage {
             if (!passIsValid(passInput)) {
                 passInput.classList.add('invalid');
             }
-            return nameIsValid(nameInput) && emailIsValid(emailInput) && passIsValid(passInput);
+            if (!passIsConfirmed(passInput, passConfirmInput)) {
+                passInput.classList.add('invalid');
+                passConfirmInput.classList.add('invalid');
+            }
+            return (
+                nameIsValid(nameInput) &&
+                emailIsValid(emailInput) &&
+                passIsValid(passInput) &&
+                passIsConfirmed(passInput, passConfirmInput)
+            );
         };
 
         const showErrorMessage = (id: string) => {
@@ -82,6 +98,7 @@ export default class RegPage {
                 password: passInput.value,
             };
             if (inputsAreValid()) {
+                inputs.forEach((input) => input.classList.remove('invalid'));
                 const regResponse = await this.auth.createUser(regData);
                 showErrorMessage(regResponse.id);
             }
@@ -90,6 +107,7 @@ export default class RegPage {
         regForm.onsubmit = formHandler;
         emailInput.oninput = uncolorizeInput;
         passInput.oninput = uncolorizeInput;
+        passConfirmInput.oninput = uncolorizeInput;
         nameInput.oninput = uncolorizeInput;
     }
 }
