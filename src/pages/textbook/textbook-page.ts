@@ -146,21 +146,6 @@ export default class TextbookPage {
         <audio class="word__audio-example" src="https://rs-back.herokuapp.com/${word.audioExample}"></audio>
 `;
 
-        // card.innerHTML = `
-        // <img src="https://rs-back.herokuapp.com/${word.image}" class="word__pic">
-        // <p class="word__word"><span>${word.word}</span>: <span>${word.transcription}</span>, <span>${word.wordTranslate}</span></p>
-        // <p class="word__meaning"><span>${word.textMeaning}</span>: <span>${word.textMeaningTranslate}</span></p>
-        // <p class="word__example"><span>${word.textExample}</span>: <span>${word.textExampleTranslate}</span></p>
-        // <audio class="word__audio" src="https://rs-back.herokuapp.com/${word.audio}"></audio>
-        // <audio class="word__audio-meaning" src="https://rs-back.herokuapp.com/${word.audioMeaning}"></audio>
-        // <audio class="word__audio-example" src="https://rs-back.herokuapp.com/${word.audioExample}"></audio>
-        // <button class="word__audio-play">Play</button>
-        // <div class="auth__visible">
-        //     <button class="word__button-hard">Сложно</button>
-        //     <button class="word__button-learned">Изучил</button>
-        // </div>
-        // `;
-
         const authVisibleBlock = card.querySelector('.auth__visible') as HTMLElement;
         if (!this.store.get('auth')) {
             authVisibleBlock.style.visibility = 'hidden';
@@ -190,15 +175,21 @@ export default class TextbookPage {
     private turnOnControls(): void {
         const groupControlPanel = document.querySelector('.group__controls') as HTMLElement;
         const pageControlPanel = document.querySelector('.page__controls') as HTMLElement;
+        const gameControlPanel = document.querySelector('.game__controls') as HTMLElement;
         const sprintGameButton = document.querySelector('.game-sprint') as HTMLElement;
         const audiocallGameButton = document.querySelector('.game-audiocall') as HTMLElement;
 
-        sprintGameButton.addEventListener('click', () => {
-            this.sprintGame.starting();
-        });
-        audiocallGameButton.addEventListener('click', () => {
-            this.audiocallGame.renderAudioCall();
-        });
+        if (!this.store.get('auth')) {
+            gameControlPanel.style.visibility = 'hidden';
+        } else {
+            sprintGameButton.addEventListener('click', () => {
+                this.sprintGame.starting();
+            });
+            audiocallGameButton.addEventListener('click', () => {
+                this.audiocallGame.renderAudioCall();
+            });
+        }
+
         groupControlPanel.addEventListener('click', (e) => {
             if (e.target !== groupControlPanel) {
                 this.group = Number((e.target as HTMLElement).innerText) - 1;
@@ -345,6 +336,13 @@ export default class TextbookPage {
     public async render(): Promise<void> {
         this.getParam('page');
         this.getParam('group');
+        if (this.store.get('page') === null) {
+            this.store.set('page', 0);
+        }
+        if (this.store.get('group') === null) {
+            this.store.set('group', 0);
+        }
+
         const app = document.querySelector('.app') as HTMLElement;
         app.innerHTML = `
 
