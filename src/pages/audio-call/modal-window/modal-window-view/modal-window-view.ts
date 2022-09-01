@@ -5,13 +5,13 @@ export default class ModalWindowView {
     const main = document.querySelector('main') as HTMLElement;
     const modal = document.createElement('div');
     modal.classList.add('modal');
-    const results = this.createRusults(statistic);
+    const results = this.createResults(statistic);
     const option = this.createOptionBlock();
     modal.append(results, option);
     main.append(modal);
   }
 
-  createRusults(statistic: Stat) {
+  createResults(statistic: Stat) {
     const results = document.createElement('div');
     const keys = Object.keys(statistic);
     results.classList.add('results');

@@ -4,6 +4,7 @@ import Storage from '../../../core/components/service/storage/storage';
 import { Word, Stat } from '../../../core/types/controller-types';
 import ModalWindowController from '../modal-window/modal-window-controller/modal-window-controller';
 import {MaxParam, maxButtons, timer } from '../../../core/constants/audio-call-const';
+import TextbookPage from '../../textbook/textbook-page';
 
 export default class AudioCallController {
   public view: AudioCallView;
@@ -14,6 +15,7 @@ export default class AudioCallController {
   public globalStatistic: Stat;
   public modal: ModalWindowController;
   public life: number;
+  public textbook: TextbookPage;
 
   constructor() {
     this.loader = new Loader();
@@ -24,6 +26,7 @@ export default class AudioCallController {
     this.gameStatistic = (JSON.parse(this.storage.get('gameStatistic') as string) as Stat) ? JSON.parse(this.storage.get('gameStatistic') as string) as Stat : {};
     this.modal = new ModalWindowController();
     this.life = this.view.removeHearth() - 1;
+    this.textbook = new TextbookPage();
   }
   connectWithView() {
     this.chooseLevel();
@@ -261,12 +264,15 @@ export default class AudioCallController {
   }
 
   constrolModalWindow() {
-    //TODO: нужно добавить ссылку на учебник;
-    // const textBook = document.querySelector('.textbook');
+    const textBook = document.querySelector('.textbook');
     const refresh = document.querySelector('.refresh');
     const modalWindow = document.querySelector('.modal');
     refresh?.addEventListener('click', () => {
       this.startGame();
+      modalWindow?.remove();
+    });
+    textBook?.addEventListener('click', () => {
+      this.textbook.render();
       modalWindow?.remove();
     });
   }
