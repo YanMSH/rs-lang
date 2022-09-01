@@ -1,7 +1,7 @@
 import './modal-window-view.css';
-import { Stat } from '../../../../core/types/controller-types';
+import { Stat } from '../../../core/types/controller-types';
 export default class ModalWindowView {
-  renderModalWindow(statistic: Stat) {
+  createModalWindow(statistic: Stat) {
     const main = document.querySelector('main') as HTMLElement;
     const modal = document.createElement('div');
     modal.classList.add('modal');

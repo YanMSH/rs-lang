@@ -1,5 +1,5 @@
 :root {
-  --audioButton: url('../../../../assets/svg/unmute.svg');
+  --audioButton: url('../../../assets/svg/unmute.svg');
 }
 
 .modal {

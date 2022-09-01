@@ -2,9 +2,11 @@ import AudioCallView from '../audio-call-view/audio-call-view';
 import Loader from '../../../core/components/loader/loader';
 import Storage from '../../../core/components/service/storage/storage';
 import { Word, Stat } from '../../../core/types/controller-types';
-import ModalWindowController from '../modal-window/modal-window-controller/modal-window-controller';
+import ModalWindowController from '../../modal-window/modal-window-controller/modal-window-controller';
 import {MaxParam, maxButtons, timer } from '../../../core/constants/audio-call-const';
 import TextbookPage from '../../textbook/textbook-page';
+import LevelPage from '../../level-page/level-page';
+import { audioCallLevelMessage } from '../../../core/constants/level-const';
 
 export default class AudioCallController {
   public view: AudioCallView;
@@ -15,7 +17,9 @@ export default class AudioCallController {
   public globalStatistic: Stat;
   public modal: ModalWindowController;
   public life: number;
-  public textbook: TextbookPage;
+  public LevelPage: LevelPage;
+  public audioCallLevelMessage: string;
+  public preloader: HTMLImageElement;
 
   constructor() {
     this.loader = new Loader();
@@ -26,18 +30,19 @@ export default class AudioCallController {
     this.gameStatistic = (JSON.parse(this.storage.get('gameStatistic') as string) as Stat) ? JSON.parse(this.storage.get('gameStatistic') as string) as Stat : {};
     this.modal = new ModalWindowController();
     this.life = this.view.removeHearth() - 1;
-    this.textbook = new TextbookPage();
+    this.LevelPage = new LevelPage();
+    this.audioCallLevelMessage = audioCallLevelMessage;
+    this.preloader = this.createPreloader();
   }
   connectWithView() {
     this.chooseLevel();
   }
   chooseLevel() {
-    this.view.renderLevelPage();
+    this.LevelPage.renderLevelPage('wrapper-audiocall', this.audioCallLevelMessage);
     const level = document.querySelectorAll('.level');
     level.forEach((elem) => {
       elem.addEventListener('click', () => {
         const buttonLevel = Number(elem.getAttribute('data-level'));
-        // this.view.renderMainPage();
         if (buttonLevel) {
           this.storage.set('group', buttonLevel - 1);
           this.storage.set('page', 0);
@@ -72,14 +77,13 @@ export default class AudioCallController {
       this.storage.set('position', 0);
     }
     this.view.renderMainPage();
-    // this.refreshWord();
     this.life = MaxParam.maxLifes;
     this.updateLocalStatistic();
     const [buildData, word] = [...(await this.getParams())];
     this.view.refreshResponse(buildData);
     this.view.refreshKeyWord(word.word, word.wordTranslate);
     this.controlAudioButton();
-    this.controlNegatioButton();
+    this.controlNegationButton();
     this.controlAnswer(word);
   }
   updateLocalStatistic() {
@@ -120,6 +124,7 @@ export default class AudioCallController {
     const position = this.storage.get('position') as number;
     const list = (await this.getWords(group, page))[position];
     this.setNewSrc(list.audio);
+    this.audio.play();
   }
   async controlAudioButton() {
     const audioButton = document.querySelector('.audio-button') as HTMLButtonElement;
@@ -167,16 +172,15 @@ export default class AudioCallController {
     }
     if (position >= MaxParam.maxPosition && page <= MaxParam.maxPage) {
       this.storage.set('page', page + 1);
-      this.storage.set('position', 0);
-      this.modal.modalWindow();
-      this.constrolModalWindow();
+      this.storage.set('position', -1);
+      this.modal.renderModalWindow();
+      this.controlModalWindow();
     } 
     if (page >= MaxParam.maxPage && group !== MaxParam.maxGroup) {
       this.storage.set('group', group + 1);
       this.storage.set('page', 0);
       this.storage.set('position', 0);
-    }
-    if (group !== MaxParam.maxGroup && page !== MaxParam.maxPage + 1 && position !== MaxParam.maxPosition + 1) {
+    } else if (group !== MaxParam.maxGroup && page !== MaxParam.maxPage + 1 && position !== MaxParam.maxPosition + 1) {
       position = this.storage.get('position') as number;
       this.storage.set('position', position + 1);
     }
@@ -193,19 +197,20 @@ export default class AudioCallController {
       this.controlAnswer(word);
     } else {
       this.view.removeHearth();
-      this.modal.modalWindow();
-      this.constrolModalWindow();
+      this.modal.renderModalWindow();
+      this.controlModalWindow();
     }
   }
 
-  controlNegatioButton() {
+  controlNegationButton() {
     const negation = document.querySelector('.negation-button');
     negation?.addEventListener('click', async () => {
       this.life = this.view.removeHearth() - 1;
+      this.addPreloader();
       this.controlLife(this.life);
     });
   }
-
+  
   controlAnswer(buildWord: Word) {
     const answer = [...document.querySelectorAll('.word')];
     const audioButton = document.querySelector('.audio-button') as HTMLButtonElement;
@@ -234,8 +239,9 @@ export default class AudioCallController {
           this.storage.set('gameStatistic', JSON.stringify(this.gameStatistic));
           audioButton.style.backgroundImage = `url(${this.setNewUrl(url)})`;
           // console.log('верно!');
+          this.addPreloader();
           setTimeout(() => {
-              this.controlLife(this.life);
+            this.controlLife(this.life);
           }, timer);
         } else {
           this.life = this.view.removeHearth() - 1;
@@ -255,6 +261,7 @@ export default class AudioCallController {
           }
           this.storage.set('gameStatistic', JSON.stringify(this.gameStatistic));
           // console.log('не верно!');
+          this.addPreloader();
           setTimeout(() => {
             this.controlLife(this.life);
           }, timer);
@@ -262,8 +269,22 @@ export default class AudioCallController {
       })
     });
   }
-
-  constrolModalWindow() {
+  createPreloader() {
+    const statusMessage = document.createElement('img');
+    statusMessage.classList.add('status');
+    statusMessage.src = '../../../assets/svg/spinner.svg';
+    statusMessage.style.cssText = `
+      display: block;
+      margin: 0 auto;
+    `;
+    return statusMessage;
+  }
+  addPreloader() {
+    const response = document.querySelector('.response-options') as HTMLDivElement;
+      response.textContent = '';
+      response.append(this.preloader);
+  }
+  controlModalWindow() {
     const textBook = document.querySelector('.textbook');
     const refresh = document.querySelector('.refresh');
     const modalWindow = document.querySelector('.modal');
@@ -272,7 +293,7 @@ export default class AudioCallController {
       modalWindow?.remove();
     });
     textBook?.addEventListener('click', () => {
-      this.textbook.render();
+      new TextbookPage().render();
       modalWindow?.remove();
     });
   }

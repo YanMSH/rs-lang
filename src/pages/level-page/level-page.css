@@ -1,6 +1,6 @@
 :root {
     --color-gradient: linear-gradient(64.43deg, rgba(249, 219, 109, 0.1725) 0%, #F9DB6D 40%, rgba(196, 177, 131, 0.819773) 60%, rgba(102, 103, 171, 0.4985) 80%, rgba(27, 30, 208, 0) 99.52%);
-    --wrapper-background: url("../../../assets/img/background.jpg");
+    --wrapper-background: url("../../assets/img/background.jpg");
     --wrapper-sprint-color: #FFA500;
     --color-white: white;
     --color-negation-button: #808080;
