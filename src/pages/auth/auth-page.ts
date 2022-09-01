@@ -20,23 +20,25 @@ export default class AuthPage {
     public render() {
         const app = document.querySelector('.app') as HTMLElement;
         app.innerHTML = `
-        <div class="auth__form-container">
-            <form class="auth__form">
+        <div class="auth__form-container form__container">
+        <h2 class="auth__title form__title">Вход</h2>
+            <form class="auth__form form">
                 <div class="form__email">
-                    <label for="form__input-email">E-mail</label>
-                <input type="email" id="form__input-email">
+                    
+                <input type="email" id="form__input-email" placeholder="E-mail" class="form__input">
                 </div>
                 <div class="form__pass">
-                    <label for="form__input-pass">Пароль</label>
-                <input type="password" id="form__input-pass">
+                    
+                <input type="password" id="form__input-pass" placeholder="Пароль" class="form__input">
                 </div>
-                <button type="submit" class="auth__submit">Войти</button>
+                <button type="submit" class="auth__submit form__button">Войти</button>
             </form>
-            <p>Нет аккаунта? <a class="reg__link" href="#">Зарегистрируйтесь!</a></p>
+            <p class="reg__hint">Нет аккаунта? <a class="reg__link" href="#">Зарегистрируйтесь!</a></p>
         </div>
         `;
 
         const authForm = document.querySelector('.auth__form') as HTMLElement;
+        const formContainer = document.querySelector('.auth__form-container') as HTMLElement;
         const emailInput = authForm.querySelector('#form__input-email') as HTMLInputElement;
         const passInput = authForm.querySelector('#form__input-pass') as HTMLInputElement;
         const regLink = document.querySelector('.reg__link') as HTMLElement;
@@ -69,14 +71,14 @@ export default class AuthPage {
             } else {
                 message.innerText = 'Неизвестная ошибка. Попробуйте снова';
             }
-            authForm.append(message);
+            formContainer.append(message);
         };
 
         const formHandler = async (e: Event) => {
             e.preventDefault();
-            const previousError = authForm.querySelector('.error-message');
+            const previousError = formContainer.querySelector('.error-message');
             if (previousError !== null) {
-                authForm.removeChild(previousError);
+                formContainer.removeChild(previousError);
             }
             const authData = {
                 email: emailInput.value,
