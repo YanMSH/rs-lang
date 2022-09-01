@@ -4,6 +4,7 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <link rel="stylesheet" href="main-page.css" />
         <title>RS-lang</title>
     </head>
     <body>
@@ -44,20 +45,30 @@
             </div>
         </header>
         <main class="app">
-            <section class="welcome__banner">
-                <div class="welcome__text">
-                    <div class="welcome__text-title">Приветствую!</div>
-                    <div class="welcome__text-desc">
-                        Это наше приложение для изучения английского языка rs-Lang!
-                        В rs-Lang есть:
-                        <ul class="welcome__text-list">
-                            <li class="welcome__text-list-item">Удобный учебник</li>
-                            <li class="welcome__text-list-item">Две мини игры: "Спринт" и "Аудио-вызов"</li>
-                            <li class="welcome__text-list-item">Статистика изученных и сложных слов</li>
-                        </ul>
+            <section class="main-page">
+                <div class="main-page__stats main-page-block subcell">
+                    <div class="stats__short cell-small">
+                        <div class="cell__title main-stats-title">Слова:</div>
                     </div>
-                    <div class="welcome__banner-picture">
-                        <div class="welcome_banner-auth-link">Войти</div>
+                    <div class="stats__long cell-small">
+                        <div class="cell__title main-stats-title">Долгосрочная стата:</div>
+                    </div>
+                </div>
+                <div class="main-page__textbook main-page-block cell-big">
+                    <div class="cell__title main-page__textbook-title">Учебник</div>
+                    <div class="textbook__words-data cell__list">
+                        <div class="textbook__words-all textbook__words cell__list-item">3600 слов</div>
+                        <div class="textbook__words-learned textbook__words cell__list-item">115 изученных слов</div>
+                        <div class="textbook__words-hard textbook__words cell__list-item">87 сложных слов</div>
+                    </div>
+                    <img src="../../assets/svg/book-pic.svg" alt="" class="textbook__words-pic" />
+                </div>
+                <div class="main-page__games main-page-block subcell">
+                    <div class="games__sprint cell-small">
+                        <div class="cell__title main-games-sprint-title">Спринт</div>
+                    </div>
+                    <div class="games__audiocall cell-small">
+                        <div class="cell__title main-games-audiocall-title">Аудио-вызов</div>
                     </div>
                 </div>
             </section>

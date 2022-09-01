@@ -8,6 +8,7 @@
     --color-shadow: #877666ff;
     --color-error: #a8201aff;
     --color-black: #1c1c1c;
+    --color-grey: #d9d9d9;
     --font-title: 'Ubuntu', sans-serif;
     --font-text: 'PT Sans', sans-serif;
 }
@@ -94,8 +95,6 @@
 }
 
 .app {
-    padding-top: 64px;
-    padding-bottom: 112px;
     min-height: 580px;
 }
 
