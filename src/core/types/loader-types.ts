@@ -1,4 +1,4 @@
-import { UserWord, Word } from './controller-types';
+import { UserWord, Word, GlobalStat } from './controller-types';
 
 export type UserReg = {
     name: string;
@@ -31,3 +31,8 @@ export type ResponseAggregatedWords = {
 }[];
 
 export type AWPaginatedResults = (Word & { userWord: UserWord; group: number; page: number })[];
+
+export type Statistic = {
+    learnedWords: number,
+    optional: GlobalStat
+}

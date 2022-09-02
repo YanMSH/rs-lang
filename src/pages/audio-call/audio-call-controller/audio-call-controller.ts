@@ -1,7 +1,8 @@
 import AudioCallView from '../audio-call-view/audio-call-view'; 
 import Loader from '../../../core/components/loader/loader';
+import { ResponseAuth } from '../../../core/types/loader-types';
 import Storage from '../../../core/components/service/storage/storage';
-import { Word, Stat } from '../../../core/types/controller-types';
+import { Word, Stat, GlobalStat, DataStat } from '../../../core/types/controller-types';
 import ModalWindowController from '../../modal-window/modal-window-controller/modal-window-controller';
 import {MaxParam, maxButtons, timer } from '../../../core/constants/audio-call-const';
 import TextbookPage from '../../textbook/textbook-page';
@@ -14,7 +15,7 @@ export default class AudioCallController {
   public storage: Storage;
   public audio: HTMLAudioElement;
   public gameStatistic: Stat;
-  public globalStatistic: Stat;
+  public AudioCallStatistic: GlobalStat;
   public modal: ModalWindowController;
   public life: number;
   public LevelPage: LevelPage;
@@ -26,7 +27,7 @@ export default class AudioCallController {
     this.view = new AudioCallView();
     this.storage = new Storage();
     this.audio = new Audio();
-    this.globalStatistic = {};
+    this.AudioCallStatistic = {};
     this.gameStatistic = (JSON.parse(this.storage.get('gameStatistic') as string) as Stat) ? JSON.parse(this.storage.get('gameStatistic') as string) as Stat : {};
     this.modal = new ModalWindowController();
     this.life = this.view.removeHearth() - 1;
@@ -72,13 +73,14 @@ export default class AudioCallController {
     return words[position];
   }
   async startGame() {
+    this.updateGlobalStatistic()
     const position = this.storage.get('position') as number;
     if (!position) {
       this.storage.set('position', 0);
     }
     this.view.renderMainPage();
     this.life = MaxParam.maxLifes;
-    this.updateLocalStatistic();
+    this.updateInitStatistic();
     const [buildData, word] = [...(await this.getParams())];
     this.view.refreshResponse(buildData);
     this.view.refreshKeyWord(word.word, word.wordTranslate);
@@ -86,12 +88,59 @@ export default class AudioCallController {
     this.controlNegationButton();
     this.controlAnswer(word);
   }
-  updateLocalStatistic() {
+  async updateGlobalStatistic() {
+    const user = this.storage.get('user') as ResponseAuth;
+    if (user) {
+      const date = new Date();
+      const year = date.getFullYear();
+      const month = date.getMonth();
+      const day = date.getDate();
+      const today = `${day}.${month}.${year}`;
+      const statistic = (await this.loader.get(`/users/${user.userId}/statistics`)).options;
+      const statGame = statistic.audioCall;
+      const statDay = statGame.today;
+      if (statGame) {
+        this.AudioCallStatistic = statGame;
+      } else {
+        this.AudioCallStatistic = {};
+      }
+    }
+  }
+  updateInitStatistic() {
     for (const stat in this.gameStatistic) {
       this.gameStatistic[stat].local = 0;
       this.gameStatistic[stat].inThisGame = false;
     }
     this.storage.set('gameStatistic', JSON.stringify(this.gameStatistic));
+  }
+  async setGlobalStatistic() {
+    const localStat = JSON.parse(this.storage.get('gameStatistic') as string) as Stat;
+    const user = this.storage.get('user') as ResponseAuth;
+    if (user) {
+      const date = new Date();
+      const year = date.getFullYear();
+      const month = date.getMonth();
+      const day = date.getDate();
+      const today = `${day}.${month}.${year}`;
+      // const statistic = (await this.loader.get(`users/${user.userId}/statistics`)).options;
+      let statDay = this.AudioCallStatistic.today;
+      if (!statDay) {
+        statDay = {};
+        console.log(this.AudioCallStatistic);
+      }
+      // const str = 'audioCall';
+      // let game = this.AudioCallStatistic.today.str;
+      // if (!this.AudioCallStatistic.today.str) {
+      //   this.AudioCallStatistic.today.str = {};
+      // }
+      console.log(localStat);
+      const words = Object.keys(localStat);
+      for (let i = 0; i < words.length; i += 1) {
+        if (localStat[words[i]].inThisGame) {
+          console.log(localStat[words[i]].local);
+        }
+      }
+    }
   }
   async getParams() {
     const group = this.storage.get('group') as number;
@@ -174,6 +223,7 @@ export default class AudioCallController {
       this.storage.set('page', page + 1);
       this.storage.set('position', -1);
       this.modal.renderModalWindow();
+      this.setGlobalStatistic();
       this.controlModalWindow();
     } 
     if (page >= MaxParam.maxPage && group !== MaxParam.maxGroup) {
@@ -198,6 +248,7 @@ export default class AudioCallController {
     } else {
       this.view.removeHearth();
       this.modal.renderModalWindow();
+      this.setGlobalStatistic();
       this.controlModalWindow();
     }
   }
