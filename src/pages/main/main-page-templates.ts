@@ -22,9 +22,8 @@ export const welcomePageTemplate = `<section class="welcome__banner">
     <div class="about-us__card">
         <div class="card__pic"></div>
         <div class="card__text">
-            <span class="card__text-name">Это я</span>: тимлид. За мной архитектура и UI-дизайн
-            приложения. Весь функционал учебника. Создание большинства методов для обращения к бекенду.
-            Регистрация, аутентификация.
+            <span class="card__text-name">Это я</span>: тимлид. Архитектура и UI-дизайн
+            приложения. Учебник, регистрация, аутентификация.
         </div>
     </div>
     <div class="about-us__card">
