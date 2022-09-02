@@ -139,8 +139,52 @@
     padding: 16px;
 }
 
+.main-stats-title {
+    padding: 16px 0 0 16px;
+}
+
 .stats__short {
     background-color: var(--color-accent);
+}
+
+.stats__short-words {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+}
+
+.words__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.words__item-new {
+    color: var(--color-primary);
+}
+
+.words__item-learned {
+    color: var(--color-learned);
+}
+.words__item-hard {
+    color: var(--color-error);
+}
+.words__number {
+    font-size: 56px;
+    font-family: var(--font-title);
+}
+
+.words__word {
+    font-size: 20px;
+    font-family: var(--font-title);
+    color: var(--color-black);
+}
+
+.stats__short-answers {
+    padding-top: 8px;
+}
+
+.stats__short-answers-container {
+    gap: 48px;
 }
 
 .stats__long {
@@ -173,6 +217,15 @@
     gap: 16px;
 }
 
+.cell__container {
+    display: flex;
+    padding: 8px;
+}
+
+.cell__pic {
+    align-self: flex-end;
+}
+
 .textbook__words-data {
     display: flex;
     flex-direction: column;
@@ -195,6 +248,27 @@
     background-color: var(--color-light);
 }
 
+.games__sprint-list {
+    text-align: end;
+}
+
+.main-games-sprint-title {
+    text-align: end;
+}
+
 .games__audiocall {
     background-color: var(--color-shadow);
+}
+
+.audiocall-list {
+    color: var(--color-light);
+}
+
+.audiocall__container {
+    padding: 8px 0px 0px 8px;
+}
+
+.games__audiocall-pic {
+    width: 110px;
+    height: 110px;
 }
