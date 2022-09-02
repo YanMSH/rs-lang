@@ -22,19 +22,19 @@ export const welcomePageTemplate = `<section class="welcome__banner">
     <div class="about-us__card">
         <div class="card__pic"></div>
         <div class="card__text">
-            <span class="card__text-name">Это я</span>: тимлид. Архитектура и UI-дизайн
-            приложения. Учебник, регистрация, аутентификация.
+            <span class="card__text-name">Ян</span>: разработчик, тимлид. Разработал архитектуру и UI-дизайн
+            приложения. Выполнил страницы: главная, учебник, регистрация, аутентификация.
         </div>
     </div>
     <div class="about-us__card">
         <div class="card__pic"></div>
         <div class="card__text">
-            <span class="card__text-name">Сергей</span>: статистика. Игра "Аудиовызов".
+            <span class="card__text-name">Сергей</span>: разработчик. Продумал и реализовал сбор статистики в приложении. Создал игру "Аудиовызов".
         </div>
     </div>
     <div class="about-us__card">
         <div class="card__pic"></div>
-        <div class="card__text"><span class="card__text-name">Кристина</span>: игра "Спринт".</div>
+        <div class="card__text"><span class="card__text-name">Кристина</span>: разработчик. Сделала игру "Спринт".</div>
     </div>
     <div class="about-us__card card__mentor">
         <div class="card__pic"></div>
