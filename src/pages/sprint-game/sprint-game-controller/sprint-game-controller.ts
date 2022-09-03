@@ -75,6 +75,7 @@ export class SprintGameController {
     this.storage.set('secondIndexOfWord', secondIndexOfWord);
     this.updateLocalStatistic();
     this.sprintGameView.render(words[firstIndexOfWord].word, words[secondIndexOfWord].wordTranslate);
+    this.changeFullSreen();
     this.changeVolume();
     this.changeWords(page);
     this.setCountCircleToLocalStorage(0); 
@@ -89,23 +90,20 @@ export class SprintGameController {
   private endGameTimeout() {
     const timer = document.querySelector('.base-timer__label') as HTMLSpanElement;
     this.timerTimeout = setTimeout(() => {
-      console.log(timer);
       if (timer && Number(timer.textContent) === 0) {
-        console.log('end-game');
         this.modal.modalWindow();
+        this.disableButtons();
         this.controlModalWindow()
-        // this.sprintGameView.resetMain();
       }
     }, this.minuteInMilisec);
   }
 
   private endGameWordsOut() {
-    console.log('end-game');
     this.clearTimeoutOfTimer();
     this.timer.resetTimer();
     this.modal.modalWindow();
+    this.disableButtons();
     this.controlModalWindow();
-    // this.sprintGameView.resetMain();
   }
 
   private chooseLevel() {
@@ -121,56 +119,74 @@ export class SprintGameController {
   }
 
   private async changeWords(page: number) {
-      const group = this.storage.get('group') as number;
-      const words = await this.fillWords(group, page);
-      const wrongAnswerBtn = document.querySelector('.wrong-answer-btn') as HTMLButtonElement;
-      const rightAnswerBtn = document.querySelector('.right-answer-btn') as HTMLButtonElement;
-      const sumPoint = document.querySelector('.point-count') as HTMLSpanElement;
-      const point = Number(sumPoint.textContent);
-      let offset = 0;
-      const maxOffSet = words.length - 4;
-      if (wrongAnswerBtn) {
-        wrongAnswerBtn.addEventListener('click', async () => {
-          const rightAnswerCount = this.storage.get('rightAnswerCount') as number;
-          const countCircle = this.storage.get('countCircle') as number;
+    const group = this.storage.get('group') as number;
+    const words = await this.fillWords(group, page);
+    const answersButtons = document.querySelector('.answers-button') as HTMLDivElement;
+    const sumPoint = document.querySelector('.point-count') as HTMLSpanElement;
+    const point = Number(sumPoint.textContent);
+    let offset = 0;
+    const maxOffSet = words.length - 4;
+    answersButtons.addEventListener('click', (event) => {
+      const target = event.target as HTMLButtonElement;
+      if (target.classList.contains('answer-btn')) {
+        const rightAnswerCount = this.storage.get('rightAnswerCount') as number;
+        const countCircle = this.storage.get('countCircle') as number;
+        if (target.classList.contains('wrong-answer-btn')) {
           this.checkWrongAnswer(point, countCircle, rightAnswerCount, words);
-          if (offset < maxOffSet) {
-            const lastRandomNumber = this.indexOfFifthWord + Number(`${offset}`);
-            const firstRandomNumber = 0 + Number(`${offset}`);
-            const firstIndexOfWord = this.getRandomNumber(firstRandomNumber, lastRandomNumber);
-            const secondIndexOfWord = this.getRandomNumber(firstRandomNumber, lastRandomNumber);
-            this.storage.set('firstIndexOfWord', firstIndexOfWord);
-            this.storage.set('secondIndexOfWord', secondIndexOfWord);
-            this.sprintGameView.clickOnTheAnswerButton(words[firstIndexOfWord].word, words[secondIndexOfWord].wordTranslate);
-            setTimeout(this.changeOkUsualIcon, 300);
-            setTimeout(this.changeUsualBorderOfContainer, 2000);
-            offset += 1;
-          } else {
-            this.endGameWordsOut();
-          }
-        });
+        } else if (target.classList.contains('right-answer-btn')) {
+          this.checkRightAnswer(point, countCircle, rightAnswerCount, words);
+        }
+
+        if (offset < maxOffSet) {
+          const lastRandomNumber = this.indexOfFifthWord + Number(`${offset}`);
+          const firstRandomNumber = 0 + Number(`${offset}`);
+          const firstIndexOfWord = this.getRandomNumber(firstRandomNumber, lastRandomNumber);
+          const secondIndexOfWord = this.getRandomNumber(firstRandomNumber, lastRandomNumber);
+          this.storage.set('firstIndexOfWord', firstIndexOfWord);
+          this.storage.set('secondIndexOfWord', secondIndexOfWord);
+          this.sprintGameView.clickOnTheAnswerButton(words[firstIndexOfWord].word, words[secondIndexOfWord].wordTranslate);
+          setTimeout(this.changeOkUsualIcon, 300);
+          setTimeout(this.changeUsualBorderOfContainer, 2000);
+          offset += 1;
+        } else {
+          this.endGameWordsOut();
+        }
       }
-      if (rightAnswerBtn) {
-        rightAnswerBtn.addEventListener('click', async () => {
-          if (offset < maxOffSet) {
-            const rightAnswerCount = this.storage.get('rightAnswerCount') as number;
-            const countCircle = this.storage.get('countCircle') as number;
-            this.checkRightAnswer(point, countCircle, rightAnswerCount, words);
-            const lastRandomNumber = this.indexOfFifthWord + Number(`${offset}`);
-            const firstRandomNumber = 0 + Number(`${offset}`);
-            const firstIndexOfWord = this.getRandomNumber(firstRandomNumber, lastRandomNumber);
-            const secondIndexOfWord = this.getRandomNumber(firstRandomNumber, lastRandomNumber);
-            this.storage.set('firstIndexOfWord', firstIndexOfWord);
-            this.storage.set('secondIndexOfWord', secondIndexOfWord);
-            this.sprintGameView.clickOnTheAnswerButton(words[firstIndexOfWord].word, words[secondIndexOfWord].wordTranslate);
-            setTimeout(this.changeOkUsualIcon, 300);
-            setTimeout(this.changeUsualBorderOfContainer, 2000);
-            offset += 1;
-          } else {
-            this.endGameWordsOut();
-          } 
-        });
+    });
+    
+    document.addEventListener('keydown', (event) => {
+      if (event.code == 'ArrowLeft' || event.code == 'ArrowRight') {
+        const rightAnswerCount = this.storage.get('rightAnswerCount') as number;
+        const countCircle = this.storage.get('countCircle') as number;
+        if (event.code == 'ArrowLeft') {
+          this.checkWrongAnswer(point, countCircle, rightAnswerCount, words);
+        } else if (event.code == 'ArrowRight') {
+          this.checkRightAnswer(point, countCircle, rightAnswerCount, words);
+        }
+
+        if (offset < maxOffSet) {
+          const lastRandomNumber = this.indexOfFifthWord + Number(`${offset}`);
+          const firstRandomNumber = 0 + Number(`${offset}`);
+          const firstIndexOfWord = this.getRandomNumber(firstRandomNumber, lastRandomNumber);
+          const secondIndexOfWord = this.getRandomNumber(firstRandomNumber, lastRandomNumber);
+          this.storage.set('firstIndexOfWord', firstIndexOfWord);
+          this.storage.set('secondIndexOfWord', secondIndexOfWord);
+          this.sprintGameView.clickOnTheAnswerButton(words[firstIndexOfWord].word, words[secondIndexOfWord].wordTranslate);
+          setTimeout(this.changeOkUsualIcon, 300);
+          setTimeout(this.changeUsualBorderOfContainer, 2000);
+          offset += 1;
+        } else {
+          this.endGameWordsOut();
+        }
       }
+    });
+  }
+
+  private disableButtons() {
+    const wrongAnswerBtn = document.querySelector('.wrong-answer-btn') as HTMLButtonElement;
+    const rightAnswerBtn = document.querySelector('.right-answer-btn') as HTMLButtonElement;
+    wrongAnswerBtn.disabled = true;
+    rightAnswerBtn.disabled = true;
   }
 
   private checkRightAnswer(point: number, countCircle: number, rightAnswerCount: number, words: Array<Word>) {
@@ -300,6 +316,21 @@ export class SprintGameController {
     })
   }
 
+  private changeFullSreen() {
+    const game = document.querySelector('.game-wrapper') as HTMLDivElement;
+    document.addEventListener('click', (event) => {
+      const target = event.target as HTMLElement;
+      if (!target.hasAttribute('data-toggle-fullscreen')) return;
+
+      if (document.fullscreenElement) {
+        document.exitFullscreen();
+      } else {
+        game.requestFullscreen();
+      }
+
+    }, false);
+  }
+
   private setCountCircleToLocalStorage(countCircle: number) {
     this.storage.set('countCircle', countCircle);
   }
@@ -375,7 +406,6 @@ export class SprintGameController {
       data = data.concat(prevData);
       page -= 1;
     }
-    // console.log('data', data);
     return data;
   }
 

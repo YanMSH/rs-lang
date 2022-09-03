@@ -23,7 +23,7 @@ export class SprintGameView {
     settingsSection.classList.add('settings-section')
     settingsSection.innerHTML = `
       <div class="sound-icon active"></div>
-      <img src = './assets/svg/fullscreen_icon.svg' alt="fullscreen icon" class="fullscreen-icon">
+      <img src = './assets/svg/fullscreen_icon.svg' alt="fullscreen icon" class="fullscreen-icon" data-toggle-fullscreen>
       <img src = './assets/svg/close_icon.svg' alt="close icon" class="close-icon">
     `
     return settingsSection;
@@ -56,8 +56,8 @@ export class SprintGameView {
         
       </div>
       <div class="answers-button">
-        <button class="wrong-answer-btn answer-btn" name="wrong-answer">Неверно</button>
-        <button class="right-answer-btn answer-btn" name="right-answer">Верно</button>
+        <button class="wrong-answer-btn answer-btn" name="wrong-answer">&#8592; Неверно</button>
+        <button class="right-answer-btn answer-btn" name="right-answer">Верно &#8594;</button>
       </div>
     `
     return sprintGameContainer;
