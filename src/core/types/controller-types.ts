@@ -41,13 +41,28 @@ type WordStat = {
     right: number,
     mistakes: number
 }
+export type WordS = {
+    [words: string]: WordStat | Record<string, never>;
+}
 export type DataStat = {
-    [audioCall: string]: WordStat | Record<string, never>,
-    sprint: WordStat | Record<string, never>
+    knowWordsAudio: number,
+    knowWordsSprint: number,
+    audioCall: WordS | Record<string, never>,
+    sprint: WordS | Record<string, never>
 }
 export type GlobalStat = {
     [gStat: string]: DataStat | Record<string, never>
 }
 export type Stat = {
     [answerStat: string]: OneStat | Record<string, never>;
+}
+export type NumStat = {
+    [a: string]: number | number[];
+}
+export type renderStat = {
+    rightDayWords?: NumStat | Record<string, never>,
+    rightAudio?: NumStat | Record<string, never>,
+    mistakesAudio?: NumStat | Record<string, never>,
+    rightSprint?: NumStat | Record<string, never>,
+    mistakesSprint?: NumStat | Record<string, never>,
 }

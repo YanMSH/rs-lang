@@ -1,8 +1,9 @@
 import AudioCallView from '../audio-call-view/audio-call-view'; 
 import Loader from '../../../core/components/loader/loader';
 import { ResponseAuth } from '../../../core/types/loader-types';
+import { Statistic } from '../../../core/types/loader-types';
 import Storage from '../../../core/components/service/storage/storage';
-import { Word, Stat, GlobalStat, DataStat } from '../../../core/types/controller-types';
+import { Word, Stat, GlobalStat } from '../../../core/types/controller-types';
 import ModalWindowController from '../../modal-window/modal-window-controller/modal-window-controller';
 import {MaxParam, maxButtons, timer } from '../../../core/constants/audio-call-const';
 import TextbookPage from '../../textbook/textbook-page';
@@ -91,16 +92,15 @@ export default class AudioCallController {
   async updateGlobalStatistic() {
     const user = this.storage.get('user') as ResponseAuth;
     if (user) {
-      const date = new Date();
-      const year = date.getFullYear();
-      const month = date.getMonth();
-      const day = date.getDate();
-      const today = `${day}.${month}.${year}`;
-      const statistic = (await this.loader.get(`/users/${user.userId}/statistics`)).options;
-      const statGame = statistic.audioCall;
-      const statDay = statGame.today;
-      if (statGame) {
-        this.AudioCallStatistic = statGame;
+      // const date = new Date();
+      // const year = date.getFullYear();
+      // const month = date.getMonth();
+      // const day = date.getDate();
+      // const today = `${day}.${month}.${year}`;
+      const serverStat = await this.loader.getStatistic(`statistics`) as Statistic;
+      const statistic = serverStat.optional as GlobalStat;
+      if (statistic) {
+        this.AudioCallStatistic = statistic;
       } else {
         this.AudioCallStatistic = {};
       }
@@ -122,25 +122,47 @@ export default class AudioCallController {
       const month = date.getMonth();
       const day = date.getDate();
       const today = `${day}.${month}.${year}`;
-      // const statistic = (await this.loader.get(`users/${user.userId}/statistics`)).options;
-      let statDay = this.AudioCallStatistic.today;
-      if (!statDay) {
-        statDay = {};
-        console.log(this.AudioCallStatistic);
-      }
-      // const str = 'audioCall';
-      // let game = this.AudioCallStatistic.today.str;
-      // if (!this.AudioCallStatistic.today.str) {
-      //   this.AudioCallStatistic.today.str = {};
-      // }
       console.log(localStat);
       const words = Object.keys(localStat);
       for (let i = 0; i < words.length; i += 1) {
         if (localStat[words[i]].inThisGame) {
-          console.log(localStat[words[i]].local);
+          if (!this.AudioCallStatistic[today]) {
+            this.AudioCallStatistic[today] = {};
+          }
+          if (!this.AudioCallStatistic[today].audioCall) {
+            this.AudioCallStatistic[today].audioCall = {};
+          }
+          console.log(this.AudioCallStatistic, words[i]); 
+          if (!this.AudioCallStatistic[today].audioCall[words[i]]) {
+            this.AudioCallStatistic[today].audioCall[words[i]] = {};
+          }
+          if (localStat[words[i]].local === 1) {
+            if (this.AudioCallStatistic[today].audioCall[words[i]].right) {
+              this.AudioCallStatistic[today].audioCall[words[i]].right += 1;
+            } else {
+              this.AudioCallStatistic[today].audioCall[words[i]].right = 1;
+            }
+          } else {
+            if (this.AudioCallStatistic[today].audioCall[words[i]].mistakes) {
+              this.AudioCallStatistic[today].audioCall[words[i]].mistakes += 1;
+            } else {
+              this.AudioCallStatistic[today].audioCall[words[i]].mistakes = 1;
+            }
+          }
+          if (localStat[words[i]].global == 3) {
+            console.log('!!!');
+            if (this.AudioCallStatistic[today].knowWordsAudio) {
+              this.AudioCallStatistic[today].knowWordsAudio += 1;
+            } else {
+              this.AudioCallStatistic[today].knowWordsAudio = 1;
+            }
+          } else {
+            this.AudioCallStatistic[today].knowWordsAudio = 0;
+          }
         }
       }
     }
+    this.loader.putStatistic(`statistics`, this.AudioCallStatistic, 0);
   }
   async getParams() {
     const group = this.storage.get('group') as number;
@@ -230,11 +252,10 @@ export default class AudioCallController {
       this.storage.set('group', group + 1);
       this.storage.set('page', 0);
       this.storage.set('position', 0);
-    } else if (group !== MaxParam.maxGroup && page !== MaxParam.maxPage + 1 && position !== MaxParam.maxPosition + 1) {
+    } else if (group !== MaxParam.maxGroup + 1 && page !== MaxParam.maxPage + 1 && position !== MaxParam.maxPosition + 1) {
       position = this.storage.get('position') as number;
       this.storage.set('position', position + 1);
     }
-    // console.log(group, page, position);
   }
 
   async controlLife(life: number) {
@@ -290,7 +311,9 @@ export default class AudioCallController {
           this.storage.set('gameStatistic', JSON.stringify(this.gameStatistic));
           audioButton.style.backgroundImage = `url(${this.setNewUrl(url)})`;
           // console.log('верно!');
-          this.addPreloader();
+          setTimeout(() => {
+            this.addPreloader();
+          }, 800);
           setTimeout(() => {
             this.controlLife(this.life);
           }, timer);
@@ -312,7 +335,9 @@ export default class AudioCallController {
           }
           this.storage.set('gameStatistic', JSON.stringify(this.gameStatistic));
           // console.log('не верно!');
-          this.addPreloader();
+          setTimeout(() => {
+            this.addPreloader();
+          }, 800);
           setTimeout(() => {
             this.controlLife(this.life);
           }, timer);
