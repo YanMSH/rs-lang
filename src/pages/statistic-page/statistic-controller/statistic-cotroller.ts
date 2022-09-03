@@ -129,6 +129,7 @@ export default class StatisticController {
       }
     }
     async render() {
+      this.storage.set('statistic', JSON.stringify(await this.getData()));
       const user = (this.storage.get('user') as ResponseAuth);
       if (user) {
         console.log(await this.getData());
