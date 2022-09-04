@@ -18,8 +18,8 @@ export default class StatisticView {
         const welcome = this.createWelcomeMessage();
         const wordsStat = this.createWordsStatistic(object.rightDayWords as NumStat);
         const audioStat = this.createAudioStatistic(object.rightAudio as NumStat, object.mistakesAudio as NumStat);
-        // const sprintStat = this.createSprintStatistic(object.rightSprint as NumStat, object.mistakesSprint as NumStat);
-        wrapper.append(welcome, wordsStat, audioStat);
+        const sprintStat = this.createSprintStatistic(object.rightSprint as NumStat, object.mistakesSprint as NumStat);
+        wrapper.append(welcome, wordsStat, audioStat, sprintStat);
         main.append(wrapper);
     }
 
@@ -93,36 +93,36 @@ export default class StatisticView {
         return audioStat;
     }
 
-    // createSprintStatistic(right: NumStat, mistakes: NumStat) {
-    //     const sprintStat = document.createElement('div');
-    //     sprintStat.classList.add('words-statistic');
-    //     const date = new Date();
-    //     const year = date.getFullYear();
-    //     const month = date.getMonth();
-    //     const day = date.getDate();
-    //     const today = `${day}.${month}.${year}`;
-    //     const arrRigth = right[today] as number;
-    //     const arrMistakes = mistakes[today] as number;
-    //     const percent = Math.floor(arrRigth / (arrRigth + arrMistakes) * 100) ; 
-    //     const sprintBlock = document.createElement('div');
-    //     sprintBlock.classList.add('words-statistic-block');
-    //     sprintBlock.innerHTML = `
-    //         <span class = "statistic-title">Игра Sprint: </span>
-    //         <span class = "statistic-title">Статистика новых слов за сегодня (${today}): </span>
-    //         <span class = "statistic-text">Количество новых слов: ${arrRigth}</span>
-    //         <span class = "statistic-text">Количество изученных слов: ${arrRigth}</span>
-    //         <span class = "statistic-text">Процент правильных ответов: ${percent}</span>
-    //     `;
-    //     const a: number[] = [];
-    //     const keys = Object.keys(right);
-    //     for (let i = 0; i < keys.length; i += 1) { 
-    //         const s = right[keys[i]] as number[];
-    //         a.push(s[0]);
-    //     }
-    //     // const graphWords = this.createGraph(Object.keys(right), a, 'green', 'Sprint Statistic');
-    //     sprintStat.append(sprintBlock);
-    //     return sprintStat;
-    // }
+    createSprintStatistic(right: NumStat, mistakes: NumStat) {
+        const sprintStat = document.createElement('div');
+        sprintStat.classList.add('words-statistic');
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = date.getMonth();
+        const day = date.getDate();
+        const today = `${day}.${month}.${year}`;
+        const arrRigth = right[today] as number;
+        const arrMistakes = mistakes[today] as number;
+        const percent = Math.floor(arrRigth / (arrRigth + arrMistakes) * 100) ; 
+        const sprintBlock = document.createElement('div');
+        sprintBlock.classList.add('words-statistic-block');
+        sprintBlock.innerHTML = `
+            <span class = "statistic-title">Игра Sprint: </span>
+            <span class = "statistic-title">Статистика новых слов за сегодня (${today}): </span>
+            <span class = "statistic-text">Количество новых слов: ${arrRigth}</span>
+            <span class = "statistic-text">Количество изученных слов: ${arrRigth}</span>
+            <span class = "statistic-text">Процент правильных ответов: ${percent}</span>
+        `;
+        const a: number[] = [];
+        const keys = Object.keys(right);
+        for (let i = 0; i < keys.length; i += 1) { 
+            const s = right[keys[i]] as number[];
+            a.push(s[0]);
+        }
+        // const graphWords = this.createGraph(Object.keys(right), a, 'green', 'Sprint Statistic');
+        sprintStat.append(sprintBlock);
+        return sprintStat;
+    }
 
 
     // createGraph(dataArray: string[], data: number[], color: string, label: string) {
