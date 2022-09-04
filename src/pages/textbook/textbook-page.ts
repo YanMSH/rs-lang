@@ -183,10 +183,10 @@ export default class TextbookPage {
             gameControlPanel.style.visibility = 'hidden';
         } else {
             sprintGameButton.addEventListener('click', () => {
-                this.sprintGame.starting();
+                this.sprintGame.startWithoutLevel();
             });
             audiocallGameButton.addEventListener('click', () => {
-                this.audiocallGame.renderAudioCall();
+                this.audiocallGame.startAudioCallGame();
             });
         }
 
