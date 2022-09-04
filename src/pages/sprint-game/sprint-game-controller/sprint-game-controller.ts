@@ -11,7 +11,10 @@ import ModalWindowController from '../../modal-window/modal-window-controller/mo
 import TextbookPage from '../../textbook/textbook-page';
 import { ResponseAuth } from '../../../core/types/loader-types';
 import { Statistic } from '../../../core/types/loader-types';
+import MainPage from '../../main/main-page';
+import TextbookController from '../../textbook/textbook-controller';
 export class SprintGameController {
+  private tbController: TextbookController;
   private sprintGameView: SprintGameView;
   private levelPage: LevelPage;
   private sprintLevelMessage: string;
@@ -34,6 +37,8 @@ export class SprintGameController {
   private modal: ModalWindowController;
   public gameStatistic: Stat;
   public SprintStatistic: GlobalStat;
+  public preloader: HTMLImageElement;
+  public session: number;
   
   constructor() {
     this.sprintGameView = new SprintGameView();
@@ -58,6 +63,9 @@ export class SprintGameController {
     this.modal = new ModalWindowController();
     this.gameStatistic = (JSON.parse(this.storage.get('gameStatistic') as string) as Stat) ? JSON.parse(this.storage.get('gameStatistic') as string) as Stat : {};
     this.SprintStatistic = {};
+    this.tbController = new TextbookController();
+    this.preloader = this.createPreloader();
+    this.session = 0;
   }
 
   public render() {
@@ -83,6 +91,7 @@ export class SprintGameController {
     this.setCountCircleToLocalStorage(0); 
     this.setRightAnswerCountToStorage(0);
     this.endGameTimeout();
+    this.controlCloseGame();
   }
 
   public clearTimeoutOfTimer() {
@@ -95,6 +104,7 @@ export class SprintGameController {
       if (timer && Number(timer.textContent) === 0) {
         this.modal.renderModalWindow();
         this.disableButtons();
+        this.checkHardLearnedWord();
         this.controlModalWindow();
       }
     }, this.minuteInMilisec);
@@ -105,6 +115,7 @@ export class SprintGameController {
     this.timer.resetTimer();
     this.modal.renderModalWindow();
     this.disableButtons();
+    this.checkHardLearnedWord();
     this.controlModalWindow();
   }
 
@@ -113,6 +124,7 @@ export class SprintGameController {
     const level = document.querySelectorAll('.level');
     level.forEach((elem) => {
       elem.addEventListener('click', async () => {
+        this.addPreloader();
         const buttonLevel = Number(elem.getAttribute('data-level'));
         this.storage.set('group', buttonLevel - 1);
         this.startGame();
@@ -263,12 +275,14 @@ export class SprintGameController {
 
   private addToStatisticRightWord(buildWord: Word) {
       if (this.gameStatistic[buildWord.word]) {
+        this.session += 1;
         this.gameStatistic[buildWord.word].local += 1;
         this.gameStatistic[buildWord.word].global += 1;
         this.gameStatistic[buildWord.word].general += 1;
         this.gameStatistic[buildWord.word].option = [buildWord.word, buildWord.wordTranslate, buildWord.audio]; 
         this.gameStatistic[buildWord.word].inThisGame = true;
       } else {
+        this.session += 1;
         this.gameStatistic[buildWord.word] = {};
         this.gameStatistic[buildWord.word].local = 1;
         this.gameStatistic[buildWord.word].global = 1;
@@ -281,11 +295,13 @@ export class SprintGameController {
 
   private addToStatisticWrongWord(buildWord: Word) {
     if (this.gameStatistic[buildWord.word]) {
+      this.session = 0;
       this.gameStatistic[buildWord.word].local = 0;
       this.gameStatistic[buildWord.word].general += 1;
       this.gameStatistic[buildWord.word].option = [buildWord.word, buildWord.wordTranslate, buildWord.audio]; 
       this.gameStatistic[buildWord.word].inThisGame = true;
     } else {
+      this.session = 0;
       this.gameStatistic[buildWord.word] = {};
       this.gameStatistic[buildWord.word].local = 0;
       this.gameStatistic[buildWord.word].global = 0;
@@ -307,11 +323,6 @@ export class SprintGameController {
   private async updateGlobalStatistic() {
     const user = this.storage.get('user') as ResponseAuth;
     if (user) {
-      // const date = new Date();
-      // const year = date.getFullYear();
-      // const month = date.getMonth();
-      // const day = date.getDate();
-      // const today = `${day}.${month}.${year}`;
       const serverStat = await this.loader.getStatistic(`statistics`) as Statistic;
       const statistic = serverStat.optional as GlobalStat;
       if (statistic) {
@@ -333,11 +344,10 @@ export class SprintGameController {
     const user = this.storage.get('user') as ResponseAuth;
     if (user) {
       const date = new Date();
-      const year = date.getFullYear();
-      const month = date.getMonth();
-      const day = date.getDate();
+      const year = (date.getFullYear() > 9) ? date.getFullYear() : `0${date.getFullYear()}`;
+      const month = (date.getMonth() > 9) ? date.getMonth() : `0${date.getMonth()}`;
+      const day = (date.getDate() > 9) ? date.getDate() : `0${date.getDate()}`;
       const today = `${day}.${month}.${year}`;
-      console.log(localStat);
       const words = Object.keys(localStat);
       for (let i = 0; i < words.length; i += 1) {
         if (localStat[words[i]].inThisGame) {
@@ -347,7 +357,6 @@ export class SprintGameController {
           if (!this.SprintStatistic[today].sprint) {
             this.SprintStatistic[today].sprint = {};
           }
-          console.log(this.SprintStatistic, words[i]); 
           if (!this.SprintStatistic[today].sprint[words[i]]) {
             this.SprintStatistic[today].sprint[words[i]] = {};
           }
@@ -365,7 +374,6 @@ export class SprintGameController {
             }
           }
           if (localStat[words[i]].global == 3) {
-            console.log('!!!');
             if (this.SprintStatistic[today].learnedWordsSprint) {
               this.SprintStatistic[today].learnedWordsSprint += 1;
             } else {
@@ -376,9 +384,15 @@ export class SprintGameController {
           }
         }
       }
+      if (this.SprintStatistic[today].longSessionSprint) {
+        if (this.SprintStatistic[today].longSessionSprint < this.session) {
+          this.SprintStatistic[today].longSessionSprint = this.session;
+        }
+      } else {
+        this.SprintStatistic[today].longSessionSprint = this.session;
+      }
     }
     this.loader.putStatistic(`statistics`, this.SprintStatistic, 0);
-    // this.loader.putStatistic(`statistics`, this.SprintStatistic, 0);
   }
 
   private changeVolume() {
@@ -493,6 +507,9 @@ export class SprintGameController {
   }
 
   private controlModalWindow() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    }
     const textBook = document.querySelector('.textbook') as HTMLElement;
     const refresh = document.querySelector('.refresh') as HTMLElement;
     const modalWindow = document.querySelector('.modal') as HTMLElement;
@@ -505,5 +522,45 @@ export class SprintGameController {
       new TextbookPage().render();
       modalWindow.remove();
     });
+  }
+
+  private controlCloseGame() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    }
+    const close = document.querySelector('.close-icon') as HTMLDivElement;
+    close.addEventListener('click', () => {
+      this.clearTimeoutOfTimer();
+      new MainPage().render();
+    });
+  }
+  private checkHardLearnedWord() {
+    const localStat = JSON.parse(this.storage.get('gameStatistic') as string) as Stat;
+    const words = Object.keys(localStat);
+      for (let i = 0; i < words.length; i += 1) {
+        if (localStat[words[i]].inThisGame) {
+          if (localStat[words[i]].global >= 3 && localStat[words[i]].global < 5) {
+            this.tbController.postLearnedWord(localStat[words[i]].id as string);
+          } else if (localStat[words[i]].global >= 5) {
+            this.tbController.postHardWord(localStat[words[i]].id as string);
+          }
+          
+        }
+      }
+  }
+  createPreloader() {
+    const statusMessage = document.createElement('img');
+    statusMessage.classList.add('status');
+    statusMessage.src = '../../../assets/svg/spinner1.svg';
+    statusMessage.style.cssText = `
+      display: block;
+      margin: 0 auto;
+    `;
+    return statusMessage;
+  }
+  addPreloader() {
+    const main = document.querySelector('main') as HTMLElement;
+      main.textContent = '';
+      main.append(this.preloader);
   }
 }

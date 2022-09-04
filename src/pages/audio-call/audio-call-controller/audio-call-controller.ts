@@ -10,7 +10,9 @@ import TextbookPage from '../../textbook/textbook-page';
 import LevelPage from '../../level-page/level-page';
 import { audioCallLevelMessage } from '../../../core/constants/level-const';
 import MainPage from '../../main/main-page';
+import TextbookController from '../../textbook/textbook-controller';
 export default class AudioCallController {
+  public tbController: TextbookController;
   public view: AudioCallView;
   public loader: Loader;
   public storage: Storage;
@@ -22,6 +24,7 @@ export default class AudioCallController {
   public LevelPage: LevelPage;
   public audioCallLevelMessage: string;
   public preloader: HTMLImageElement;
+  public session: number;
 
   constructor() {
     this.loader = new Loader();
@@ -35,6 +38,8 @@ export default class AudioCallController {
     this.LevelPage = new LevelPage();
     this.audioCallLevelMessage = audioCallLevelMessage;
     this.preloader = this.createPreloader();
+    this.tbController = new TextbookController();
+    this.session = 0;
   }
   connectWithView() {
     this.chooseLevel();
@@ -74,6 +79,7 @@ export default class AudioCallController {
     return words[position];
   }
   async startGame() {
+    this.audio.volume = 1;
     this.updateGlobalStatistic()
     const position = this.storage.get('position') as number;
     if (!position) {
@@ -115,11 +121,10 @@ export default class AudioCallController {
     const user = this.storage.get('user') as ResponseAuth;
     if (user) {
       const date = new Date();
-      const year = date.getFullYear();
-      const month = date.getMonth();
-      const day = date.getDate();
+      const year = (date.getFullYear() > 9) ? date.getFullYear() : `0${date.getFullYear()}`;
+      const month = (date.getMonth() > 9) ? date.getMonth() : `0${date.getMonth()}`;
+      const day = (date.getDate() > 9) ? date.getDate() : `0${date.getDate()}`;
       const today = `${day}.${month}.${year}`;
-      console.log(localStat);
       const words = Object.keys(localStat);
       for (let i = 0; i < words.length; i += 1) {
         if (localStat[words[i]].inThisGame) {
@@ -129,7 +134,6 @@ export default class AudioCallController {
           if (!this.AudioCallStatistic[today].audioCall) {
             this.AudioCallStatistic[today].audioCall = {};
           }
-          console.log(this.AudioCallStatistic, words[i]); 
           if (!this.AudioCallStatistic[today].audioCall[words[i]]) {
             this.AudioCallStatistic[today].audioCall[words[i]] = {};
           }
@@ -147,7 +151,6 @@ export default class AudioCallController {
             }
           }
           if (localStat[words[i]].global == 3) {
-            console.log('!!!');
             if (this.AudioCallStatistic[today].learnedWordsAudio) {
               this.AudioCallStatistic[today].learnedWordsAudio += 1;
             } else {
@@ -157,6 +160,13 @@ export default class AudioCallController {
             this.AudioCallStatistic[today].learnedWordsAudio = 0;
           }
         }
+      }
+      if (this.AudioCallStatistic[today].longSessionAudio) {
+        if (this.AudioCallStatistic[today].longSessionAudio < this.session) {
+          this.AudioCallStatistic[today].longSessionAudio = this.session;
+        }
+      } else {
+        this.AudioCallStatistic[today].longSessionAudio = this.session;
       }
     }
     this.loader.putStatistic(`statistics`, this.AudioCallStatistic, 0);
@@ -240,16 +250,20 @@ export default class AudioCallController {
     }
     if (position >= MaxParam.maxPosition && page <= MaxParam.maxPage) {
       this.storage.set('page', page + 1);
-      this.storage.set('position', -1);
+      this.storage.set('position', 0);
+      this.audio.src = '';
       this.modal.renderModalWindow();
       this.setGlobalStatistic();
+      this.checkHardLearnedWord();
       this.controlModalWindow();
     } 
-    if (page >= MaxParam.maxPage && group !== MaxParam.maxGroup) {
+    if (page >= MaxParam.maxPage + 1 && group !== MaxParam.maxGroup + 1) {
       this.storage.set('group', group + 1);
       this.storage.set('page', 0);
       this.storage.set('position', 0);
-    } else if (group !== MaxParam.maxGroup + 1 && page !== MaxParam.maxPage + 1 && position !== MaxParam.maxPosition + 1) {
+      this.audio.src = '';
+      this.audio.volume = 0;
+    } else if (group !== MaxParam.maxGroup + 1 && page !== MaxParam.maxPage + 1 && position !== MaxParam.maxPosition) {
       position = this.storage.get('position') as number;
       this.storage.set('position', position + 1);
     }
@@ -265,8 +279,10 @@ export default class AudioCallController {
       this.controlAnswer(word);
     } else {
       this.view.removeHearth();
+      this.audio.src = '';
       this.modal.renderModalWindow();
       this.setGlobalStatistic();
+      this.checkHardLearnedWord();
       this.controlModalWindow();
     }
   }
@@ -291,22 +307,25 @@ export default class AudioCallController {
           elem.classList.add('right');
           const url = buildWord.image;
           if (this.gameStatistic[buildWord.word]) {
+            this.session += 1;
             this.gameStatistic[buildWord.word].local += 1;
             this.gameStatistic[buildWord.word].global += 1;
             this.gameStatistic[buildWord.word].general += 1;
             this.gameStatistic[buildWord.word].option = [buildWord.word, buildWord.wordTranslate, buildWord.audio]; 
+            this.gameStatistic[buildWord.word].id = buildWord.id;
             this.gameStatistic[buildWord.word].inThisGame = true;
           } else {
+            this.session += 1;
             this.gameStatistic[buildWord.word] = {};
             this.gameStatistic[buildWord.word].local = 1;
             this.gameStatistic[buildWord.word].global = 1;
             this.gameStatistic[buildWord.word].general = 1;
             this.gameStatistic[buildWord.word].option = [buildWord.word, buildWord.wordTranslate, buildWord.audio];
+            this.gameStatistic[buildWord.word].id = buildWord.id;
             this.gameStatistic[buildWord.word].inThisGame = true;
           }
           this.storage.set('gameStatistic', JSON.stringify(this.gameStatistic));
           audioButton.style.backgroundImage = `url(${this.setNewUrl(url)})`;
-          // console.log('верно!');
           setTimeout(() => {
             this.addPreloader();
           }, 800);
@@ -317,11 +336,14 @@ export default class AudioCallController {
           this.life = this.view.removeHearth() - 1;
           elem.classList.add('mistakes');
           if (this.gameStatistic[buildWord.word]) {
+            this.session = 0;
             this.gameStatistic[buildWord.word].local = 0;
             this.gameStatistic[buildWord.word].general += 1;
             this.gameStatistic[buildWord.word].option = [buildWord.word, buildWord.wordTranslate, buildWord.audio]; 
+            this.gameStatistic[buildWord.word].id = buildWord.id;
             this.gameStatistic[buildWord.word].inThisGame = true;
           } else {
+            this.session = 0;
             this.gameStatistic[buildWord.word] = {};
             this.gameStatistic[buildWord.word].local = 0;
             this.gameStatistic[buildWord.word].global = 0;
@@ -330,7 +352,6 @@ export default class AudioCallController {
             this.gameStatistic[buildWord.word].inThisGame = true;
           }
           this.storage.set('gameStatistic', JSON.stringify(this.gameStatistic));
-          // console.log('не верно!');
           setTimeout(() => {
             this.addPreloader();
           }, 800);
@@ -340,6 +361,20 @@ export default class AudioCallController {
         }
       })
     });
+  }
+  checkHardLearnedWord() {
+    const localStat = JSON.parse(this.storage.get('gameStatistic') as string) as Stat;
+    const words = Object.keys(localStat);
+      for (let i = 0; i < words.length; i += 1) {
+        if (localStat[words[i]].inThisGame) {
+          if (localStat[words[i]].global >= 3 && localStat[words[i]].global < 5) {
+            this.tbController.postLearnedWord(localStat[words[i]].id as string);
+          } else if (localStat[words[i]].global >= 5) {
+            this.tbController.postHardWord(localStat[words[i]].id as string);
+          }
+          
+        }
+      }
   }
   createPreloader() {
     const statusMessage = document.createElement('img');
@@ -357,6 +392,10 @@ export default class AudioCallController {
       response.append(this.preloader);
   }
   controlModalWindow() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    }
+    this.audio.src = '';
     const textBook = document.querySelector('.textbook');
     const refresh = document.querySelector('.refresh');
     const modalWindow = document.querySelector('.modal');
@@ -384,6 +423,9 @@ export default class AudioCallController {
     }, false);
   }
   controlCloseGame() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    }
     const close = document.querySelector('.close-game') as HTMLDivElement;
     close.addEventListener('click', () => {
       new MainPage().render();

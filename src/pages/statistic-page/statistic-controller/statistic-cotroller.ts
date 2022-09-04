@@ -11,37 +11,45 @@ export default class StatisticController {
     public loader: Loader;
     public storage: Storage;
     public auth: AuthPage;
+    public preloader: HTMLImageElement;
 
     constructor() {
         this.statistic = new StatisticView();
         this.loader = new Loader();
         this.storage = new Storage();
         this.auth = new AuthPage();
+        this.preloader = this.createPreloader();
     }
 
     async getNewWordsToday() {
-      const obj: NumStat | Record<string, never> = {};
-      const arr: number[] = [];
-      const date = new Date();
-      const year = date.getFullYear();
-      const month = date.getMonth();
-      const day = date.getDate();
-      const today = `${day}.${month}.${year}`;
-      const rightAudio = await this.getRightAudioAnswers() as NumStat;
-      const mistakesAudio = await this.getMistakesAudioAnswers() as NumStat;
-      const rightSprint = await this.getRightSprintAnswers() as NumStat;
-      const mistakesSprint = await this.getMistakesSprintAnswers() as NumStat;
-      const rightAnsw = (Number(rightAudio[today]) + Number(rightSprint[today])) as number;
-      const mistakesAnsw = (Number(mistakesAudio[today]) + Number(mistakesSprint[today])) as number;
-      // const rightAnsw = rightAudio[today] as number;
-      // const mistakesAnsw = mistakesAudio[today] as number;
-      const percent = Math.floor(rightAnsw / (rightAnsw + mistakesAnsw) * 100) ; 
-      arr.push(rightAnsw, percent);
-      arr.push
-      obj[today] = arr;
-
-      // obj.today = rightAudio[today] + rightSprint[today]; 
-      return obj;
+        const obj: NumStat | Record<string, never> = {};
+        const arr: number[] = [];
+        const date = new Date();
+        const year = (date.getFullYear() > 9) ? date.getFullYear() : `0${date.getFullYear()}`;
+      const month = (date.getMonth() > 9) ? date.getMonth() : `0${date.getMonth()}`;
+      const day = (date.getDate() > 9) ? date.getDate() : `0${date.getDate()}`;
+        const today = `${day}.${month}.${year}`;
+        const rightAudio = (await this.getRightAudioAnswers()) as NumStat;
+        const mistakesAudio = (await this.getMistakesAudioAnswers()) as NumStat;
+        const rightSprint = (await this.getRightSprintAnswers()) as NumStat;
+        const mistakesSprint = (await this.getMistakesSprintAnswers()) as NumStat;
+        let rightAnsw = (Number(rightAudio[today]) + Number(rightSprint[today])) as number;
+        const mistakesAnsw = (Number(mistakesAudio[today]) + Number(mistakesSprint[today])) as number;
+        let percent = Math.floor((rightAnsw / (rightAnsw + mistakesAnsw)) * 100);
+        if (rightAnsw ) {
+          rightAnsw  = rightAnsw ;
+        } else {
+          rightAnsw  = 0;
+        }
+        if (percent) {
+          percent = percent;
+      } else {
+          percent = 0;
+      }
+        arr.push(rightAnsw, percent);
+        arr.push;
+        obj[today] = arr;
+        return obj;
     }
 
     async getRightAudioAnswers() {
@@ -51,15 +59,41 @@ export default class StatisticController {
         let right = 0;
         for (let i = 0; i < keys.length; i += 1) {
             const audio = stat[keys[i]].audioCall;
-            const audioKeys = Object.keys(audio);
-            for (let m = 0; m < audioKeys.length; m += 1) {
-                if (audio[audioKeys[m]].right) {
-                    right += audio[audioKeys[m]].right;
+            if (audio) {
+                const audioKeys = Object.keys(audio);
+                for (let m = 0; m < audioKeys.length; m += 1) {
+                    if (audio[audioKeys[m]].right) {
+                        right += audio[audioKeys[m]].right;
+                    }
                 }
             }
             obj[keys[i]] = right;
             right = 0;
-          }
+        }
+        return obj;
+    }
+    async getLongSessionAudioCall() {
+      const stat = ((await this.loader.getStatistic(`statistics`)) as Statistic).optional;
+      const keys = Object.keys(stat);
+        const obj: NumStat = {};
+        let long = 0;
+        for (let i = 0; i < keys.length; i += 1) {
+          long = stat[keys[i]].longSessionAudio;
+          obj[keys[i]] = long;
+          long = 0;
+        }
+        return obj;
+    }
+    async getLongSessionSprint() {
+      const stat = ((await this.loader.getStatistic(`statistics`)) as Statistic).optional;
+      const keys = Object.keys(stat);
+        const obj: NumStat = {};
+        let long = 0;
+        for (let i = 0; i < keys.length; i += 1) {
+          long = stat[keys[i]].longSessionSprint;
+          obj[keys[i]] = long;
+          long = 0;
+        }
         return obj;
     }
     async getRightSprintAnswers() {
@@ -69,17 +103,18 @@ export default class StatisticController {
         let right = 0;
         for (let i = 0; i < keys.length; i += 1) {
             const sprintGame = stat[keys[i]].sprint;
-            console.log(stat);
-            const sprintKeys = Object.keys(sprintGame);
-            for (let m = 0; m < sprintKeys.length; m += 1) {
-                if (sprintGame[sprintKeys[m]].right) {
-                    right += sprintGame[sprintKeys[m]].right;
+            if (sprintGame) {
+                const sprintKeys = Object.keys(sprintGame);
+                for (let m = 0; m < sprintKeys.length; m += 1) {
+                    if (sprintGame[sprintKeys[m]].right) {
+                        right += sprintGame[sprintKeys[m]].right;
+                    }
                 }
             }
             obj[keys[i]] = right;
             right = 0;
-          }
-        return obj
+        }
+        return obj;
     }
 
     async getMistakesAudioAnswers() {
@@ -89,10 +124,12 @@ export default class StatisticController {
         let mistakes = 0;
         for (let i = 0; i < keys.length; i += 1) {
             const audio = stat[keys[i]].audioCall;
-            const audioKeys = Object.keys(audio);
-            for (let m = 0; m < audioKeys.length; m += 1) {
-                if (audio[audioKeys[m]].mistakes) {
-                    mistakes += audio[audioKeys[m]].mistakes;
+            if (audio) {
+                const audioKeys = Object.keys(audio);
+                for (let m = 0; m < audioKeys.length; m += 1) {
+                    if (audio[audioKeys[m]].mistakes) {
+                        mistakes += audio[audioKeys[m]].mistakes;
+                    }
                 }
             }
             obj[keys[i]] = mistakes;
@@ -108,10 +145,12 @@ export default class StatisticController {
         let mistakes = 0;
         for (let i = 0; i < keys.length; i += 1) {
             const sprint = stat[keys[i]].sprint;
-            const sprintKeys = Object.keys(sprint);
-            for (let m = 0; m < sprintKeys.length; m += 1) {
-                if (sprint[sprintKeys[m]].mistakes) {
-                    mistakes += sprint[sprintKeys[m]].mistakes;
+            if (sprint) {
+                const sprintKeys = Object.keys(sprint);
+                for (let m = 0; m < sprintKeys.length; m += 1) {
+                    if (sprint[sprintKeys[m]].mistakes) {
+                        mistakes += sprint[sprintKeys[m]].mistakes;
+                    }
                 }
             }
             obj[keys[i]] = mistakes;
@@ -121,33 +160,50 @@ export default class StatisticController {
     }
 
     async getData() {
-      return {
-        rightDayWords: await this.getNewWordsToday(),
-        rightAudio: await this.getRightAudioAnswers(),
-        mistakesAudio: await this.getMistakesAudioAnswers(),
-        rightSprint: await this.getRightSprintAnswers(),
-        mistakesSprint: await this.getMistakesSprintAnswers(),
-      }
+        return {
+            rightDayWords: await this.getNewWordsToday(),
+            rightAudio: await this.getRightAudioAnswers(),
+            mistakesAudio: await this.getMistakesAudioAnswers(),
+            rightSprint: await this.getRightSprintAnswers(),
+            mistakesSprint: await this.getMistakesSprintAnswers(),
+            longSessionAudio: await this.getLongSessionAudioCall(),
+            longSessionSprint: await this.getLongSessionSprint(),
+        };
     }
     async render() {
-      const user = (this.storage.get('user') as ResponseAuth);
-      if (user) {
-        console.log(await this.getData());
-        this.storage.set('statistic', JSON.stringify(await this.getData()));
-        this.statistic.renderStatisticPage(await this.getData());
-      } else {
-        const main = document.querySelector('main') as HTMLElement;
-        main.innerHTML = '';
-        const wrapper = document.createElement('div');
-        wrapper.classList.add('no-user');
-        wrapper.innerHTML = `
+        this.addPreloader();
+        const user = this.storage.get('user') as ResponseAuth;
+        if (user) {
+            this.storage.set('statistic', JSON.stringify(await this.getData()));
+            this.statistic.renderStatisticPage(await this.getData());
+        } else {
+            const main = document.querySelector('main') as HTMLElement;
+            main.innerHTML = '';
+            const wrapper = document.createElement('div');
+            wrapper.classList.add('no-user');
+            wrapper.innerHTML = `
           <span class = "no-user-title">Внимание! Статистика доступна только зарегистрированным пользователям!</span>
           <span class = "reg-user">Желаете зарегистрироваться?</span>
           <button class = "auth-statistic">Зарегистрироваться</button>
         `;
-        main.append(wrapper);
-        const authLink = document.querySelector('.auth-statistic') as HTMLElement;
-        authLink.onclick = () => this.auth.render();
-      }
+            main.append(wrapper);
+            const authLink = document.querySelector('.auth-statistic') as HTMLElement;
+            authLink.onclick = () => this.auth.render();
+        }
+    }
+    createPreloader() {
+        const statusMessage = document.createElement('img');
+        statusMessage.classList.add('status');
+        statusMessage.src = '../../../assets/svg/spinner1.svg';
+        statusMessage.style.cssText = `
+        display: block;
+        margin: 0 auto;
+      `;
+        return statusMessage;
+    }
+    addPreloader() {
+        const main = document.querySelector('main') as HTMLElement;
+        main.textContent = '';
+        main.append(this.preloader);
     }
 }

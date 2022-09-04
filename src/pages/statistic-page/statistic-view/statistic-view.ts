@@ -17,8 +17,8 @@ export default class StatisticView {
         wrapper.classList.add('wrapper-statistic');
         const welcome = this.createWelcomeMessage();
         const wordsStat = this.createWordsStatistic(object.rightDayWords as NumStat);
-        const audioStat = this.createAudioStatistic(object.rightAudio as NumStat, object.mistakesAudio as NumStat);
-        const sprintStat = this.createSprintStatistic(object.rightSprint as NumStat, object.mistakesSprint as NumStat);
+        const audioStat = this.createAudioStatistic(object.rightAudio as NumStat, object.mistakesAudio as NumStat, object.longSessionAudio as NumStat);
+        const sprintStat = this.createSprintStatistic(object.rightSprint as NumStat, object.mistakesSprint as NumStat, object.longSessionSprint as NumStat);
         wrapper.append(welcome, wordsStat, audioStat, sprintStat);
         main.append(wrapper);
     }
@@ -37,10 +37,11 @@ export default class StatisticView {
     createWordsStatistic(right: NumStat) {
         const wordStat = document.createElement('div');
         wordStat.classList.add('words-statistic');
+        wordStat.classList.add('words-statistic-general');
         const date = new Date();
-        const year = date.getFullYear();
-        const month = date.getMonth();
-        const day = date.getDate();
+        const year = (date.getFullYear() > 9) ? date.getFullYear() : `0${date.getFullYear()}`;
+        const month = (date.getMonth() > 9) ? date.getMonth() : `0${date.getMonth()}`;
+        const day = (date.getDate() > 9) ? date.getDate() : `0${date.getDate()}`;
         const today = `${day}.${month}.${year}`;
         const arr = right[today] as number[];
         const wordsBlock = document.createElement('div');
@@ -62,17 +63,39 @@ export default class StatisticView {
         return wordStat;
     }
 
-    createAudioStatistic(right: NumStat, mistakes: NumStat) {
+    createAudioStatistic(right: NumStat, mistakes: NumStat, longSession: NumStat) {
         const audioStat = document.createElement('div');
         audioStat.classList.add('words-statistic');
+        audioStat.classList.add('words-statistic-audio');
         const date = new Date();
-        const year = date.getFullYear();
-        const month = date.getMonth();
-        const day = date.getDate();
+        const year = (date.getFullYear() > 9) ? date.getFullYear() : `0${date.getFullYear()}`;
+        const month = (date.getMonth() > 9) ? date.getMonth() : `0${date.getMonth()}`;
+        const day = (date.getDate() > 9) ? date.getDate() : `0${date.getDate()}`;
         const today = `${day}.${month}.${year}`;
-        const arrRigth = right[today] as number;
-        const arrMistakes = mistakes[today] as number;
-        const percent = Math.floor(arrRigth / (arrRigth + arrMistakes) * 100) ; 
+        let arrRigth = right[today] as number;
+        let session = longSession[today] as number;
+        let arrMistakes = mistakes[today] as number;
+        let percent = Math.floor(arrRigth / (arrRigth + arrMistakes) * 100);
+        if (session) {
+            session = session;
+        } else {
+            session = 0;
+        }
+        if (arrRigth) {
+            arrRigth = arrRigth;
+        } else {
+            arrRigth = 0;
+        }
+        if (arrMistakes) {
+            arrMistakes = arrMistakes;
+        } else {
+            arrMistakes = 0;
+        }
+        if (percent) {
+            percent = percent;
+        } else {
+            percent = 0;
+        }
         const audioBlock = document.createElement('div');
         audioBlock.classList.add('words-statistic-block');
         audioBlock.innerHTML = `
@@ -81,6 +104,7 @@ export default class StatisticView {
             <span class = "statistic-text">Количество новых слов: ${arrRigth}</span>
             <span class = "statistic-text">Количество изученных слов: ${arrRigth}</span>
             <span class = "statistic-text">Процент правильных ответов: ${percent}</span>
+            <span class = "statistic-text">Количество правильных ответов подряд: ${session} </span>
         `;
         const a: number[] = [];
         const keys = Object.keys(right);
@@ -93,17 +117,39 @@ export default class StatisticView {
         return audioStat;
     }
 
-    createSprintStatistic(right: NumStat, mistakes: NumStat) {
+    createSprintStatistic(right: NumStat, mistakes: NumStat, longSession: NumStat) {
         const sprintStat = document.createElement('div');
         sprintStat.classList.add('words-statistic');
+        sprintStat.classList.add('words-statistic-sprint');
         const date = new Date();
-        const year = date.getFullYear();
-        const month = date.getMonth();
-        const day = date.getDate();
+        const year = (date.getFullYear() > 9) ? date.getFullYear() : `0${date.getFullYear()}`;
+        const month = (date.getMonth() > 9) ? date.getMonth() : `0${date.getMonth()}`;
+        const day = (date.getDate() > 9) ? date.getDate() : `0${date.getDate()}`;
         const today = `${day}.${month}.${year}`;
-        const arrRigth = right[today] as number;
-        const arrMistakes = mistakes[today] as number;
-        const percent = Math.floor(arrRigth / (arrRigth + arrMistakes) * 100) ; 
+        let session = longSession[today] as number;
+        let arrRigth = right[today] as number;
+        let arrMistakes = mistakes[today] as number;
+        let percent = Math.floor(arrRigth / (arrRigth + arrMistakes) * 100);
+        if (session) {
+            session = session;
+        } else {
+            session = 0;
+        }
+        if (arrRigth) {
+            arrRigth = arrRigth;
+        } else {
+            arrRigth = 0;
+        }
+        if (arrMistakes) {
+            arrMistakes = arrMistakes;
+        } else {
+            arrMistakes = 0;
+        }
+        if (percent) {
+            percent = percent;
+        } else {
+            percent = 0;
+        } 
         const sprintBlock = document.createElement('div');
         sprintBlock.classList.add('words-statistic-block');
         sprintBlock.innerHTML = `
@@ -112,6 +158,7 @@ export default class StatisticView {
             <span class = "statistic-text">Количество новых слов: ${arrRigth}</span>
             <span class = "statistic-text">Количество изученных слов: ${arrRigth}</span>
             <span class = "statistic-text">Процент правильных ответов: ${percent}</span>
+            <span class = "statistic-text">Количество правильных ответов подряд: ${session} </span>
         `;
         const a: number[] = [];
         const keys = Object.keys(right);
