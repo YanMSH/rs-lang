@@ -136,11 +136,15 @@ export default class StatisticController {
         this.statistic.renderStatisticPage(await this.getData());
       } else {
         const main = document.querySelector('main') as HTMLElement;
-        main.innerHTML = `
+        main.innerHTML = '';
+        const wrapper = document.createElement('div');
+        wrapper.classList.add('no-user');
+        wrapper.innerHTML = `
           <span class = "no-user">Внимание! Статистика доступна только зарегистрированным пользователям!</span>
           <span class = "reg-user">Желаете зарегистрироваться?</span>
           <button class = "auth-statistic">Зарегистрироваться</button>
         `;
+        main.append(wrapper);
         const authLink = document.querySelector('.auth-statistic') as HTMLElement;
         authLink.onclick = () => this.auth.render();
       }

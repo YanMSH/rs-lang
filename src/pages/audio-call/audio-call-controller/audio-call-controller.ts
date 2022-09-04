@@ -151,13 +151,13 @@ export default class AudioCallController {
           }
           if (localStat[words[i]].global == 3) {
             console.log('!!!');
-            if (this.AudioCallStatistic[today].knowWordsAudio) {
-              this.AudioCallStatistic[today].knowWordsAudio += 1;
+            if (this.AudioCallStatistic[today].learnedWordsAudio) {
+              this.AudioCallStatistic[today].learnedWordsAudio += 1;
             } else {
-              this.AudioCallStatistic[today].knowWordsAudio = 1;
+              this.AudioCallStatistic[today].learnedWordsAudio = 1;
             }
           } else {
-            this.AudioCallStatistic[today].knowWordsAudio = 0;
+            this.AudioCallStatistic[today].learnedWordsAudio = 0;
           }
         }
       }

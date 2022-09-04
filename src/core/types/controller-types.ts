@@ -41,14 +41,14 @@ type WordStat = {
     right: number,
     mistakes: number
 }
-export type WordS = {
+export type WordString = {
     [words: string]: WordStat | Record<string, never>;
 }
 export type DataStat = {
-    knowWordsAudio: number,
-    knowWordsSprint: number,
-    audioCall: WordS | Record<string, never>,
-    sprint: WordS | Record<string, never>
+    learnedWordsAudio: number,
+    learnedWordsSprint: number,
+    audioCall: WordString | Record<string, never>,
+    sprint: WordString | Record<string, never>
 }
 export type GlobalStat = {
     [gStat: string]: DataStat | Record<string, never>
