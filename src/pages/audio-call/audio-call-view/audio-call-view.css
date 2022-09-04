@@ -5,12 +5,13 @@
   --controlPanelSound: url("../../../assets/svg/unmute.svg");
   --controlFullScreen: url("../../../assets/svg/fullscreen.svg");
   --audioButtonImage: url('../../../assets/img/audio-image.png');
+  --controlCloseGame: url('../../../assets/svg/close-audio-call.svg');
   --heart: url("../../../assets/svg/heart.svg");
   --color-white: white;
   --color-right: green;
   --color-mistakes: red;
-  --color-negation-button: #808080;
-  --color-hover-button: #707070;
+  --color-negation-button: #ff0000;
+  --color-hover-button: #e1e414;
   --color-word-button: white;
   --font-title: 'Ubuntu', sans-serif;
   --font-text: 'Cabin', sans-serif;
@@ -36,14 +37,14 @@
   display: flex;
   justify-content: space-between;
 }
-.sound-control, .control-fullscreen {
+.control-fullscreen, .close-game {
   width: 30px;
   height: 30px;
   background-repeat: no-repeat;
   background-size: 100%;
 }
-.sound-control {
-  background-image: var(--controlPanelSound);
+.close-game {
+  background-image: var(--controlCloseGame);
 }
 
 .control-fullscreen {
@@ -59,7 +60,15 @@
   background-repeat: no-repeat;
   background-size: 100%;
 }
-
+.negation-button:hover {
+  cursor: pointer;
+  border: 1px solid var(--color-mistakes);
+  color: var(--color-mistakes);
+}
+.audio-button:hover {
+  cursor: pointer;
+  border: 1px solid var(--color-right);
+}
 .negation-button {
   width: 190px;
   height: 43px;
@@ -70,8 +79,10 @@
   color: var(--color-negation-button);
 }
 .response-options {
+  width: 80%;
   display: flex;
-  gap: 90px;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
 }
 .word {
   background-color: inherit;
@@ -85,11 +96,12 @@
   color: var(--color-hover-button);
 }
 .game-panel {
+  height: 60%;
   margin-top: 5%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 80px;
+  justify-content: space-between;
 }
 .heart {
   width: 30px;
@@ -153,9 +165,11 @@
 .right {
   background-color: var(--color-right);
 }
-
 .mistakes {
   background-color: var(--color-mistakes);;
+}
+.right:hover, .mistakes.hover {
+  color: var(--color-white);  
 }
 
 @media (max-width: 768px)  { 
@@ -164,5 +178,16 @@
   }
   .level-block {
     flex-wrap: wrap;
+  }
+  .response-options {
+    width: 50%;
+    height: 30%;
+    justify-content: space-between;
+    flex-direction: column;
+  }
+  .word {
+    margin: 0 auto;
+    width: 50%;
+    text-align: center;
   }
 }

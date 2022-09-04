@@ -9,7 +9,7 @@ import {MaxParam, maxButtons, timer } from '../../../core/constants/audio-call-c
 import TextbookPage from '../../textbook/textbook-page';
 import LevelPage from '../../level-page/level-page';
 import { audioCallLevelMessage } from '../../../core/constants/level-const';
-
+import MainPage from '../../main/main-page';
 export default class AudioCallController {
   public view: AudioCallView;
   public loader: Loader;
@@ -88,15 +88,12 @@ export default class AudioCallController {
     this.controlAudioButton();
     this.controlNegationButton();
     this.controlAnswer(word);
+    this.changeFullScreen();
+    this.controlCloseGame();
   }
   async updateGlobalStatistic() {
     const user = this.storage.get('user') as ResponseAuth;
     if (user) {
-      // const date = new Date();
-      // const year = date.getFullYear();
-      // const month = date.getMonth();
-      // const day = date.getDate();
-      // const today = `${day}.${month}.${year}`;
       const serverStat = await this.loader.getStatistic(`statistics`) as Statistic;
       const statistic = serverStat.optional as GlobalStat;
       if (statistic) {
@@ -275,14 +272,13 @@ export default class AudioCallController {
   }
 
   controlNegationButton() {
-    const negation = document.querySelector('.negation-button');
-    negation?.addEventListener('click', async () => {
+    const negation = document.querySelector('.negation-button') as HTMLButtonElement;
+    negation.addEventListener('click', async () => {
       this.life = this.view.removeHearth() - 1;
       this.addPreloader();
       this.controlLife(this.life);
     });
   }
-  
   controlAnswer(buildWord: Word) {
     const answer = [...document.querySelectorAll('.word')];
     const audioButton = document.querySelector('.audio-button') as HTMLButtonElement;
@@ -373,4 +369,24 @@ export default class AudioCallController {
       modalWindow?.remove();
     });
   }
+  changeFullScreen() {
+    const game = document.querySelector('.wrapper') as HTMLDivElement;
+    document.addEventListener('click', (event) => {
+      const target = event.target as HTMLElement;
+      if (!target.hasAttribute('data-toggle-fullscreen')) return;
+ 
+      if (document.fullscreenElement) {
+        document.exitFullscreen();
+      } else {
+        game.requestFullscreen();
+      }
+ 
+    }, false);
+  }
+  controlCloseGame() {
+    const close = document.querySelector('.close-game') as HTMLDivElement;
+    close.addEventListener('click', () => {
+      new MainPage().render();
+    });
+}
 }

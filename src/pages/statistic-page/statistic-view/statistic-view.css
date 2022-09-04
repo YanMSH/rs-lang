@@ -2,3 +2,48 @@
   display: flex;
   flex-direction: column;
 }
+.no-user {
+  margin: 10% auto;
+  width: 50%;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 35px;
+  font-size: 2rem;
+  hyphens: auto;
+  white-space: pre-line;
+}
+.no-user-title {
+  margin: 0 auto;
+  width: 80%;
+  text-align: center;
+}
+.reg-user {
+  margin: 0 auto;
+  width: 80%;
+  text-align: center;
+}
+.auth-statistic {
+  margin: 0 auto;
+  width: 20rem;
+}
+
+@media (max-width: 1130px)  { 
+  .no-user {
+    font-size: 1.5rem;
+  }
+  .auth-statistic {
+    margin: 0 auto;
+    width: 15rem;
+  }
+}
+
+@media (max-width: 850px)  { 
+  .no-user {
+    font-size: 1rem;
+  }
+  .auth-statistic {
+    margin: 0 auto;
+    width: 10rem;
+  }
+}

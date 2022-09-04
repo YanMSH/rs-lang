@@ -140,7 +140,7 @@ export default class StatisticController {
         const wrapper = document.createElement('div');
         wrapper.classList.add('no-user');
         wrapper.innerHTML = `
-          <span class = "no-user">Внимание! Статистика доступна только зарегистрированным пользователям!</span>
+          <span class = "no-user-title">Внимание! Статистика доступна только зарегистрированным пользователям!</span>
           <span class = "reg-user">Желаете зарегистрироваться?</span>
           <button class = "auth-statistic">Зарегистрироваться</button>
         `;
