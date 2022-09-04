@@ -8,4 +8,7 @@ export class SprintGameApp {
   starting() {
     this.sprintGameController.render();
   }
+  startWithoutLevel() {
+    this.sprintGameController.startGame();
+  }
 }

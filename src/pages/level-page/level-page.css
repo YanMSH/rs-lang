@@ -61,6 +61,28 @@
 }
 @media (max-width: 768px)  { 
     .level-block {
-        flex-wrap: wrap;
+        flex-direction: column;
+        gap: 50px;
+    }
+    .level-buttons {
+        flex-direction: row;
+    }
+}
+@media (max-width: 500px) {
+    .level {
+        width: 2rem;
+        height: 2rem;
+    }
+    .message {
+        font-size: 0.7rem;
+    }
+}
+@media (max-width: 400px) {
+    .level {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+    .level-block {
+        gap: 100px;
     }
 }

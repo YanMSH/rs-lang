@@ -29,12 +29,12 @@ export default class StatisticController {
       const today = `${day}.${month}.${year}`;
       const rightAudio = await this.getRightAudioAnswers() as NumStat;
       const mistakesAudio = await this.getMistakesAudioAnswers() as NumStat;
-      // const rightSprint = await this.getRightSprintAnswers() as NumStat;
-      // const mistakesSprint = await this.getMistakesSprintAnswers() as NumStat;
-      // const rightAnsw = (rightAudio[today] + rightSprint[today]) as number;
-      // const mistakesAnsw = (mistakesAudio[today] + mistakesSprint[today]) as number;
-      const rightAnsw = rightAudio[today] as number;
-      const mistakesAnsw = mistakesAudio[today] as number;
+      const rightSprint = await this.getRightSprintAnswers() as NumStat;
+      const mistakesSprint = await this.getMistakesSprintAnswers() as NumStat;
+      const rightAnsw = (Number(rightAudio[today]) + Number(rightSprint[today])) as number;
+      const mistakesAnsw = (Number(mistakesAudio[today]) + Number(mistakesSprint[today])) as number;
+      // const rightAnsw = rightAudio[today] as number;
+      // const mistakesAnsw = mistakesAudio[today] as number;
       const percent = Math.floor(rightAnsw / (rightAnsw + mistakesAnsw) * 100) ; 
       arr.push(rightAnsw, percent);
       arr.push
@@ -68,11 +68,12 @@ export default class StatisticController {
         const obj: NumStat = {};
         let right = 0;
         for (let i = 0; i < keys.length; i += 1) {
-            const sprint = stat[keys[i]].sprint;
-            const sprintKeys = Object.keys(sprint);
+            const sprintGame = stat[keys[i]].sprint;
+            console.log(stat);
+            const sprintKeys = Object.keys(sprintGame);
             for (let m = 0; m < sprintKeys.length; m += 1) {
-                if (sprint[sprintKeys[m]].right) {
-                    right += sprint[sprintKeys[m]].right;
+                if (sprintGame[sprintKeys[m]].right) {
+                    right += sprintGame[sprintKeys[m]].right;
                 }
             }
             obj[keys[i]] = right;
@@ -124,8 +125,8 @@ export default class StatisticController {
         rightDayWords: await this.getNewWordsToday(),
         rightAudio: await this.getRightAudioAnswers(),
         mistakesAudio: await this.getMistakesAudioAnswers(),
-        // rightSprint: await this.getRightSprintAnswers(),
-        // mistakesSprint: await this.getMistakesSprintAnswers(),
+        rightSprint: await this.getRightSprintAnswers(),
+        mistakesSprint: await this.getMistakesSprintAnswers(),
       }
     }
     async render() {

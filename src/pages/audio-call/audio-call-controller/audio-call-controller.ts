@@ -374,13 +374,13 @@ export default class AudioCallController {
     document.addEventListener('click', (event) => {
       const target = event.target as HTMLElement;
       if (!target.hasAttribute('data-toggle-fullscreen')) return;
- 
+
       if (document.fullscreenElement) {
         document.exitFullscreen();
       } else {
         game.requestFullscreen();
       }
- 
+
     }, false);
   }
   controlCloseGame() {
