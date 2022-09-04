@@ -11,7 +11,7 @@ export default class ModalWindowController {
     this.storage = new Storage();
 }
 
-modalWindow() {
+renderModalWindow() {
     const statistic = JSON.parse(this.storage.get('gameStatistic') as string) as Stat;
     this.modal.createModalWindow(statistic);
     }

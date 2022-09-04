@@ -91,7 +91,7 @@ export class SprintGameController {
     const timer = document.querySelector('.base-timer__label') as HTMLSpanElement;
     this.timerTimeout = setTimeout(() => {
       if (timer && Number(timer.textContent) === 0) {
-        this.modal.modalWindow();
+        this.modal.renderModalWindow();
         this.disableButtons();
         this.controlModalWindow()
       }
@@ -101,7 +101,7 @@ export class SprintGameController {
   private endGameWordsOut() {
     this.clearTimeoutOfTimer();
     this.timer.resetTimer();
-    this.modal.modalWindow();
+    this.modal.renderModalWindow();
     this.disableButtons();
     this.controlModalWindow();
   }

@@ -2,7 +2,7 @@ import AudioCallView from '../audio-call-view/audio-call-view';
 import Loader from '../../../core/components/loader/loader';
 import Storage from '../../../core/components/service/storage/storage';
 import { Word, Stat } from '../../../core/types/controller-types';
-import ModalWindowController from '../modal-window/modal-window-controller/modal-window-controller';
+import ModalWindowController from '../../modal-window/modal-window-controller/modal-window-controller';
 import {MaxParam, maxButtons, timer } from '../../../core/constants/audio-call-const';
 import TextbookPage from '../../textbook/textbook-page';
 
