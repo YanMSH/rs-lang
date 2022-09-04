@@ -13,7 +13,9 @@
     border-radius: 20px;
     border: 3px solid #F9DB6D;
 }
-
+.audio-result:hover {
+    cursor: pointer;
+}
 .modal {
     position: absolute;
     width: 70vw;
@@ -85,6 +87,10 @@
     border: 3px solid #fcca16;
     background: #F9DB6D;
 }
+.modal-message {
+    color: #F9DB6D;
+    font-size: 32px;
+}
 @media (max-width: 860px) {
     .options {
         display: flex;
@@ -112,6 +118,9 @@
         height: 20px;
         background-size: 20px;
     }
+    .modal-message {
+        font-size: 24px;
+    }
 }
 @media (max-width: 320px) {
     .modal {
@@ -127,5 +136,8 @@
     .result-symbol {
         width: 20px;
         height: 20px;
+    }
+    .modal-message {
+        font-size: 16px;
     }
 }
