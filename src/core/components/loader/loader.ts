@@ -1,5 +1,5 @@
 import { ALL_WORDS_PER_GROUP, Requests, serverURL, StatusCodes } from '../../constants/loader-const';
-import { UserWord } from '../../types/controller-types';
+import { UserWord, GlobalStat } from '../../types/controller-types';
 import { AWPaginatedResults, ResponseAggregatedWords, ResponseAuth } from '../../types/loader-types';
 import Storage from '../service/storage/storage';
 import { buildAuthorizedEndpoint } from '../service/utils/utils';
@@ -50,7 +50,42 @@ export default class Loader {
             throw await response.text();
         }
     }
-
+    public async getStatistic(endpoint: string) {
+        const path = serverURL + buildAuthorizedEndpoint(endpoint);
+        const response = await this.requestAuth(path, Requests.get);
+        if (response.ok) {
+            return await response.json();
+        } else {
+            console.log('resp status', response.status);
+            throw await response.text();
+        }
+        // const token = (this.store.get('user') as ResponseAuth).token;
+        // const path = serverURL + buildAuthorizedEndpoint(endpoint);
+        // return await fetch(path, {
+        //     method: "GET",
+        //     headers: {
+        //         'Authorization': `Bearer ${token}`,
+        //         'Accept': 'application/json',
+        //         'Content-Type': 'application/json'
+        //     },
+        // }).then(resp => resp.json()).then(data => console.log(data));
+    }
+    public putStatistic(endpoint: string, data: GlobalStat, number: number) {
+        const token = (this.store.get('user') as ResponseAuth).token;
+        const path = serverURL + buildAuthorizedEndpoint(endpoint);
+        fetch(path, {
+        method: "PUT",
+        headers: {
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+        learnedWords: number,
+        optional: data
+        })
+        }).then(resp => resp.json()).then(data => console.log(data));
+    }
     public async postAuthorisedData(endpoint: string, wordId: string, body: UserWord) {
         const path = serverURL + buildAuthorizedEndpoint(endpoint) + wordId;
         const response = await this.requestAuth(path, Requests.post, body);
