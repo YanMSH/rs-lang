@@ -37,7 +37,32 @@ type OneStat = {
     option: string[],
     inThisGame: boolean
 }
-
+type WordStat = {
+    right: number,
+    mistakes: number
+}
+export type WordString = {
+    [words: string]: WordStat | Record<string, never>;
+}
+export type DataStat = {
+    learnedWordsAudio: number,
+    learnedWordsSprint: number,
+    audioCall: WordString | Record<string, never>,
+    sprint: WordString | Record<string, never>
+}
+export type GlobalStat = {
+    [gStat: string]: DataStat | Record<string, never>
+}
 export type Stat = {
     [answerStat: string]: OneStat | Record<string, never>;
+}
+export type NumStat = {
+    [a: string]: number | number[];
+}
+export type renderStat = {
+    rightDayWords?: NumStat | Record<string, never>,
+    rightAudio?: NumStat | Record<string, never>,
+    mistakesAudio?: NumStat | Record<string, never>,
+    rightSprint?: NumStat | Record<string, never>,
+    mistakesSprint?: NumStat | Record<string, never>,
 }

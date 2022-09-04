@@ -1,6 +1,6 @@
 import ModalWindowView from '../modal-window-view/modal-window-view';
-import { Stat } from '../../../../core/types/controller-types';
-import Storage from '../../../../core/components/service/storage/storage'; 
+import { Stat } from '../../../core/types/controller-types';
+import Storage from '../../../core/components/service/storage/storage'; 
 
 export default class ModalWindowController {
   
@@ -12,8 +12,8 @@ export default class ModalWindowController {
     this.storage = new Storage();
   }
 
-  modalWindow() {
+  renderModalWindow() {
     const statistic = JSON.parse(this.storage.get('gameStatistic') as string) as Stat;
-    this.modal.renderModalWindow(statistic);
+    this.modal.createModalWindow(statistic);
   }
 }

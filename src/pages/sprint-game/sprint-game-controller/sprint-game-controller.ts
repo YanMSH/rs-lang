@@ -1,5 +1,5 @@
 import { SprintGameView } from '../sprint-game-view/sprint-game-view';
-import LevelPage from '../sprint-game-view/level-page';
+import LevelPage from '../../level-page/level-page';
 import { sprintLevelMessage } from '../../../core/constants/level-const';
 import Storage from '../../../core/components/service/storage/storage';
 import Loader from '../../../core/components/loader/loader';
