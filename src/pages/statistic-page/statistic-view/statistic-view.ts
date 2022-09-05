@@ -2,8 +2,6 @@ import './statistic-view.css';
 import { renderStat, NumStat } from '../../../core/types/controller-types';
 import Storage from '../../../core/components/service/storage/storage';
 import { ResponseAuth } from '../../../core/types/loader-types';
-// import Chart from 'chart.js';
-// const Chart = require('chart.js');
 import { Chart, registerables } from 'chart.js';
 Chart.register(...registerables);
 
@@ -43,10 +41,15 @@ export default class StatisticView {
         wordStat.classList.add('words-statistic-general');
         const date = new Date();
         const year = (date.getFullYear() > 9) ? date.getFullYear() : `0${date.getFullYear()}`;
-        const month = (date.getMonth() > 9) ? date.getMonth() : `0${date.getMonth()}`;
+        const month = date.getMonth() + 1 > 9 ? date.getMonth() + 1 : `0${date.getMonth() + 1}`;
         const day = (date.getDate() > 9) ? date.getDate() : `0${date.getDate()}`;
         const today = `${day}.${month}.${year}`;
-        const arr = right[today] as number[];
+        let arr = right[today] as number[];
+        if (arr) {
+            arr = arr;
+        } else {
+            arr = [0, 0];
+        }
         const wordsBlock = document.createElement('div');
         wordsBlock.classList.add('words-statistic-block');
         wordsBlock.innerHTML = `
@@ -73,7 +76,7 @@ export default class StatisticView {
         audioStat.classList.add('words-statistic-audio');
         const date = new Date();
         const year = (date.getFullYear() > 9) ? date.getFullYear() : `0${date.getFullYear()}`;
-        const month = (date.getMonth() > 9) ? date.getMonth() : `0${date.getMonth()}`;
+        const month = date.getMonth() + 1 > 9 ? date.getMonth() + 1 : `0${date.getMonth() + 1}`;
         const day = (date.getDate() > 9) ? date.getDate() : `0${date.getDate()}`;
         const today = `${day}.${month}.${year}`;
         let arrRigth = right[today] as number;
@@ -112,9 +115,7 @@ export default class StatisticView {
         `;
         const a: number[] = [];
         const keys = Object.keys(right);
-        // console.log('keys = ',keys, right);
         for (let i = 0; i < keys.length; i += 1) {
-            console.log('keys = ', right[keys[i]]); 
             const s = right[keys[i]] as number;
             a.push(s);
         }
@@ -130,7 +131,7 @@ export default class StatisticView {
         sprintStat.classList.add('words-statistic-sprint');
         const date = new Date();
         const year = (date.getFullYear() > 9) ? date.getFullYear() : `0${date.getFullYear()}`;
-        const month = (date.getMonth() > 9) ? date.getMonth() : `0${date.getMonth()}`;
+        const month = date.getMonth() + 1 > 9 ? date.getMonth() + 1 : `0${date.getMonth() + 1}`;
         const day = (date.getDate() > 9) ? date.getDate() : `0${date.getDate()}`;
         const today = `${day}.${month}.${year}`;
         let session = longSession[today] as number;
@@ -213,8 +214,8 @@ export default class StatisticView {
         return canvas;
     }
     getRandomColor() {
-        var letters = '0123456789ABCDEF';
-        var color = '#';
+        const letters = '0123456789ABCDEF';
+        let color = '#';
         for (let i = 0; i < 6; i += 1) {
           color += letters[Math.floor(Math.random() * 16)];
         }

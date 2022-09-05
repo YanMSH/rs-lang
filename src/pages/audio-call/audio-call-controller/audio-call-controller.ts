@@ -125,7 +125,7 @@ export default class AudioCallController {
         if (user) {
             const date = new Date();
             const year = date.getFullYear() > 9 ? date.getFullYear() : `0${date.getFullYear()}`;
-            const month = date.getMonth() > 9 ? date.getMonth() : `0${date.getMonth()}`;
+            const month = date.getMonth() + 1 > 9 ? date.getMonth() + 1 : `0${date.getMonth() + 1}`;
             const day = date.getDate() > 9 ? date.getDate() : `0${date.getDate()}`;
             const today = `${day}.${month}.${year}`;
             const words = Object.keys(localStat);
