@@ -73,10 +73,11 @@ export default class TextbookPage {
     private turnOnHardLearnedButtons(card: HTMLElement, id: string): void {
         const setHardButton = card.querySelector('.word__button-hard') as HTMLButtonElement;
         const setLearnedButton = card.querySelector('.word__button-learned') as HTMLButtonElement;
-        setHardButton.onclick = () => {
+        setHardButton.onclick = async () => {
             setHardButton.classList.toggle('card__word-hard');
             setLearnedButton.classList.remove('card__word-learned');
-            this.tbController.postHardWord(id as string);
+            await this.tbController.postHardWord(id as string);
+            await this.tbController.updateTextbookStats();
         };
         setLearnedButton.onclick = () => {
             setLearnedButton.classList.toggle('card__word-learned');
@@ -390,7 +391,6 @@ export default class TextbookPage {
                 .getAllHardAggregatedWords()
                 .then((value) => value?.forEach((item) => cards.append(this.drawCard(item))));
         }
-
         this.makePagination();
         app.append(cards);
         this.markButtons();

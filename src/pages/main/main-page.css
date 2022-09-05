@@ -62,7 +62,7 @@
     text-align: center;
     font-size: 36px;
     font-family: var(--font-title);
-    margin: 165px auto;
+    margin: 52px auto;
 }
 
 .about-us {
@@ -103,6 +103,26 @@
     background-color: var(--color-light);
 }
 
+.card__pic-yan {
+    background-image: url('../../assets/img/yan-pic.png');
+    background-size: contain;
+}
+
+.card__pic-sergey {
+    background-image: url('../../assets/img/sergey-pic.jpg');
+    background-size: contain;
+}
+
+.card__pic-kristina {
+    background-image: url('../../assets/img/kristina-pic.jpg');
+    background-size: contain;
+}
+
+.card__pic-tanya {
+    background-image: url('../../assets/img/tanya-pic.jpg');
+    background-size: contain;
+}
+
 .card__text-name {
     font-weight: 700;
 }
@@ -127,6 +147,10 @@
 
 .cell-small {
     height: 285px;
+}
+
+.cell-big {
+    max-height: 610px;
 }
 
 .cell-small,
@@ -198,6 +222,12 @@
     background-color: var(--color-grey);
 }
 
+.stats-long__pic {
+    display: block;
+    margin-top: 24px;
+    padding: 16px;
+}
+
 .main-page__textbook-title,
 .main-games-audiocall-title {
     color: var(--color-light);
@@ -241,7 +271,7 @@
 
 .textbook__words-pic {
     display: block;
-    margin: 96px auto;
+    margin: 64px auto;
 }
 
 .subcell {

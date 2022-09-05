@@ -1,8 +1,8 @@
 import Loader from '../../core/components/loader/loader';
 import Storage from '../../core/components/service/storage/storage';
 import { toggleHardNothard } from '../../core/components/service/utils/utils';
-import { UserWord } from '../../core/types/controller-types';
-import { AWPaginatedResults } from '../../core/types/loader-types';
+import { GlobalStat, TBWords, UserWord } from '../../core/types/controller-types';
+import { AWPaginatedResults, Statistic } from '../../core/types/loader-types';
 
 export default class TextbookController {
     store: Storage;
@@ -28,6 +28,7 @@ export default class TextbookController {
                     learned: false,
                     guessedRight: 0,
                     guessedWrong: 0,
+                    notNew: true,
                 },
             };
         } else {
@@ -37,6 +38,7 @@ export default class TextbookController {
                     learned: false,
                     guessedRight: oldData.optional.guessedRight,
                     guessedWrong: oldData.optional.guessedWrong,
+                    notNew: true,
                 },
             };
         }
@@ -63,6 +65,7 @@ export default class TextbookController {
                     learned: true,
                     guessedRight: 0,
                     guessedWrong: 0,
+                    notNew: true,
                 },
             };
         } else {
@@ -72,6 +75,7 @@ export default class TextbookController {
                     learned: !oldData.optional.learned,
                     guessedRight: oldData.optional.guessedRight,
                     guessedWrong: oldData.optional.guessedWrong,
+                    notNew: true,
                 },
             };
         }
@@ -117,6 +121,120 @@ export default class TextbookController {
             return result;
         } catch (e) {
             console.log(e);
+        }
+    }
+
+    public async getAmountOfNewWords() {
+        try {
+            const result = (await this.load.getAmountOfFilteredWords('"userWord.optional.notNew":true')) as number;
+            return result;
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    public async getAmountOfHardWords() {
+        try {
+            const result = (await this.load.getAmountOfFilteredWords('"userWord.difficulty":"hard"')) as number;
+            return result;
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    public async getAmountOfLearnedWords() {
+        try {
+            const result = (await this.load.getAmountOfFilteredWords('"userWord.optional.learned":true')) as number;
+            return result;
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    public async updateTextbookStats() {
+        const today = new Date(Date.now());
+        const todayString = today.toLocaleDateString();
+        try {
+            const fetchStat = (await this.load.getStatistic('statistics')) as Statistic;
+            const optionalStat = fetchStat.optional as GlobalStat;
+            const todayStats = optionalStat[todayString];
+            const textbookData = {
+                new: await this.getAmountOfNewWords(),
+                hard: await this.getAmountOfHardWords(),
+                learned: await this.getAmountOfLearnedWords(),
+            } as TBWords;
+            todayStats.textbook = textbookData;
+            this.load.putStatistic('statistics', optionalStat, 0);
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    public async getAmountOfGuessedWords(gameName: string, guess?: 'right' | 'mistakes') {
+        const today = new Date(Date.now());
+        const todayString = today.toLocaleDateString();
+        try {
+            const result = await this.load.getStatistic('statistics');
+
+            const gameWords = result['optional'][todayString][gameName] as object;
+            if (guess === undefined) {
+                return Object.values(gameWords).length;
+            }
+            return Object.values(gameWords).filter((item) => item[guess]).length;
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    public async getStreakInfo(gameName: 'sprint' | 'audioCall') {
+        const today = new Date(Date.now());
+        const todayString = today.toLocaleDateString();
+        try {
+            const result = await this.load.getStatistic('statistics');
+            if (gameName === 'sprint') {
+                return result['optional'][todayString]['longSessionSprint'];
+            } else {
+                return result['optional'][todayString]['longSessionAudio'];
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    public async getTextbookData() {
+        const today = new Date(Date.now());
+        const todayString = today.toLocaleDateString();
+        try {
+            const result = await this.load.getStatistic('statistics');
+            return result['optional'][todayString]['textbook'];
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    public async getCurrentStatData() {
+        const today = new Date(Date.now());
+        const todayString = today.toLocaleDateString();
+        try {
+            const result = await this.load.getStatistic('statistics');
+            return result['optional'][todayString];
+        } catch (e) {
+            console.log(e);
+            const emptyData: GlobalStat = {};
+            emptyData[todayString] = {
+                learnedWordsAudio: 0,
+                learnedWordsSprint: 0,
+                longSessionAudio: 0,
+                longSessionSprint: 0,
+                audioCall: { empty: { right: 0, mistakes: 0 } },
+                sprint: { empty: { right: 0, mistakes: 0 } },
+                textbook: {
+                    new: 0,
+                    hard: 0,
+                    learned: 0,
+                }
+            }
+            return await this.load.putStatistic('statistics', emptyData, 0);
         }
     }
 }
