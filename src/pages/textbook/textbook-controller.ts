@@ -1,7 +1,7 @@
 import Loader from '../../core/components/loader/loader';
 import Storage from '../../core/components/service/storage/storage';
 import { toggleHardNothard } from '../../core/components/service/utils/utils';
-import { GlobalStat, TBWords, UserWord } from '../../core/types/controller-types';
+import { GlobalStat, TBWords, UserWord, DataStat } from '../../core/types/controller-types';
 import { AWPaginatedResults, Statistic } from '../../core/types/loader-types';
 
 export default class TextbookController {
@@ -220,6 +220,21 @@ export default class TextbookController {
             return result['optional'][todayString];
         } catch (e) {
             console.log(e);
+            const emptyData: GlobalStat = {};
+            emptyData[todayString] = {
+                learnedWordsAudio: 0,
+                learnedWordsSprint: 0,
+                longSessionAudio: 0,
+                longSessionSprint: 0,
+                audioCall: { empty: { right: 0, mistakes: 0 } },
+                sprint: { empty: { right: 0, mistakes: 0 } },
+                textbook: {
+                    new: 0,
+                    hard: 0,
+                    learned: 0,
+                }
+            }
+            return await this.load.putStatistic('statistics', emptyData, 0);
         }
     }
 }

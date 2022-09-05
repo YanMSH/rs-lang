@@ -11,6 +11,21 @@ export default class MainPageTemplates {
 
     async processGameStats() {
         const stats = await this.statData;
+        if (stats === null) {
+            return {
+                percentOfRightAnswers: 0,
+                longestStreak: 0,
+                sprintRightPercentage: 0,
+                audioCallRightPercentage: 0,
+                sprintStreak: 0,
+                audioCallStreak: 0,
+                textbookNewWords: 0,
+                textbookHardWords: 0,
+                textbookLearnedWords: 0,
+                newWordsFromSprint: 0,
+                newWordsFromAudioCall: 0,
+            }
+        }
         const allWordsFromSprint = Object.keys(stats.sprint).length;
         const allWordsFromAudioCall = Object.keys(stats.audioCall).length;
         const rightWordsFromSprint = Object.values(stats.sprint).filter((item) => item.right).length;
@@ -44,9 +59,15 @@ export default class MainPageTemplates {
     private async getTextbookStats(): Promise<TBWords | undefined> {
         return await this.tbController.getTextbookData();
     }
-    private async getNewWordsStats(fieldName: 'new' | 'learned' | 'hard'): Promise<number> {
-        const wordsAmount = ((await this.getTextbookStats()) as TBWords)[fieldName];
-        return wordsAmount ? wordsAmount : 0;
+    private async getNewWordsStats(fieldName: 'new' | 'learned' | 'hard'): Promise<number | undefined> {
+        try {
+            const wordsAmount = ((await this.getTextbookStats()) as TBWords)[fieldName];
+            return wordsAmount ? wordsAmount : 0;
+        }
+        catch (e) {
+            console.log(e);
+            return 0;
+        }
     }
 
     buildWelcomePage() {
@@ -64,7 +85,8 @@ export default class MainPageTemplates {
     <button class="welcome__banner-reg-link welcome__banner-btn">Регистрация</button>
 </div>
 <div class="welcome__banner-picture welcome__banner-half">
-    <div class="welcome__banner-picture-title">Я не нашел картинку!</div>
+    <div class="welcome__banner-picture-title">
+    <img src="../../assets/svg/welcome-page-banner.svg"></div>
     <button class="welcome__banner-auth-link welcome__banner-btn">Войти</button>
 </div>
 </section>
@@ -72,24 +94,24 @@ export default class MainPageTemplates {
 <div class="about-us__title block__title">Наша команда</div>
 <div class="about-us__card-container">
     <div class="about-us__card">
-        <div class="card__pic"></div>
+        <div class="card__pic card__pic-yan"></div>
         <div class="card__text">
             <span class="card__text-name">Ян</span>: разработчик, тимлид. Разработал архитектуру и UI-дизайн
             приложения. Выполнил страницы: главная, учебник, регистрация, аутентификация.
         </div>
     </div>
     <div class="about-us__card">
-        <div class="card__pic"></div>
+        <div class="card__pic card__pic-sergey"></div>
         <div class="card__text">
             <span class="card__text-name">Сергей</span>: разработчик. Продумал и реализовал сбор статистики в приложении. Создал игру "Аудиовызов".
         </div>
     </div>
     <div class="about-us__card">
-        <div class="card__pic"></div>
+        <div class="card__pic card__pic-kristina"></div>
         <div class="card__text"><span class="card__text-name">Кристина</span>: разработчик. Сделала игру "Спринт".</div>
     </div>
     <div class="about-us__card card__mentor">
-        <div class="card__pic"></div>
+        <div class="card__pic card__pic-tanya"></div>
         <div class="card__text">
             <span class="card__text-name">Таня</span>: ментор. Советы по организации командной работы.
             Помощь с выбором технологий. Подсказки по архитектуре приложения.
@@ -106,11 +128,11 @@ export default class MainPageTemplates {
         <div class="cell__title main-stats-title">Слова:</div>
         <div class="stats__short-words">
             <div class="words__item words__item-new">
-                <div class="words__number">${await this.getNewWordsStats('new')}</div>
+                <div class="words__number">${await this.getNewWordsStats('new') as number + 1}</div>
                 <div class="words__word">новых</div>
             </div>
             <div class="words__item words__item-learned">
-                <div class="words__number">${await this.getNewWordsStats('learned')}</div>
+                <div class="words__number">${await this.getNewWordsStats('learned') as number + 1}</div>
                 <div class="words__word">изученных</div>
             </div>
             <div class="words__item words__item-hard">
@@ -139,16 +161,14 @@ export default class MainPageTemplates {
     <div class="cell__title main-page__textbook-title">Учебник</div>
     <div class="textbook__words-data cell__list">
         <div class="textbook__words-all textbook__words cell__list-item">3600 слов</div>
-        <div class="textbook__words-learned textbook__words cell__list-item">${
-            (await this.processGameStats()).textbookLearnedWords
-        } изученных слов</div>
-        <div class="textbook__words-hard textbook__words cell__list-item">${
-            (await this.processGameStats()).textbookHardWords
-        } сложных слов</div>
+        <div class="textbook__words-learned textbook__words cell__list-item">${(await this.processGameStats()).textbookLearnedWords as number + 1
+            } изученных слов</div>
+        <div class="textbook__words-hard textbook__words cell__list-item">${(await this.processGameStats()).textbookHardWords
+            } сложных слов</div>
         <div class="textbook__words-learned textbook__words cell__list-item">${(
-            (((await this.processGameStats()).textbookLearnedWords as number) / 3600) *
-            100
-        ).toFixed(2)}% учебника пройдено</div>
+                (((await this.processGameStats()).textbookLearnedWords as number) + 1 / 3600) *
+                100
+            ).toFixed(2)}% учебника пройдено</div>
     </div>
     <img src="../../assets/svg/book-pic.svg" alt="" class="textbook__words-pic" />
 </div>
@@ -159,12 +179,10 @@ export default class MainPageTemplates {
             <img src="../../assets/svg/sprint-pic.svg" alt="" class="cell__pic games__sprint-pic" />
             <div class="cell__list games__sprint-list">
                 <div class="cell__list-item">${(await this.processGameStats()).newWordsFromSprint} новых слов</div>
-                <div class="cell__list-item">${
-                    (await this.processGameStats()).sprintRightPercentage
-                }% правильных ответов</div>
-                <div class="cell__list-item">${
-                    (await this.processGameStats()).sprintStreak
-                } правильных ответов подряд</div>
+                <div class="cell__list-item">${(await this.processGameStats()).sprintRightPercentage
+            }% правильных ответов</div>
+                <div class="cell__list-item">${(await this.processGameStats()).sprintStreak
+            } правильных ответов подряд</div>
             </div>
         </div>
     </div>
@@ -173,12 +191,10 @@ export default class MainPageTemplates {
         <div class="cell__container audiocall__container">
             <div class="cell__list audiocall-list">
                 <div class="cell__list-item">${(await this.processGameStats()).newWordsFromAudioCall} новых слов</div>
-                <div class="cell__list-item">${
-                    (await this.processGameStats()).audioCallRightPercentage
-                }% правильных ответов</div>
-                <div class="cell__list-item">${
-                    (await this.processGameStats()).audioCallStreak
-                } правильных ответов подряд</div>
+                <div class="cell__list-item">${(await this.processGameStats()).audioCallRightPercentage
+            }% правильных ответов</div>
+                <div class="cell__list-item">${(await this.processGameStats()).audioCallStreak
+            } правильных ответов подряд</div>
             </div>
             <img src="../../assets/svg/audiocall-pic.svg" alt="" class="cell__pic games__audiocall-pic" />
     </div>
