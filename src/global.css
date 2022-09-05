@@ -14,6 +14,10 @@
     --font-text: 'PT Sans', sans-serif;
 }
 
+body, html {
+    overflow-x: hidden;
+}
+
 .header {
     width: 100%;
     background-color: var(--color-primary);
@@ -208,5 +212,59 @@
     }
     .nav-link-text-content {
         font-size: 22px;
+    }
+}
+@media screen and (max-width: 768px) {
+    .header__container {
+        min-width: 320px;
+        margin: 0;
+        align-items: stretch;
+    }
+    .nav-link-text-content {
+        display: none;
+    }
+    .footer__container {
+        margin: 0;
+        min-width: 320px;
+        width: 100%;
+        padding: 60px 0;
+        justify-content: center;
+        gap: 40px;
+    }
+    .footer__githubs {
+        flex-direction: column;
+    }
+    .footer__stuff {
+        flex: 0 0 0;
+    }
+}
+@media screen and (max-width: 500px) {
+    .header__container {
+        min-width: 320px;
+        margin: 0;
+        justify-content: center;
+        align-items: flex-start;
+    }
+    .header__title {
+        font-size: 32px;
+    }
+    .nav-link-text-content {
+        display: none;
+    }
+    .footer__container {
+        min-width: 320px;
+        width: 100%;
+        flex-direction: column;
+    }
+    .footer__stuff {
+        flex: 0 0 0;
+    }
+    .footer__githubs{
+        margin-right: 0;
+    }
+}
+@media screen and (max-width: 320px) {
+    .header__title {
+        font-size: 24px;
     }
 }
