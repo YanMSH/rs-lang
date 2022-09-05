@@ -1,7 +1,7 @@
 import Loader from '../../core/components/loader/loader';
 import Storage from '../../core/components/service/storage/storage';
 import { toggleHardNothard } from '../../core/components/service/utils/utils';
-import { GlobalStat, TBWords, UserWord, DataStat } from '../../core/types/controller-types';
+import { GlobalStat, TBWords, UserWord } from '../../core/types/controller-types';
 import { AWPaginatedResults, Statistic } from '../../core/types/loader-types';
 
 export default class TextbookController {
