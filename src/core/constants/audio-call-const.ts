@@ -1,5 +1,5 @@
 export enum MaxParam {
-  maxLifes = 5,
+  maxLives = 5,
   maxGroup = 5,
   maxPage = 29,
   maxPosition = 19

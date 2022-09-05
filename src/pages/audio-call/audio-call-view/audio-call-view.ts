@@ -50,10 +50,9 @@ export default class AudioCallView {
     const controlPanel = document.createElement('div');
     controlPanel.classList.add('control-panel');
     controlPanel.innerHTML = `
-      <div class = "sound-control"></div>
-      <div class = "control-fullscreen"></div>
+      <div class = "control-fullscreen" data-toggle-fullscreen></div>
+      <div class = "close-game"></div>
     `;
-    
     return controlPanel;
   }
 
@@ -69,7 +68,7 @@ export default class AudioCallView {
     headerPanel.classList.add('header-panel');
     const controlPanel = this.createPanel();
     const lifeCounter = this.lifeCounter();
-    headerPanel.append(controlPanel, lifeCounter);
+    headerPanel.append(lifeCounter, controlPanel);
     
     return headerPanel;
   }
