@@ -2,7 +2,10 @@ import './statistic-view.css';
 import { renderStat, NumStat } from '../../../core/types/controller-types';
 import Storage from '../../../core/components/service/storage/storage';
 import { ResponseAuth } from '../../../core/types/loader-types';
-import { Chart } from 'chart.js';
+// import Chart from 'chart.js';
+// const Chart = require('chart.js');
+import { Chart, registerables } from 'chart.js';
+Chart.register(...registerables);
 
 export default class StatisticView {
     public storage: Storage;
@@ -58,8 +61,9 @@ export default class StatisticView {
             const s = right[keys[i]] as number[];
             a.push(s[0]);
         }
-        // const graphWords = this.createGraph(Object.keys(right), a, 'green', 'Words Statistic');
-        wordStat.append(wordsBlock);
+        const color = this.getRandomColor();
+        const graphWords = this.createGraph(Object.keys(right), a, color, 'Words Statistic');
+        wordStat.append(wordsBlock, graphWords);
         return wordStat;
     }
 
@@ -108,12 +112,15 @@ export default class StatisticView {
         `;
         const a: number[] = [];
         const keys = Object.keys(right);
-        for (let i = 0; i < keys.length; i += 1) { 
-            const s = right[keys[i]] as number[];
-            a.push(s[0]);
+        // console.log('keys = ',keys, right);
+        for (let i = 0; i < keys.length; i += 1) {
+            console.log('keys = ', right[keys[i]]); 
+            const s = right[keys[i]] as number;
+            a.push(s);
         }
-        // const graphWords = this.createGraph(Object.keys(right), a, 'green', 'AudioCall Statistic');
-        audioStat.append(audioBlock);
+        const color = this.getRandomColor();
+        const graphWords = this.createGraph(Object.keys(right), a, color, 'AudioCall Statistic');
+        audioStat.append(audioBlock, graphWords);
         return audioStat;
     }
 
@@ -163,66 +170,54 @@ export default class StatisticView {
         const a: number[] = [];
         const keys = Object.keys(right);
         for (let i = 0; i < keys.length; i += 1) { 
-            const s = right[keys[i]] as number[];
-            a.push(s[0]);
+            const s = right[keys[i]] as number;
+            a.push(s);
         }
-        // const graphWords = this.createGraph(Object.keys(right), a, 'green', 'Sprint Statistic');
-        sprintStat.append(sprintBlock);
+        const color = this.getRandomColor();
+        const graphWords = this.createGraph(Object.keys(right), a, color, 'Sprint Statistic');
+        sprintStat.append(sprintBlock, graphWords);
         return sprintStat;
     }
 
 
-    // createGraph(dataArray: string[], data: number[], color: string, label: string) {
-    //     const canvas = document.createElement('canvas');
-    //     canvas.id = 'MyChart';
-    //     canvas.width = 500;
-    //     canvas.height = 500;
-    //     const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+    createGraph(dataArray: string[], data: number[], color: string, label: string) {
+        const canvas = document.createElement('canvas');
+        canvas.id = 'myChart';
+        canvas.width = 500;
+        canvas.height = 500;
+        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 
-    //     const myChart = new Chart(ctx, {
-    //         type: 'bar',
-    //         data: {
-    //             labels: dataArray,
-    //             datasets: [
-    //                 {
-    //                     label: 'Life expectancy',
-    //                     data: data,
-    //                     backgroundColor: color,
-    //                     borderColor: [
-    //                         'rgba(216, 27, 96, 1)',
-    //                         'rgba(3, 169, 244, 1)',
-    //                         'rgba(255, 152, 0, 1)',
-    //                         'rgba(29, 233, 182, 1)',
-    //                         'rgba(156, 39, 176, 1)',
-    //                         'rgba(84, 110, 122, 1)',
-    //                     ],
-    //                     borderWidth: 1,
-    //                 },
-    //             ],
-    //         },
-    //         options: {
-    //             legend: {
-    //                 display: false,
-    //             },
-    //             title: {
-    //                 display: true,
-    //                 text: label,
-    //                 position: 'top',
-    //                 fontSize: 15,
-    //                 padding: 20,
-    //             },
-    //             scales: {
-    //                 yAxes: [
-    //                     {
-    //                         ticks: {
-    //                             min: 0,
-    //                         },
-    //                     },
-    //                 ],
-    //             },
-    //         },
-    //     });
+        const myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: dataArray,
+                datasets: [
+                    {
+                        label: label,
+                        data: data,
+                        backgroundColor: color,
+                        borderColor: [
+                            'rgba(216, 27, 96, 1)',
+                            'rgba(3, 169, 244, 1)',
+                            'rgba(255, 152, 0, 1)',
+                            'rgba(29, 233, 182, 1)',
+                            'rgba(156, 39, 176, 1)',
+                            'rgba(84, 110, 122, 1)',
+                        ],
+                        borderWidth: 1,
+                    },
+                ],
+            },
+        });
 
-    //     return canvas;
-    // }
+        return canvas;
+    }
+    getRandomColor() {
+        var letters = '0123456789ABCDEF';
+        var color = '#';
+        for (let i = 0; i < 6; i += 1) {
+          color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
 }

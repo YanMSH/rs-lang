@@ -1,7 +1,7 @@
 :root {
   --color-black: black;
   --color-light: #f4ededff;
-  --color-shadow: #877666ff;
+  --color-shadow: rgb(173, 173, 173);
   --color-yellow: #F9DB6D;
 }
 .words-statistic-block {
@@ -69,6 +69,7 @@
   background-color: var(--color-shadow);
 }
 
+
 @media (max-width: 1130px)  { 
   .no-user {
     font-size: 1.5rem;
@@ -91,6 +92,10 @@
 @media (max-width: 715px)  { 
   .message-statistic {
     width: 80%;
+    font-size: 1.2rem;
+  }
+  .words-statistic {
+    width: 85%;
     font-size: 1.2rem;
   }
 }
