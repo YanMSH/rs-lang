@@ -84,3 +84,28 @@
     outline: 1px solid red;
     background-color: rgba(255, 0, 0, 0.205);
 }
+
+@media screen and (max-width: 768px) {
+    .form__container {
+        width: 90%;
+    }
+    .form__input {
+        display: block;
+        text-align: center;
+        width: 85%;
+        padding: 0;
+        height: 24px;
+        margin: 0 auto;
+    }
+    .form__button {
+        width: 90%;
+    }
+    .form__input { 
+        font-size: 24px;
+    }
+}
+@media screen and (max-width: 320px) {
+    .form__input { 
+        font-size: 16px;
+    }
+}

@@ -145,6 +145,7 @@
   .answer-btn {
     width: 90px;
     height: 40px;
+    font-size: 12px;
   }
   .point-count {
     margin: 0 43% 0 57%;

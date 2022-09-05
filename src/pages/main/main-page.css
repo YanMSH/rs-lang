@@ -308,3 +308,83 @@
     width: 110px;
     height: 110px;
 }
+@media screen and (max-width: 1300px) {
+    .main-page {
+        width: 100%;
+    }
+    .welcome__banner {
+        width: 90%;
+        margin: 0;
+    }
+    .about-us__card-container {
+        width: 100%;
+    }
+    .block__title {
+        text-align: center;
+        font-size: 32px;
+    }
+}
+@media screen and (max-width: 768px) {
+    .main-page {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .welcome__banner {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        font-size: 18px;
+        margin: 0 auto;
+    }
+    .welcome__banner-btn {
+        width: 200px;
+        font-size: 24px;
+    }
+    .about-us__title {
+        width: 80%;
+    }
+    .about-us {
+        font-size: 18px;
+    }
+    .card__pic {
+        width: 68px;
+        height: 68px;
+    }
+    .about-us__card-container{
+        flex-wrap: wrap;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .about-us__card {
+        width: 300px;
+    }
+    .card__mentor {
+        width: 300px;
+    }
+}
+@media screen and (max-width: 320px) {
+    .main-page-block {
+        width: 300px;
+    }
+    .welcome__banner {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        font-size: 12px;
+    }
+    .welcome__banner-btn {
+        width: 150px;
+        font-size: 12px;
+    }
+    .block__title {
+        font-size: 24px;
+    }
+    .about-us__card-container {
+        font-size: 12px;
+    }
+    .cell__list-item {
+        font-size: 16px;    
+    }
+}

@@ -261,3 +261,43 @@
 .card__word-learned:hover path {
     fill: var(--color-white);
 }
+
+@media screen and (max-width: 1300px) {
+    .cards__container {
+        width: 100%;
+    }
+    .app__controls {
+        width: 100%;
+    }
+}
+@media screen and (max-width: 768px) {
+    .app__controls {
+        width: 90%;
+        margin: 0 auto;
+        flex-direction: column;
+    }
+    .cards__container {
+        flex-wrap: nowrap;
+        flex-direction: column;
+        align-items: center;
+    }
+    .control__button {
+        width: 30px;
+        height: 30px;
+    }
+    .card {
+        max-width: 300px;
+    }
+    .game__controls {
+        justify-content: space-evenly;
+        align-items: center;
+        height: 100px;
+    }
+    .game-sprint {
+        justify-self: center;
+    }
+    .game__button {
+        display: block;
+    }
+}
+
