@@ -3,10 +3,13 @@
   --color-light: #f4ededff;
   --color-shadow: rgb(173, 173, 173);
   --color-yellow: #F9DB6D;
+  --font-title: 'Ubuntu', sans-serif;
+  --font-text: 'PT Sans', sans-serif;
 }
 .words-statistic-block {
   display: flex;
   flex-direction: column;
+  font-family: var(--font-text);
 }
 .no-user {
   margin: 10% auto;
@@ -23,6 +26,7 @@
   margin: 0 auto;
   width: 80%;
   text-align: center;
+  font-family: var(--font-title);
 }
 .reg-user {
   margin: 0 auto;
@@ -67,6 +71,15 @@
 
 .words-statistic-sprint {
   background-color: var(--color-shadow);
+}
+
+.statistic-title,
+.title-statistic  {
+  font-family: var(--font-title);
+}
+
+.sub_title-statistic {
+  font-family: var(--font-text);
 }
 
 
