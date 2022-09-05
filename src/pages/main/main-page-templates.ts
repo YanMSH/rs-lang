@@ -1,25 +1,38 @@
-import { TBWords } from '../../core/types/controller-types';
+import { DataStat, TBWords } from '../../core/types/controller-types';
 import TextbookController from '../textbook/textbook-controller';
 
 export default class MainPageTemplates {
     tbController: TextbookController;
+    statData: Promise<DataStat>;
     constructor() {
         this.tbController = new TextbookController();
+        this.statData = this.tbController.getCurrentStatData();
     }
-    async getAmountOfNewWords(): Promise<number | undefined> {
-        const wordsFromSprint = await this.tbController.getAmountOfGuessedWords('sprint');
-        const wordsFromAudioCall = await this.tbController.getAmountOfGuessedWords('audioCall');
-        return (wordsFromSprint ? wordsFromSprint : 0) + (wordsFromAudioCall ? wordsFromAudioCall : 0);
-    }
-    async getAmountOfLearnedWords(): Promise<number | undefined> {
-        const wordsFromSprint = await this.tbController.getAmountOfGuessedWords('sprint', 'mistakes');
-        const wordsFromAudioCall = await this.tbController.getAmountOfGuessedWords('audioCall', 'mistakes');
-        return (wordsFromSprint ? wordsFromSprint : 0) + (wordsFromAudioCall ? wordsFromAudioCall : 0);
-    }
-    async getAmountOfHardWords(): Promise<number | undefined> {
-        const wordsFromSprint = await this.tbController.getAmountOfGuessedWords('sprint', 'right');
-        const wordsFromAudioCall = await this.tbController.getAmountOfGuessedWords('audioCall', 'right');
-        return (wordsFromSprint ? wordsFromSprint : 0) + (wordsFromAudioCall ? wordsFromAudioCall : 0);
+
+    async processGameStats() {
+        const stats = await this.statData;
+        const allWordsFromSprint = Object.keys(stats.sprint).length;
+        const allWordsFromAudioCall = Object.keys(stats.audioCall).length;
+        const rightWordsFromSprint = Object.values(stats.sprint).filter((item) => item.right).length;
+        const rightWordsFromAudioCall = Object.values(stats.audioCall).filter((item) => item.right).length;
+        const sprintStreak = stats.longSessionSprint;
+        const audioCallStreak = stats.longSessionAudio;
+        const sprintRightPercentage = (rightWordsFromSprint / allWordsFromSprint) * 100;
+        const audioCallRightPercentage = (rightWordsFromAudioCall / allWordsFromAudioCall) * 100;
+        const rightAnswers =
+            (rightWordsFromAudioCall ? rightWordsFromAudioCall : 0) + (rightWordsFromSprint ? rightWordsFromSprint : 0);
+        const allAnswers =
+            (allWordsFromSprint ? allWordsFromSprint : 0) + (allWordsFromAudioCall ? allWordsFromAudioCall : 0);
+        return {
+            percentOfRightAnswers: ((rightAnswers / allAnswers) * 100).toFixed(0),
+            longestStreak: Math.max(sprintStreak, audioCallStreak),
+            sprintStreak: sprintStreak,
+            audioCallStreak: audioCallStreak,
+            newWordsFromSprint: allWordsFromSprint,
+            newWordsFromAudioCall: allWordsFromAudioCall,
+            sprintRightPercentage: sprintRightPercentage ? sprintRightPercentage.toFixed(0) : 0,
+            audioCallRightPercentage: audioCallRightPercentage ? audioCallRightPercentage.toFixed(0) : 0,
+        };
     }
 
     private async getTextbookStats(): Promise<TBWords | undefined> {
@@ -102,18 +115,19 @@ export default class MainPageTemplates {
         <div class="cell__title main-stats-title stats__short-answers">Ответы:</div>
         <div class="stats__short-words stats__short-answers-container">
             <div class="words__item words__item-hard">
-                <div class="words__number">55%</div>
+                <div class="words__number">${(await this.processGameStats()).percentOfRightAnswers}%</div>
                 <div class="words__word">правильных</div>
             </div>
             <div class="words__item words__item-hard">
-                <div class="words__number">12</div>
+                <div class="words__number">${(await this.processGameStats()).longestStreak}</div>
                 <div class="words__word">подряд</div>
             </div>
         </div>
     </div>
     <div class="stats__long cell-small">
-        <div class="cell__title main-stats-title">Долгосрочная стата:</div>
-    </div>
+        <div class="cell__title main-stats-title">Долгосрочная статистика:
+        </div>
+        <img src="../../assets/svg/stat-pic.svg" class="cell__pic stats-long__pic"></div>
 </div>
 <div class="main-page__textbook main-page-block cell-big">
     <div class="cell__title main-page__textbook-title">Учебник</div>
@@ -134,9 +148,13 @@ export default class MainPageTemplates {
         <div class="cell__container sprint__container">
             <img src="../../assets/svg/sprint-pic.svg" alt="" class="cell__pic games__sprint-pic" />
             <div class="cell__list games__sprint-list">
-                <div class="cell__list-item">12 новых слов</div>
-                <div class="cell__list-item">78% правильных ответов</div>
-                <div class="cell__list-item">11 правильных ответов подряд</div>
+                <div class="cell__list-item">${(await this.processGameStats()).newWordsFromSprint} новых слов</div>
+                <div class="cell__list-item">${
+                    (await this.processGameStats()).sprintRightPercentage
+                }% правильных ответов</div>
+                <div class="cell__list-item">${
+                    (await this.processGameStats()).sprintStreak
+                } правильных ответов подряд</div>
             </div>
         </div>
     </div>
@@ -144,9 +162,13 @@ export default class MainPageTemplates {
         <div class="cell__title main-games-audiocall-title">Аудио-вызов</div>
         <div class="cell__container audiocall__container">
             <div class="cell__list audiocall-list">
-                <div class="cell__list-item">35 новых слов</div>
-                <div class="cell__list-item">63% правильных ответов</div>
-                <div class="cell__list-item">15 правильных ответов подряд</div>
+                <div class="cell__list-item">${(await this.processGameStats()).newWordsFromAudioCall} новых слов</div>
+                <div class="cell__list-item">${
+                    (await this.processGameStats()).audioCallRightPercentage
+                }% правильных ответов</div>
+                <div class="cell__list-item">${
+                    (await this.processGameStats()).audioCallStreak
+                } правильных ответов подряд</div>
             </div>
             <img src="../../assets/svg/audiocall-pic.svg" alt="" class="cell__pic games__audiocall-pic" />
     </div>

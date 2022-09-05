@@ -202,6 +202,12 @@
     background-color: var(--color-grey);
 }
 
+.stats-long__pic {
+    display: block;
+    margin-top: 24px;
+    padding: 16px;
+}
+
 .main-page__textbook-title,
 .main-games-audiocall-title {
     color: var(--color-light);

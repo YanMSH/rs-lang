@@ -186,12 +186,38 @@ export default class TextbookController {
         }
     }
 
+    public async getStreakInfo(gameName: 'sprint' | 'audioCall') {
+        const today = new Date(Date.now());
+        const todayString = today.toLocaleDateString();
+        try {
+            const result = await this.load.getStatistic('statistics');
+            if (gameName === 'sprint') {
+                return result['optional'][todayString]['longSessionSprint'];
+            } else {
+                return result['optional'][todayString]['longSessionAudio'];
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
     public async getTextbookData() {
         const today = new Date(Date.now());
         const todayString = today.toLocaleDateString();
         try {
             const result = await this.load.getStatistic('statistics');
             return result['optional'][todayString]['textbook'];
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    public async getCurrentStatData() {
+        const today = new Date(Date.now());
+        const todayString = today.toLocaleDateString();
+        try {
+            const result = await this.load.getStatistic('statistics');
+            return result['optional'][todayString];
         } catch (e) {
             console.log(e);
         }
