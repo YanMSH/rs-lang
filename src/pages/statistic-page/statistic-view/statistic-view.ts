@@ -79,19 +79,19 @@ export default class StatisticView {
         const month = date.getMonth() + 1 > 9 ? date.getMonth() + 1 : `0${date.getMonth() + 1}`;
         const day = (date.getDate() > 9) ? date.getDate() : `0${date.getDate()}`;
         const today = `${day}.${month}.${year}`;
-        let arrRigth = right[today] as number;
+        let arrRight = right[today] as number;
         let session = longSession[today] as number;
         let arrMistakes = mistakes[today] as number;
-        let percent = Math.floor(arrRigth / (arrRigth + arrMistakes) * 100);
+        let percent = Math.floor(arrRight / (arrRight + arrMistakes) * 100);
         if (session) {
             session = session;
         } else {
             session = 0;
         }
-        if (arrRigth) {
-            arrRigth = arrRigth;
+        if (arrRight) {
+            arrRight = arrRight;
         } else {
-            arrRigth = 0;
+            arrRight = 0;
         }
         if (arrMistakes) {
             arrMistakes = arrMistakes;
@@ -108,8 +108,8 @@ export default class StatisticView {
         audioBlock.innerHTML = `
             <span class = "statistic-title">Игра AudioCall: </span>
             <span class = "statistic-title">Статистика новых слов за сегодня (${today}): </span>
-            <span class = "statistic-text">Количество новых слов: ${arrRigth}</span>
-            <span class = "statistic-text">Количество изученных слов: ${arrRigth}</span>
+            <span class = "statistic-text">Количество новых слов: ${arrRight}</span>
+            <span class = "statistic-text">Количество изученных слов: ${arrRight}</span>
             <span class = "statistic-text">Процент правильных ответов: ${percent}</span>
             <span class = "statistic-text">Количество правильных ответов подряд: ${session} </span>
         `;

@@ -89,7 +89,7 @@ export default class AudioCallController {
             this.storage.set('position', 0);
         }
         this.view.renderMainPage();
-        this.life = MaxParam.maxLifes;
+        this.life = MaxParam.maxLives;
         this.updateInitStatistic();
         const [buildData, word] = [...(await this.getParams())];
         this.view.refreshResponse(buildData);
