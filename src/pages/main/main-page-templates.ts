@@ -1,3 +1,4 @@
+import { TBWords } from '../../core/types/controller-types';
 import TextbookController from '../textbook/textbook-controller';
 
 export default class MainPageTemplates {
@@ -5,6 +6,30 @@ export default class MainPageTemplates {
     constructor() {
         this.tbController = new TextbookController();
     }
+    async getAmountOfNewWords(): Promise<number | undefined> {
+        const wordsFromSprint = await this.tbController.getAmountOfGuessedWords('sprint');
+        const wordsFromAudioCall = await this.tbController.getAmountOfGuessedWords('audioCall');
+        return (wordsFromSprint ? wordsFromSprint : 0) + (wordsFromAudioCall ? wordsFromAudioCall : 0);
+    }
+    async getAmountOfLearnedWords(): Promise<number | undefined> {
+        const wordsFromSprint = await this.tbController.getAmountOfGuessedWords('sprint', 'mistakes');
+        const wordsFromAudioCall = await this.tbController.getAmountOfGuessedWords('audioCall', 'mistakes');
+        return (wordsFromSprint ? wordsFromSprint : 0) + (wordsFromAudioCall ? wordsFromAudioCall : 0);
+    }
+    async getAmountOfHardWords(): Promise<number | undefined> {
+        const wordsFromSprint = await this.tbController.getAmountOfGuessedWords('sprint', 'right');
+        const wordsFromAudioCall = await this.tbController.getAmountOfGuessedWords('audioCall', 'right');
+        return (wordsFromSprint ? wordsFromSprint : 0) + (wordsFromAudioCall ? wordsFromAudioCall : 0);
+    }
+
+    private async getTextbookStats(): Promise<TBWords | undefined> {
+        return await this.tbController.getTextbookData();
+    }
+    private async getNewWordsStats(fieldName: 'new' | 'learned' | 'hard'): Promise<number> {
+        const wordsAmount = ((await this.getTextbookStats()) as TBWords)[fieldName];
+        return wordsAmount ? wordsAmount : 0;
+    }
+
     buildWelcomePage() {
         return `<section class="welcome__banner">
 <div class="welcome__text-block welcome__banner-half">
@@ -62,15 +87,15 @@ export default class MainPageTemplates {
         <div class="cell__title main-stats-title">Слова:</div>
         <div class="stats__short-words">
             <div class="words__item words__item-new">
-                <div class="words__number">99</div>
+                <div class="words__number">${await this.getNewWordsStats('new')}</div>
                 <div class="words__word">новых</div>
             </div>
             <div class="words__item words__item-learned">
-                <div class="words__number">54</div>
+                <div class="words__number">${await this.getNewWordsStats('learned')}</div>
                 <div class="words__word">изученных</div>
             </div>
             <div class="words__item words__item-hard">
-                <div class="words__number">45</div>
+                <div class="words__number">${await this.getNewWordsStats('hard')}</div>
                 <div class="words__word">сложных</div>
             </div>
         </div>

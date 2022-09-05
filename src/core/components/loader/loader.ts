@@ -40,7 +40,6 @@ export default class Loader {
     }
 
     public async getAuthorizedData(endpoint: string, wordId: string) {
-        // TODO Handle case when token is outdated!
         const path = serverURL + buildAuthorizedEndpoint(endpoint) + wordId;
         const response = await this.requestAuth(path, Requests.get);
         if (response.ok) {
@@ -163,6 +162,22 @@ export default class Loader {
                 this.store.remove('auth');
             }
             throw await response.text();
+        }
+    }
+
+    public async getAmountOfGuessedWords(gameName: string, guess?: 'right' | 'mistakes') {
+        const today = new Date(Date.now());
+        const todayString = today.toLocaleDateString();
+        try {
+            const result = await this.getStatistic('statistics');
+
+            const gameWords = result['optional'][todayString][gameName] as object;
+            if (guess === undefined) {
+                return Object.values(gameWords).length;
+            }
+            return Object.values(gameWords).filter((item) => item[guess]).length;
+        } catch (e) {
+            console.log(e);
         }
     }
 }
