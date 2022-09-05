@@ -17,6 +17,9 @@ export default class MainPageTemplates {
         const rightWordsFromAudioCall = Object.values(stats.audioCall).filter((item) => item.right).length;
         const sprintStreak = stats.longSessionSprint;
         const audioCallStreak = stats.longSessionAudio;
+        const textbookNewWords = stats.textbook?.new;
+        const textbookHardWords = stats.textbook?.hard;
+        const textbookLearnedWords = stats.textbook?.learned;
         const sprintRightPercentage = (rightWordsFromSprint / allWordsFromSprint) * 100;
         const audioCallRightPercentage = (rightWordsFromAudioCall / allWordsFromAudioCall) * 100;
         const rightAnswers =
@@ -26,12 +29,15 @@ export default class MainPageTemplates {
         return {
             percentOfRightAnswers: ((rightAnswers / allAnswers) * 100).toFixed(0),
             longestStreak: Math.max(sprintStreak, audioCallStreak),
-            sprintStreak: sprintStreak,
-            audioCallStreak: audioCallStreak,
-            newWordsFromSprint: allWordsFromSprint,
-            newWordsFromAudioCall: allWordsFromAudioCall,
             sprintRightPercentage: sprintRightPercentage ? sprintRightPercentage.toFixed(0) : 0,
             audioCallRightPercentage: audioCallRightPercentage ? audioCallRightPercentage.toFixed(0) : 0,
+            sprintStreak,
+            audioCallStreak,
+            textbookNewWords,
+            textbookHardWords,
+            textbookLearnedWords,
+            newWordsFromSprint: allWordsFromSprint,
+            newWordsFromAudioCall: allWordsFromAudioCall,
         };
     }
 
@@ -133,10 +139,14 @@ export default class MainPageTemplates {
     <div class="cell__title main-page__textbook-title">Учебник</div>
     <div class="textbook__words-data cell__list">
         <div class="textbook__words-all textbook__words cell__list-item">3600 слов</div>
-        <div class="textbook__words-learned textbook__words cell__list-item">${await this.tbController.getAmountOfLearnedWords()} изученных слов</div>
-        <div class="textbook__words-hard textbook__words cell__list-item">${await this.tbController.getAmountOfHardWords()} сложных слов</div>
+        <div class="textbook__words-learned textbook__words cell__list-item">${
+            (await this.processGameStats()).textbookLearnedWords
+        } изученных слов</div>
+        <div class="textbook__words-hard textbook__words cell__list-item">${
+            (await this.processGameStats()).textbookHardWords
+        } сложных слов</div>
         <div class="textbook__words-learned textbook__words cell__list-item">${(
-            (((await this.tbController.getAmountOfLearnedWords()) as number) / 3600) *
+            (((await this.processGameStats()).textbookLearnedWords as number) / 3600) *
             100
         ).toFixed(2)}% учебника пройдено</div>
     </div>
