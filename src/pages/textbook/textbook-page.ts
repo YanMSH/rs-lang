@@ -390,7 +390,7 @@ export default class TextbookPage {
                 .getAllHardAggregatedWords()
                 .then((value) => value?.forEach((item) => cards.append(this.drawCard(item))));
         }
-
+        console.log('amount of hard words:', await this.tbController.getAmountOfHardWords());
         this.makePagination();
         app.append(cards);
         this.markButtons();

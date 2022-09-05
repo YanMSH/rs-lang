@@ -74,17 +74,19 @@ export default class Loader {
         const token = (this.store.get('user') as ResponseAuth).token;
         const path = serverURL + buildAuthorizedEndpoint(endpoint);
         fetch(path, {
-        method: "PUT",
-        headers: {
-        'Authorization': `Bearer ${token}`,
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-        learnedWords: number,
-        optional: data
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                learnedWords: number,
+                optional: data,
+            }),
         })
-        }).then(resp => resp.json()).then(data => console.log(data));
+            .then((resp) => resp.json())
+            .then((data) => console.log(data));
     }
     public async postAuthorisedData(endpoint: string, wordId: string, body: UserWord) {
         const path = serverURL + buildAuthorizedEndpoint(endpoint) + wordId;
@@ -142,6 +144,28 @@ export default class Loader {
             const result = responseArray[0];
             const aggregatedWords = result.paginatedResults;
             return aggregatedWords;
+        } else {
+            console.log('resp status', response.status);
+            if (response.status === StatusCodes.unauthorized) {
+                this.store.remove('auth');
+            }
+            throw await response.text();
+        }
+    }
+
+    public async getAmountOfFilteredWords(filterQuery: string) {
+        const path =
+            serverURL + buildAuthorizedEndpoint('aggregatedwords') + `?wordsPerPage=600&filter={${filterQuery}}`;
+        const response = await this.requestAuth(path, Requests.get);
+        return await this.pullAmountOfFilteredWords(response);
+    }
+
+    private async pullAmountOfFilteredWords(response: Response): Promise<number> {
+        if (response.ok) {
+            const responseArray = (await response.json()) as ResponseAggregatedWords;
+            const result = responseArray[0];
+            const countArray = result.totalCount;
+            return countArray[0].count;
         } else {
             console.log('resp status', response.status);
             if (response.status === StatusCodes.unauthorized) {

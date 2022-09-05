@@ -89,7 +89,7 @@ export default class AuthPage {
                 if (authResponse.message === AuthMessages.success) {
                     this.store.set('user', authResponse);
                     this.store.set('auth', true);
-                    showErrorMessage(authResponse.message);
+                    location.reload();
                 } else {
                     showErrorMessage(authResponse.message);
                 }

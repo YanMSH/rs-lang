@@ -129,6 +129,10 @@
     height: 285px;
 }
 
+.cell-big {
+    max-height: 610px;
+}
+
 .cell-small,
 .cell-big {
     cursor: pointer;
@@ -241,7 +245,7 @@
 
 .textbook__words-pic {
     display: block;
-    margin: 96px auto;
+    margin: 64px auto;
 }
 
 .subcell {

@@ -1,6 +1,6 @@
 import './main-page.css';
 import Storage from '../../core/components/service/storage/storage';
-import { mainPageTemplate, welcomePageTemplate } from './main-page-templates';
+import MainPageTemplates from './main-page-templates';
 import RegPage from '../registration/reg-page';
 import AuthPage from '../auth/auth-page';
 import TextbookPage from '../textbook/textbook-page';
@@ -14,6 +14,7 @@ export default class MainPage {
     textbook: TextbookPage;
     sprintGame: SprintGameApp;
     audiocallGame: AudioCallApp;
+    template: MainPageTemplates;
     constructor() {
         this.store = new Storage();
         this.regPage = new RegPage();
@@ -21,6 +22,7 @@ export default class MainPage {
         this.textbook = new TextbookPage();
         this.sprintGame = new SprintGameApp();
         this.audiocallGame = new AudioCallApp();
+        this.template = new MainPageTemplates();
     }
     turnOnWelcomeLinks() {
         const regButton = document.querySelector('.welcome__banner-reg-link') as HTMLElement;
@@ -42,13 +44,13 @@ export default class MainPage {
         audiocallGameLink.onclick = () => this.audiocallGame.renderAudioCall();
     }
 
-    render() {
+    async render() {
         const app = document.querySelector('.app') as HTMLElement;
         if (this.store.inStore('auth')) {
-            app.innerHTML = mainPageTemplate;
+            app.innerHTML = await this.template.buildMainPage();
             this.turnOnMainLinks();
         } else {
-            app.innerHTML = welcomePageTemplate;
+            app.innerHTML = this.template.buildWelcomePage();
             this.turnOnWelcomeLinks();
         }
     }

@@ -119,4 +119,22 @@ export default class TextbookController {
             console.log(e);
         }
     }
+
+    public async getAmountOfHardWords() {
+        try {
+            const result = (await this.load.getAmountOfFilteredWords('"userWord.difficulty":"hard"')) as number;
+            return result;
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    public async getAmountOfLearnedWords() {
+        try {
+            const result = (await this.load.getAmountOfFilteredWords('"userWord.optional.learned":true')) as number;
+            return result;
+        } catch (e) {
+            console.log(e);
+        }
+    }
 }

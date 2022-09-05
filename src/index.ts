@@ -1,5 +1,5 @@
 import './global.css';
-
+import AppHeader from './core/components/app/app-header';
 import TextbookPage from './pages/textbook/textbook-page';
 import AuthPage from './pages/auth/auth-page';
 import { SprintGameApp } from './pages/sprint-game/app/sprint-game-app';
@@ -9,6 +9,7 @@ import StatisticController from './pages/statistic-page/statistic-controller/sta
 // import App from './core/components/app/app';
 
 // const app = new App();
+const header = new AppHeader();
 const logoLink = document.querySelector('.header__title-link') as HTMLElement;
 const mainPage = new MainPage();
 const textbook = new TextbookPage();
@@ -28,4 +29,5 @@ audioCallLink.onclick = () => audioCallGame.renderAudioCall();
 statisticLink.onclick = () => statistic.render();
 sprintLink.onclick = () => sprintGame.starting();
 authLink.onclick = () => auth.render();
+header.toggleLoginLogout();
 mainPage.render();

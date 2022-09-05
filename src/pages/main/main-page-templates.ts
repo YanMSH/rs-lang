@@ -1,4 +1,12 @@
-export const welcomePageTemplate = `<section class="welcome__banner">
+import TextbookController from '../textbook/textbook-controller';
+
+export default class MainPageTemplates {
+    tbController: TextbookController;
+    constructor() {
+        this.tbController = new TextbookController();
+    }
+    buildWelcomePage() {
+        return `<section class="welcome__banner">
 <div class="welcome__text-block welcome__banner-half">
     <div class="welcome__text-title block__title">Приветствую!</div>
     <div class="welcome__text-desc">
@@ -45,7 +53,10 @@ export const welcomePageTemplate = `<section class="welcome__banner">
     </div>
 </div>
 </section>`;
-export const mainPageTemplate = `<section class="main-page">
+    }
+
+    async buildMainPage() {
+        return `<section class="main-page">
 <div class="main-page__stats main-page-block subcell">
     <div class="stats__short cell-small">
         <div class="cell__title main-stats-title">Слова:</div>
@@ -83,8 +94,12 @@ export const mainPageTemplate = `<section class="main-page">
     <div class="cell__title main-page__textbook-title">Учебник</div>
     <div class="textbook__words-data cell__list">
         <div class="textbook__words-all textbook__words cell__list-item">3600 слов</div>
-        <div class="textbook__words-learned textbook__words cell__list-item">115 изученных слов</div>
-        <div class="textbook__words-hard textbook__words cell__list-item">87 сложных слов</div>
+        <div class="textbook__words-learned textbook__words cell__list-item">${await this.tbController.getAmountOfLearnedWords()} изученных слов</div>
+        <div class="textbook__words-hard textbook__words cell__list-item">${await this.tbController.getAmountOfHardWords()} сложных слов</div>
+        <div class="textbook__words-learned textbook__words cell__list-item">${(
+            (((await this.tbController.getAmountOfLearnedWords()) as number) / 3600) *
+            100
+        ).toFixed(2)}% учебника пройдено</div>
     </div>
     <img src="../../assets/svg/book-pic.svg" alt="" class="textbook__words-pic" />
 </div>
@@ -112,3 +127,5 @@ export const mainPageTemplate = `<section class="main-page">
     </div>
 </div>
 </section>`;
+    }
+}
