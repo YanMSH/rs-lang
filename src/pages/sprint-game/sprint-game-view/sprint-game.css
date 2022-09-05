@@ -5,12 +5,14 @@
   --color-black: #000000;
   --color-white: #ffffff;
   --color-grey: #D3D3D3;
-  /* --color-green: green; */
+  --font-title: 'Ubuntu', sans-serif;
+  --font-text: 'PT Sans', sans-serif;
 }
 .game-wrapper {
   padding: 15px;
   height: 120vh;
   background: var(--color-gradient);
+  font-family: var(--font-text);
 }
 .settings-section {
   padding-top: 1%;

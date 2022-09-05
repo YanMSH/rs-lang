@@ -6,11 +6,13 @@
     --color-negation-button: #808080;
     --color-hover-button: #707070;
     --font-title: 'Ubuntu', sans-serif;
+    --font-text: 'PT Sans', sans-serif;
 }
 .wrapper-sprint {
     padding: 15px;
     height: 630px;
     background-color: var(--wrapper-sprint-color);
+    font-family: var(--font-text);
 }
 .wrapper-audiocall {
     height: 630px;

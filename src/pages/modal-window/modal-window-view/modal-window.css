@@ -1,5 +1,7 @@
 :root {
     --audioButton: url('../../../assets/svg/unmute.svg');
+    --font-title: 'Ubuntu', sans-serif;
+    --font-text: 'PT Sans', sans-serif;
 }
 
 .results::-webkit-scrollbar {
@@ -27,6 +29,7 @@
     left: 15vw;
     text-align: center;
     z-index: 100;
+    font-family: var(--font-text);
 }
 .results {
     color: white;
@@ -90,6 +93,7 @@
 .modal-message {
     color: #F9DB6D;
     font-size: 32px;
+    font-family: var(--font-title);
 }
 @media (max-width: 860px) {
     .options {
