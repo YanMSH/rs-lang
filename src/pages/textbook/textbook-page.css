@@ -1,0 +1,303 @@
+:root {
+    --color-primary: #6667abff;
+    --color-accent: #f9db6dff;
+    --color-light: #f4ededff;
+    --color-shadow: #877666ff;
+    --color-error: #a8201aff;
+    --color-black: #1c1c1c;
+    --color-white: #f9f9f9;
+    --color-grey: #d9d9d9;
+    --font-title: 'Ubuntu', sans-serif;
+    --font-text: 'PT Sans', sans-serif;
+}
+
+.app__controls {
+    width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.app__hard-page {
+    background-color: rgba(220, 53, 69, 0.2);
+}
+
+.app_learned-page {
+    background-color: rgba(40, 167, 69, 0.2);
+}
+
+.textbook__title {
+    text-align: center;
+    font-size: 32px;
+    font-family: var(--font-title);
+    color: var(--color-black);
+    font-weight: 700;
+}
+
+.textbook__control-panel {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.control__button {
+    display: block;
+    width: 40px;
+    height: 40px;
+    font-family: var(--font-text);
+    font-weight: 400;
+    font-size: 18px;
+    color: var(--color-black);
+    border: none;
+    outline: none;
+    background-color: #f2f2f2;
+    cursor: pointer;
+    transition-duration: 0.3s;
+}
+
+.control__button:hover {
+    filter: brightness(1.1);
+}
+
+.controls-current {
+    pointer-events: none;
+    background-color: var(--color-primary);
+    color: var(--color-accent);
+}
+
+.group__controls-disabled {
+    pointer-events: none;
+
+    opacity: 0.4;
+    cursor: default;
+}
+
+.game__controls {
+    display: flex;
+    gap: 16px;
+}
+
+.game__button {
+    width: auto;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+}
+
+.cards__container {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 32px auto 112px;
+    gap: 60px;
+    width: 1200px;
+}
+
+.card {
+    background-color: var(--color-white);
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    max-width: 360px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+}
+
+.card__main {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 120px;
+}
+
+.card__buttons-toggleables {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+    width: 64px;
+}
+
+.card__main-text {
+    font-family: var(--font-text);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.card__main-word {
+    color: var(--color-error);
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.card__main-etc {
+    font-size: 24px;
+    color: var(--color-black);
+}
+
+.word__transcription {
+    font-style: italic;
+    font-weight: 400;
+}
+
+.word__translation {
+    font-style: normal;
+    font-weight: 700;
+}
+
+.card__buttons-audio {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+}
+
+.btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: var(--color-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition-duration: 0.4s;
+}
+
+.btn:hover {
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
+    background-color: var(--color-white);
+}
+.btn-toggled {
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
+    background-color: var(--color-white);
+}
+.icon-toggled {
+    fill: var(--color-primary);
+}
+
+.btn:hover path {
+    fill: var(--color-primary);
+}
+
+.word__pic {
+    width: 360px;
+    height: 240px;
+}
+
+.card:hover .card__hidden {
+    transform: translateY(50%);
+}
+
+.card__hidden {
+    position: absolute;
+    height: 240px;
+    transform: translateY(400%);
+    background-color: rgba(255, 234, 155, 0.8);
+    font-family: var(--font-text);
+    font-size: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    transition-delay: 0.15s;
+    transition-timing-function: ease-in-out;
+    transition-duration: 0.5s;
+}
+
+.hidden__revail {
+    transform: translateY(50%);
+}
+
+.card__hidden-text {
+    width: 330px;
+    margin-top: 12px;
+}
+
+.card__meaning,
+.card__example {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.card__meaning-eng,
+.card__example-eng {
+    transition-duration: 0.3s;
+    font-style: italic;
+}
+
+.underline {
+    font-size: 18px;
+    text-decoration: underline;
+}
+
+.card__word-hard {
+    background-color: #dc3545;
+}
+.card__word-hard:hover {
+    filter: opacity(0.6);
+    background-color: #dc3545;
+}
+.card__word-hard:hover path {
+    fill: var(--color-white);
+}
+
+.card__word-learned {
+    background-color: #28a745;
+}
+
+.card__word-learned:hover {
+    background-color: #28a745;
+    filter: opacity(0.6);
+}
+.card__word-learned:hover path {
+    fill: var(--color-white);
+}
+
+@media screen and (max-width: 1300px) {
+    .cards__container {
+        width: 100%;
+    }
+    .app__controls {
+        width: 100%;
+    }
+}
+@media screen and (max-width: 768px) {
+    .app__controls {
+        width: 90%;
+        margin: 0 auto;
+        flex-direction: column;
+    }
+    .cards__container {
+        flex-wrap: nowrap;
+        flex-direction: column;
+        align-items: center;
+    }
+    .control__button {
+        width: 30px;
+        height: 30px;
+    }
+    .card {
+        max-width: 300px;
+    }
+    .game__controls {
+        justify-content: space-evenly;
+        align-items: center;
+        height: 100px;
+    }
+    .game-sprint {
+        justify-self: center;
+    }
+    .game__button {
+        display: block;
+    }
+}
+

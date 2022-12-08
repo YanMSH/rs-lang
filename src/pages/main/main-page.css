@@ -1,0 +1,390 @@
+@import '../../global.css';
+
+.welcome__banner {
+    width: 1200px;
+    margin: 112px auto;
+    display: flex;
+    font-size: 28px;
+    font-family: var(--font-text);
+}
+
+.welcome__banner-half {
+    width: 50%;
+    padding: 62px 40px;
+    display: flex;
+    flex-direction: column;
+}
+
+.welcome__text-block {
+    background-color: var(--color-light);
+}
+
+.block__title {
+    font-size: 48px;
+    font-family: var(--font-title);
+}
+
+.welcome__text-title {
+    margin-bottom: 28px;
+}
+.welcome__text-list-item {
+    line-height: 42px;
+}
+
+.welcome__banner-btn {
+    margin: 44px auto 28px;
+    display: block;
+    width: 340px;
+    height: 72px;
+    font-size: 36px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    transition-duration: 0.3s;
+}
+
+.welcome__banner-reg-link {
+    color: var(--color-black);
+    background-color: var(--color-accent);
+}
+
+.welcome__banner-auth-link {
+    color: var(--color-accent);
+    background-color: var(--color-primary);
+}
+
+.welcome__banner-picture {
+    width: 50%;
+    background-color: var(--color-accent);
+}
+
+.welcome__banner-picture-title {
+    text-align: center;
+    font-size: 36px;
+    font-family: var(--font-title);
+    margin: 52px auto;
+}
+
+.about-us {
+    width: 100%;
+    background: linear-gradient(40.72deg, #f9db6d 17.25%, #6667ab 49.85%);
+    padding: 84px 0;
+}
+
+.about-us__title {
+    color: #ffffff;
+    width: 1230px;
+    margin: 0 auto;
+}
+
+.about-us__card-container {
+    font-size: 28px;
+    font-family: var(--font-text);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 45px;
+    width: 1230px;
+    margin: 84px auto 0;
+}
+
+.about-us__card {
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+    width: 380px;
+    color: #ffffff;
+}
+
+.card__pic {
+    width: 136px;
+    height: 136px;
+    border-radius: 50%;
+    background-color: var(--color-light);
+}
+
+.card__pic-yan {
+    background-image: url('../../assets/img/yan-pic.png');
+    background-size: contain;
+}
+
+.card__pic-sergey {
+    background-image: url('../../assets/img/sergey-pic.jpg');
+    background-size: contain;
+}
+
+.card__pic-kristina {
+    background-image: url('../../assets/img/kristina-pic.jpg');
+    background-size: contain;
+}
+
+.card__pic-tanya {
+    background-image: url('../../assets/img/tanya-pic.jpg');
+    background-size: contain;
+}
+
+.card__text-name {
+    font-weight: 700;
+}
+
+.card__mentor {
+    width: 760px;
+    text-align: center;
+    align-items: center;
+    color: var(--color-black);
+}
+
+.main-page {
+    width: 1200px;
+    margin: 104px auto;
+    display: flex;
+    gap: 60px;
+}
+
+.main-page-block {
+    width: 360px;
+}
+
+.cell-small {
+    height: 285px;
+}
+
+.cell-big {
+    max-height: 610px;
+}
+
+.cell-small,
+.cell-big {
+    cursor: pointer;
+}
+
+.cell-small:hover,
+.cell-big:hover {
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.cell__title {
+    font-size: 32px;
+    font-family: var(--font-title);
+    padding: 16px;
+}
+
+.main-stats-title {
+    padding: 16px 0 0 16px;
+}
+
+.stats__short {
+    background-color: var(--color-accent);
+}
+
+.stats__short-words {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+}
+
+.words__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.words__item-new {
+    color: var(--color-primary);
+}
+
+.words__item-learned {
+    color: var(--color-learned);
+}
+.words__item-hard {
+    color: var(--color-error);
+}
+.words__number {
+    font-size: 56px;
+    font-family: var(--font-title);
+}
+
+.words__word {
+    font-size: 20px;
+    font-family: var(--font-title);
+    color: var(--color-black);
+}
+
+.stats__short-answers {
+    padding-top: 8px;
+}
+
+.stats__short-answers-container {
+    gap: 48px;
+}
+
+.stats__long {
+    height: 285px;
+    background-color: var(--color-grey);
+}
+
+.stats-long__pic {
+    display: block;
+    margin-top: 24px;
+    padding: 16px;
+}
+
+.main-page__textbook-title,
+.main-games-audiocall-title {
+    color: var(--color-light);
+}
+
+.main-page__textbook {
+    color: var(--color-white);
+    background-color: var(--color-primary);
+}
+
+.textbook__words {
+    color: var(--color-light);
+}
+
+.cell__list-item {
+    font-family: var(--font-title);
+    font-size: 28px;
+}
+
+.cell__list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.cell__container {
+    display: flex;
+    padding: 8px;
+}
+
+.cell__pic {
+    align-self: flex-end;
+}
+
+.textbook__words-data {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin: 16px 24px;
+}
+
+.textbook__words-pic {
+    display: block;
+    margin: 64px auto;
+}
+
+.subcell {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.games__sprint {
+    background-color: var(--color-light);
+}
+
+.games__sprint-list {
+    text-align: end;
+}
+
+.main-games-sprint-title {
+    text-align: end;
+}
+
+.games__audiocall {
+    background-color: var(--color-shadow);
+}
+
+.audiocall-list {
+    color: var(--color-light);
+}
+
+.audiocall__container {
+    padding: 8px 0px 0px 8px;
+}
+
+.games__audiocall-pic {
+    width: 110px;
+    height: 110px;
+}
+@media screen and (max-width: 1300px) {
+    .main-page {
+        width: 100%;
+    }
+    .welcome__banner {
+        width: 90%;
+        margin: 0;
+    }
+    .about-us__card-container {
+        width: 100%;
+    }
+    .block__title {
+        text-align: center;
+        font-size: 32px;
+    }
+}
+@media screen and (max-width: 768px) {
+    .main-page {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .welcome__banner {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        font-size: 18px;
+        margin: 0 auto;
+    }
+    .welcome__banner-btn {
+        width: 200px;
+        font-size: 24px;
+    }
+    .about-us__title {
+        width: 80%;
+    }
+    .about-us {
+        font-size: 18px;
+    }
+    .card__pic {
+        width: 68px;
+        height: 68px;
+    }
+    .about-us__card-container{
+        flex-wrap: wrap;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .about-us__card {
+        width: 300px;
+    }
+    .card__mentor {
+        width: 300px;
+    }
+}
+@media screen and (max-width: 320px) {
+    .main-page-block {
+        width: 300px;
+    }
+    .welcome__banner {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        font-size: 12px;
+    }
+    .welcome__banner-btn {
+        width: 150px;
+        font-size: 12px;
+    }
+    .block__title {
+        font-size: 24px;
+    }
+    .about-us__card-container {
+        font-size: 12px;
+    }
+    .cell__list-item {
+        font-size: 16px;    
+    }
+}
