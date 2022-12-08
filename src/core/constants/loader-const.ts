@@ -35,7 +35,7 @@ export enum Endpoints {
     settings = 'settings',
 }
 
-export const serverURL = 'https://rs-back.herokuapp.com/';
+export const serverURL = 'https://rslang-backend-1svg.onrender.com/';
 export const ALL_WORDS_PER_GROUP = 600;
 
 export const LAST_PAGE = 29;
